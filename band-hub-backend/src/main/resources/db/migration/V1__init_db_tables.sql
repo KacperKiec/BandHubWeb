@@ -6,6 +6,7 @@ CREATE TABLE musician (
     age int (2),
     city varchar(20),
     sex ENUM('MALE', 'FEMALE') NOT NULL DEFAULT 'MALE',
+    is_looking_band bit,
     bio varchar(200)
 );
 

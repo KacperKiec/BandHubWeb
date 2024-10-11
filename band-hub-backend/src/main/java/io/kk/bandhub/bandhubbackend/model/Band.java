@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+
+/**
+ * Class represents entity in database
+ * */
 @Entity
 @Table(name = "band")
 public class Band {
@@ -11,6 +15,10 @@ public class Band {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private int maxMembers;
+    private boolean isLookingMembers;
+    private String city;
+    private String bio;
 
     @ElementCollection(targetClass = MusicalGenre.class)
     @Enumerated(EnumType.STRING)
@@ -30,93 +38,19 @@ public class Band {
     @Column(name = "instrument")
     private List<Instrument> currentInstruments;
 
+    @ManyToMany
+    @JoinTable(
+            name = "musician_band",
+            joinColumns = @JoinColumn(name = "band_id"),
+            inverseJoinColumns = @JoinColumn(name = "musician_id")
+    )
+    private List<Musician> members;
+
     @ManyToOne
     @JoinColumn(name = "founder_id")
     private Musician founder;
 
+    public Band() {
 
-    private int maxMembers;
-    private boolean isLookingMembers;
-    private String city;
-    private String bio;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<MusicalGenre> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<MusicalGenre> genres) {
-        this.genres = genres;
-    }
-
-    public int getMaxMembers() {
-        return maxMembers;
-    }
-
-    public void setMaxMembers(int maxMembers) {
-        this.maxMembers = maxMembers;
-    }
-
-    public Musician getFounder() {
-        return founder;
-    }
-
-    public void setFounder(Musician founder) {
-        this.founder = founder;
-    }
-
-    public List<Instrument> getRequestedInstruments() {
-        return requestedInstruments;
-    }
-
-    public void setRequestedInstruments(List<Instrument> requestedInstruments) {
-        this.requestedInstruments = requestedInstruments;
-    }
-
-    public List<Instrument> getCurrentInstruments() {
-        return currentInstruments;
-    }
-
-    public void setCurrentInstruments(List<Instrument> currentInstruments) {
-        this.currentInstruments = currentInstruments;
-    }
-
-    public boolean isLookingMembers() {
-        return isLookingMembers;
-    }
-
-    public void setLookingMembers(boolean lookingMembers) {
-        isLookingMembers = lookingMembers;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
