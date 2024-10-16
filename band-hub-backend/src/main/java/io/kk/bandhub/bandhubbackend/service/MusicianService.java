@@ -1,16 +1,16 @@
 package io.kk.bandhub.bandhubbackend.service;
 
-import io.kk.bandhub.bandhubbackend.model.Instrument;
-import io.kk.bandhub.bandhubbackend.model.MusicalGenre;
-import io.kk.bandhub.bandhubbackend.model.Musician;
-import io.kk.bandhub.bandhubbackend.model.Sex;
+import io.kk.bandhub.bandhubbackend.exception.MusicianNotFoundException;
+import io.kk.bandhub.bandhubbackend.model.*;
 import io.kk.bandhub.bandhubbackend.repository.MusicianRepository;
 import io.kk.bandhub.bandhubbackend.repository.MusicianSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for provide data and methods for MusicianController
@@ -24,19 +24,28 @@ public class MusicianService {
         this.musicianRepository = musicianRepository;
     }
 
-    public Musician save(Musician musician) {
-        return musicianRepository.save(musician);
+    public MusicianDTO save(Musician musician) {
+        var musicianSaved = musicianRepository.save(musician);
+        return toDTO(musicianSaved);
     }
 
-    public List<Musician> getAll() {
-        return musicianRepository.findAll();
+    public List<MusicianDTO> getAll() {
+        return musicianRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Musician getById(int id) {
-        return musicianRepository.findMusicianById(id);
+    public MusicianDTO getById(int id) {
+        var musician = musicianRepository.findMusicianById(id)
+                .orElseThrow(() -> new MusicianNotFoundException("Musician with given id was not found"));
+        return toDTO(musician);
     }
 
-    public List<Musician> findMusiciansByFilters(String name, List<String> cities, List<MusicalGenre> genres, List<Instrument> instruments, boolean isLookingForBand, String sex) {
+    public List<MusicianDTO> findMusiciansByFilters(
+            String name,
+            List<String> cities,
+            List<MusicalGenre> genres,
+            List<Instrument> instruments,
+            Boolean isLookingForBand, String sex) {
+
         Specification<Musician> spec = Specification.where(MusicianSpecification.hasCities(cities))
                 .and(MusicianSpecification.hasGenres(genres))
                 .and(MusicianSpecification.hasInstruments(instruments))
@@ -44,7 +53,28 @@ public class MusicianService {
                 .and(MusicianSpecification.hasSex(sex))
                 .and(MusicianSpecification.hasName(name));
 
-        return musicianRepository.findAll(spec);
+        return musicianRepository.findAll(spec).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    private MusicianDTO toDTO(Musician musician) {
+        MusicianDTO dto = new MusicianDTO();
+        dto.setId(musician.getId());
+        dto.setName(musician.getName());
+        dto.setEmail(musician.getEmail());
+        dto.setPassword(musician.getPassword());
+        dto.setCity(musician.getCity());
+        dto.setInstruments(musician.getInstruments());
+        dto.setGenres(musician.getGenres());
+        dto.setSex(musician.getSex());
+        dto.setLookingBand(musician.isLookingBand());
+
+        List<Band> bands = musician.getBands() != null ? musician.getBands() : Collections.emptyList();
+
+        List<String> bandNames = bands.stream()
+                .map(Band::getName)
+                .collect(Collectors.toList());
+        dto.setBands(bandNames);
+
+        return dto;
+    }
 }

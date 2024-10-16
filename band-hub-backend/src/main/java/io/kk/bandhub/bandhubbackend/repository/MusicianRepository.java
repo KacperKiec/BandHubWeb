@@ -5,6 +5,7 @@ import io.kk.bandhub.bandhubbackend.model.Musician;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for managing Musician entities.
@@ -13,7 +14,7 @@ import java.util.List;
 public interface MusicianRepository {
     Musician save(Musician musician);
     List<Musician> findAll();
-    Musician findMusicianById(int id);
+    Optional<Musician> findMusicianById(int id);
 
     List<Musician> findAll(Specification<Musician> specification);
 

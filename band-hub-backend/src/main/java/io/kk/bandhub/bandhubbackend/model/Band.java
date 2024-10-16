@@ -1,6 +1,7 @@
 package io.kk.bandhub.bandhubbackend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * Class represents entity in database
  * */
+@Data
 @Entity
 @Table(name = "band")
 public class Band {
@@ -47,10 +49,14 @@ public class Band {
     private List<Musician> members;
 
     @ManyToOne
-    @JoinColumn(name = "founder_id")
+    @Transient
     private Musician founder;
+
+    @JoinColumn(name = "founder_id")
+    private Integer founderId;
 
     public Band() {
 
     }
+
 }

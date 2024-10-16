@@ -1,12 +1,14 @@
 package io.kk.bandhub.bandhubbackend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * Class represents entity in database
  * */
+@Data
 @Entity
 @Table(name = "musician")
 public class Musician {
@@ -17,6 +19,8 @@ public class Musician {
     private String email;
     private String password;
     private int age;
+
+    @Enumerated(EnumType.STRING)
     private Sex sex;
     private String city;
     private boolean isLookingBand;
@@ -46,7 +50,7 @@ public class Musician {
 
     }
 
-    public int getId() {
-        return id;
+    public void setBands(Band band) {
+        this.bands.add(band);
     }
 }

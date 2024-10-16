@@ -1,15 +1,17 @@
 package io.kk.bandhub.bandhubbackend.service;
 
-import io.kk.bandhub.bandhubbackend.model.Band;
-import io.kk.bandhub.bandhubbackend.model.Instrument;
-import io.kk.bandhub.bandhubbackend.model.MusicalGenre;
-import io.kk.bandhub.bandhubbackend.model.Musician;
+import io.kk.bandhub.bandhubbackend.exception.BandNotFoundException;
+import io.kk.bandhub.bandhubbackend.exception.MusicianNotFoundException;
+import io.kk.bandhub.bandhubbackend.model.*;
 import io.kk.bandhub.bandhubbackend.repository.BandRepository;
 import io.kk.bandhub.bandhubbackend.repository.BandSpecification;
+import io.kk.bandhub.bandhubbackend.repository.MusicianRepository;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for provide data and method for BandController
@@ -17,31 +19,79 @@ import java.util.List;
 @Service
 public class BandService {
     private final BandRepository bandRepository;
+    private final MusicianRepository musicianRepository;
 
-    public BandService(final BandRepository bandRepository) {
+    public BandService(final BandRepository bandRepository, MusicianRepository musicianRepository) {
         this.bandRepository = bandRepository;
+        this.musicianRepository = musicianRepository;
     }
 
-    public Band save(Band band) {
-        return bandRepository.save(band);
+    public BandDTO save(Band band) {
+
+        Musician founder = musicianRepository.findMusicianById(band.getFounderId())
+                .orElseThrow(() ->new MusicianNotFoundException("Musician with given id was not found"));
+
+        band.setFounder(founder);
+        band.setFounderId(founder.getId());
+        founder.setBands(band);
+
+        var savedBand = bandRepository.save(band);
+
+        return toDTO(savedBand);
     }
 
-    public Band getById(int id) {
-        return bandRepository.findBandById(id);
+    public BandDTO getById(int id) {
+        var band = bandRepository.findBandById(id)
+                .orElseThrow(() -> new BandNotFoundException("Band with given id was not found"));
+        return toDTO(band);
     }
 
-    public List<Band> getAll() {
-        return bandRepository.findAll();
+    public List<BandDTO> getAll() {
+        return bandRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Band> findBandByFilters(String name, List<String> cities, Musician founder, List<MusicalGenre> genres, List<Instrument> requestedInstruments, List<Instrument> currentInstruments) {
+    public List<BandDTO> findBandByFilters(
+            String name,
+            List<String> cities,
+            Integer founderId,
+            List<MusicalGenre> genres,
+            List<Instrument> requestedInstruments,
+            List<Instrument> currentInstruments,
+            Boolean isLookingMembers) {
+
         Specification<Band> spec = Specification.where(BandSpecification.hasName(name)
                 .and(BandSpecification.hasCity(cities))
-                .and(BandSpecification.hasFounderId(founder.getId()))
+                .and(BandSpecification.hasFounderId(founderId))
                 .and(BandSpecification.hasGenres(genres))
                 .and(BandSpecification.hasRequestedInstruments(requestedInstruments))
-                .and(BandSpecification.hasInstruments(currentInstruments)));
-        return bandRepository.findAll(spec);
+                .and(BandSpecification.hasInstruments(currentInstruments))
+                .and(BandSpecification.isLookingMembers(isLookingMembers)));
+        return bandRepository.findAll(spec).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private BandDTO toDTO(Band band) {
+        BandDTO dto = new BandDTO();
+        dto.setId(band.getId());
+        dto.setBandName(band.getName());
+        dto.setMaxMembers(band.getMaxMembers());
+        dto.setCity(band.getCity());
+        dto.setBio(band.getBio());
+
+        var musician = musicianRepository.findMusicianById(band.getFounderId())
+                .orElseThrow(() -> new MusicianNotFoundException("Musician with given id was not found"));
+        dto.setFounderName(musician.getName());
+
+        dto.setRequestedInstruments(band.getRequestedInstruments());
+        dto.setCurrentInstruments(band.getCurrentInstruments());
+
+        List<Musician> members = band.getMembers() != null ? band.getMembers() : Collections.emptyList();
+
+        List<String> memberNames = members.stream()
+                .map(Musician::getName)
+                .collect(Collectors.toList());
+
+        dto.setMembers(memberNames);
+        return dto;
     }
 
 }

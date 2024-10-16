@@ -4,6 +4,7 @@ import io.kk.bandhub.bandhubbackend.model.Band;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for managing Band entities.
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface BandRepository {
     Band save(Band band);
-    Band findBandById(int id);
+    Optional<Band> findBandById(int id);
     List<Band> findAll();
 
     List<Band> findAll(Specification<Band> spec);
