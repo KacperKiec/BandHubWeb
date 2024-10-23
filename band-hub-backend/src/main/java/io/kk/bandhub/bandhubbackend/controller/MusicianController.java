@@ -5,6 +5,9 @@ import io.kk.bandhub.bandhubbackend.model.MusicalGenre;
 import io.kk.bandhub.bandhubbackend.model.Musician;
 import io.kk.bandhub.bandhubbackend.model.MusicianDTO;
 import io.kk.bandhub.bandhubbackend.service.MusicianService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class provides communication with client
+ * */
 @Controller
 @RequestMapping(value = "/musician")
 public class MusicianController {
@@ -33,12 +39,14 @@ public class MusicianController {
     }
 
     @GetMapping(value = "/all")
-    ResponseEntity<List<MusicianDTO>> getAllMusicians() {
-        return ResponseEntity.ok(service.getAll());
+    ResponseEntity<Page<MusicianDTO>> getAllMusicians(@RequestParam (defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return ResponseEntity.ok(service.getAll(pageable));
     }
 
     @GetMapping(value = "/search")
-    ResponseEntity<List<MusicianDTO>> searchMusician(
+    ResponseEntity<Page<MusicianDTO>> searchMusician(
+            @RequestParam (defaultValue = "0") int page,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) List<MusicalGenre> genres,
@@ -46,7 +54,8 @@ public class MusicianController {
             @RequestParam(required = false) Boolean isLookingForBand,
             @RequestParam(required = false) String sex) {
 
-        List<MusicianDTO> musicians = service.findMusiciansByFilters(name, cities, genres, instruments, isLookingForBand, sex);
+        Pageable pageable = PageRequest.of(page, 10);
+        var musicians = service.findMusiciansByFilters(name, cities, genres, instruments, isLookingForBand, sex, pageable);
         return ResponseEntity.ok(musicians);
     }
 

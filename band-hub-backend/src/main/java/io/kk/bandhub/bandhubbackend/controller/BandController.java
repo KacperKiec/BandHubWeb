@@ -5,13 +5,20 @@ import io.kk.bandhub.bandhubbackend.model.BandDTO;
 import io.kk.bandhub.bandhubbackend.model.Instrument;
 import io.kk.bandhub.bandhubbackend.model.MusicalGenre;
 import io.kk.bandhub.bandhubbackend.service.BandService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Controller class provides communication with client
+ * */
 @Controller
 @RequestMapping(value = "/band")
 public class BandController {
@@ -33,12 +40,25 @@ public class BandController {
     }
 
     @GetMapping(value = "/all")
-    ResponseEntity<List<BandDTO>> getAllBands() {
-        return ResponseEntity.ok(service.getAll());
+    ResponseEntity<Page<BandDTO>> getAllBands(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return ResponseEntity.ok(service.getAll(pageable));
+    }
+
+    @GetMapping(value = "/recommended")
+    ResponseEntity<Page<BandDTO>> getRecommendedBands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String userCity,
+            @RequestParam(required = false) List<MusicalGenre> userGenres,
+            @RequestParam(required = false) List<Instrument> userInstruments) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        return ResponseEntity.ok(service.findBandByFilters(null, Collections.singletonList(userCity), null, userGenres, userInstruments, null, true, pageable));
     }
 
     @GetMapping(value = "/search")
-    ResponseEntity<List<BandDTO>> searchBand(
+    ResponseEntity<Page<BandDTO>> searchBand(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) Integer founderId,
@@ -47,7 +67,8 @@ public class BandController {
             @RequestParam(required = false) List<Instrument> currentInstruments,
             @RequestParam(required = false) Boolean isLookingMembers) {
 
-        List<BandDTO> bands = service.findBandByFilters(name, cities, founderId, genres, requestedInstruments, currentInstruments, isLookingMembers);
+        Pageable pageable = PageRequest.of(page, 10);
+        var bands = service.findBandByFilters(name, cities, founderId, genres, requestedInstruments, currentInstruments, isLookingMembers, pageable);
         return ResponseEntity.ok(bands);
     }
 }

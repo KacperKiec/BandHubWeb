@@ -50,7 +50,7 @@ public class Musician {
 
     }
 
-    public void setBands(Band band) {
+    public void addBand(Band band) {
         this.bands.add(band);
     }
 }

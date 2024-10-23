@@ -59,4 +59,8 @@ public class Band {
 
     }
 
+    public void addMember(Musician musician) {
+        this.members.add(musician);
+    }
+
 }

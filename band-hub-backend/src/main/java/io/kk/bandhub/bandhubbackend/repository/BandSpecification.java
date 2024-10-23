@@ -47,7 +47,7 @@ public class BandSpecification {
             if (cities == null || cities.isEmpty()) {
                 return builder.conjunction();
             }
-            return builder.equal(root.get("city"), cities);
+            return root.get("city").in(cities);
         };
     }
 

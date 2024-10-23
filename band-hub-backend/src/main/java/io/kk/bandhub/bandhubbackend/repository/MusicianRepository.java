@@ -2,6 +2,8 @@ package io.kk.bandhub.bandhubbackend.repository;
 
 import io.kk.bandhub.bandhubbackend.model.Band;
 import io.kk.bandhub.bandhubbackend.model.Musician;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -13,9 +15,8 @@ import java.util.Optional;
  */
 public interface MusicianRepository {
     Musician save(Musician musician);
-    List<Musician> findAll();
     Optional<Musician> findMusicianById(int id);
-
-    List<Musician> findAll(Specification<Musician> specification);
+    Page<Musician> findAll(Pageable pageable);
+    Page<Musician> findAll(Specification<Musician> specification, Pageable pageable);
 
 }

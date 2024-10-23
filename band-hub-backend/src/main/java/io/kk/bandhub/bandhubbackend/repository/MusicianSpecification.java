@@ -6,6 +6,7 @@ import io.kk.bandhub.bandhubbackend.model.MusicalGenre;
 import io.kk.bandhub.bandhubbackend.model.Musician;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;

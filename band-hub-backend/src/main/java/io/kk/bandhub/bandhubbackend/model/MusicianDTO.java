@@ -11,6 +11,7 @@ public class MusicianDTO {
     private String password;
     private String name;
     private String city;
+    private int age;
     private List<Instrument> instruments;
     private List<MusicalGenre> genres;
     private Sex sex;

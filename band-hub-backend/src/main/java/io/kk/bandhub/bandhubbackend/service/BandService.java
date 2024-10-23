@@ -6,6 +6,8 @@ import io.kk.bandhub.bandhubbackend.model.*;
 import io.kk.bandhub.bandhubbackend.repository.BandRepository;
 import io.kk.bandhub.bandhubbackend.repository.BandSpecification;
 import io.kk.bandhub.bandhubbackend.repository.MusicianRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,7 @@ public class BandService {
 
         band.setFounder(founder);
         band.setFounderId(founder.getId());
-        founder.setBands(band);
+        founder.addBand(band);
 
         var savedBand = bandRepository.save(band);
 
@@ -46,18 +48,19 @@ public class BandService {
         return toDTO(band);
     }
 
-    public List<BandDTO> getAll() {
-        return bandRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+    public Page<BandDTO> getAll(Pageable pageable) {
+        return bandRepository.findAll(pageable).map(this::toDTO);
     }
 
-    public List<BandDTO> findBandByFilters(
+    public Page<BandDTO> findBandByFilters(
             String name,
             List<String> cities,
             Integer founderId,
             List<MusicalGenre> genres,
             List<Instrument> requestedInstruments,
             List<Instrument> currentInstruments,
-            Boolean isLookingMembers) {
+            Boolean isLookingMembers,
+            Pageable pageable) {
 
         Specification<Band> spec = Specification.where(BandSpecification.hasName(name)
                 .and(BandSpecification.hasCity(cities))
@@ -66,7 +69,7 @@ public class BandService {
                 .and(BandSpecification.hasRequestedInstruments(requestedInstruments))
                 .and(BandSpecification.hasInstruments(currentInstruments))
                 .and(BandSpecification.isLookingMembers(isLookingMembers)));
-        return bandRepository.findAll(spec).stream().map(this::toDTO).collect(Collectors.toList());
+        return bandRepository.findAll(spec, pageable).map(this::toDTO);
     }
 
     private BandDTO toDTO(Band band) {
@@ -76,6 +79,7 @@ public class BandService {
         dto.setMaxMembers(band.getMaxMembers());
         dto.setCity(band.getCity());
         dto.setBio(band.getBio());
+        dto.setLookingMembers(band.isLookingMembers());
 
         var musician = musicianRepository.findMusicianById(band.getFounderId())
                 .orElseThrow(() -> new MusicianNotFoundException("Musician with given id was not found"));
@@ -83,6 +87,7 @@ public class BandService {
 
         dto.setRequestedInstruments(band.getRequestedInstruments());
         dto.setCurrentInstruments(band.getCurrentInstruments());
+        dto.setGenres(band.getGenres());
 
         List<Musician> members = band.getMembers() != null ? band.getMembers() : Collections.emptyList();
 
