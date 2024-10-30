@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 /**
  * Service class for provide data and method for BandController
  * */
@@ -28,13 +30,13 @@ public class BandService {
         this.musicianRepository = musicianRepository;
     }
 
-    public BandDTO save(Band band) {
+    public BandDTO save(Band band, int founderId) {
 
-        Musician founder = musicianRepository.findMusicianById(band.getFounderId())
+        Musician founder = musicianRepository.findMusicianById(founderId)
                 .orElseThrow(() ->new MusicianNotFoundException("Musician with given id was not found"));
 
         band.setFounder(founder);
-        band.setFounderId(founder.getId());
+        band.setFounderId(founderId);
         founder.addBand(band);
 
         var savedBand = bandRepository.save(band);
@@ -70,6 +72,32 @@ public class BandService {
                 .and(BandSpecification.hasInstruments(currentInstruments))
                 .and(BandSpecification.isLookingMembers(isLookingMembers)));
         return bandRepository.findAll(spec, pageable).map(this::toDTO);
+    }
+
+    public Page<BandDTO> getUserBands(int userid, Pageable pageable) {
+        var bands = bandRepository.findBandsByMembersId(userid, pageable);
+        return bands.map(this::toDTO);
+    }
+
+    public BandDTO updateBand(BandDTO bandDTO) {
+        var band = bandRepository.findBandById(bandDTO.getId()).orElseThrow(
+                () ->new BandNotFoundException("Band with given id was not found"));
+
+        band.setName(bandDTO.getBandName());
+        band.setMaxMembers(bandDTO.getMaxMembers());
+        band.setRequestedInstruments(bandDTO.getRequestedInstruments());
+        band.setCurrentInstruments(bandDTO.getCurrentInstruments());
+        band.setGenres(bandDTO.getGenres());
+        band.setLookingMembers(bandDTO.isLookingMembers());
+        band.setCity(bandDTO.getCity());
+        band.setBio(bandDTO.getBio());
+        return toDTO(bandRepository.save(band));
+    }
+
+    public void deleteBand(int bandId) {
+        var band = bandRepository.findBandById(bandId).orElseThrow(
+                () -> new BandNotFoundException("Band with given id was not found"));
+        bandRepository.deleteBandById(bandId);
     }
 
     private BandDTO toDTO(Band band) {

@@ -36,6 +36,7 @@ public class MusicianService {
     public MusicianDTO updateMusician(MusicianDTO musicianDTO) {
         var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
                 () ->new MusicianNotFoundException("Musician with given id was not found"));
+
         musician.setName(musicianDTO.getName());
         musician.setEmail(musicianDTO.getEmail());
         musician.setPassword(musicianDTO.getPassword());

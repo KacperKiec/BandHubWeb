@@ -28,11 +28,11 @@ public class BandController {
         this.service = service;
     }
 
-    @PostMapping
-    ResponseEntity<BandDTO> addBand(@RequestBody Band band) {
-        var savedBand = service.save(band);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBand);
-    }
+//    @PostMapping
+//    ResponseEntity<BandDTO> addBand(@RequestBody Band band) {
+//        var savedBand = service.save(band);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedBand);
+//    }
 
     @GetMapping(value = "/{id}")
     ResponseEntity<BandDTO> getBandById(@PathVariable int id) {
@@ -70,5 +70,16 @@ public class BandController {
         Pageable pageable = PageRequest.of(page, 10);
         var bands = service.findBandByFilters(name, cities, founderId, genres, requestedInstruments, currentInstruments, isLookingMembers, pageable);
         return ResponseEntity.ok(bands);
+    }
+
+    @PutMapping(value = "/{id}")
+    ResponseEntity<BandDTO> updateBand(@PathVariable int id, @RequestBody BandDTO bandDTO) {
+        return ResponseEntity.ok(service.updateBand(bandDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    ResponseEntity<?> deleteBand(@PathVariable int id) {
+        service.deleteBand(id);
+        return ResponseEntity.noContent().build();
     }
 }

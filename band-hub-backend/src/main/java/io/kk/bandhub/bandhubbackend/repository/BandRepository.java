@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,7 +13,9 @@ import java.util.Optional;
  */
 public interface BandRepository {
     Band save(Band band);
+    void deleteBandById(int id);
     Optional<Band> findBandById(int id);
     Page<Band> findAll(Pageable pageable);
     Page<Band> findAll(Specification<Band> spec, Pageable pageable);
+    Page<Band> findBandsByMembersId(Integer membersId, Pageable pageable);
 }
