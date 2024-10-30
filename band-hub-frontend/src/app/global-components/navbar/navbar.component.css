@@ -1,0 +1,56 @@
+.navbar{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  width: 20%;
+  border-right: 1px solid black;
+  padding-right: 20px;
+  position: relative;
+  transition: opacity 350ms ease-in-out, transform 350ms ease-in-out;
+  z-index: 9;
+}
+
+.navbar.hide {
+  transform: translateX(-90%);
+}
+
+.option{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8%;
+  width: 90%;
+  border: 1px solid red;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.nav-button{
+  display: flex;
+  border: 1px solid blue;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  position: absolute;
+  top: 45%;
+  left: 100%;
+  transform: translate(-50%);
+  cursor: pointer;
+  z-index: 10;
+  background-color: #ffffff;
+  justify-content: center;
+  align-items: center;
+}
+
+#arrow{
+  transition: transform 0.5s;
+}
+
+.navbar.show #arrow{
+  transform: rotate(180deg);
+}
+
+.navbar.hide #arrow{
+  transform: rotate(0deg);
+}

@@ -1,0 +1,24 @@
+<div class="navbar" [ngClass]="{'show': isMenuOpen, 'hide': !isMenuOpen}">
+  <div class="option">
+    <label>menu</label>
+  </div>
+  <div class="option">
+    <label>musicians</label>
+  </div>
+  <div class="option">
+    <label>bands</label>
+  </div>
+  <div class="option">
+    <label>profile</label>
+  </div>
+  <div class="option">
+    <label>friends</label>
+  </div>
+  <div class="option">
+    <label>log out</label>
+  </div>
+
+  <div class="nav-button" (click)="toggleMenu()">
+    <img id="arrow" ngSrc="/arrow.png" height="32" width="32" alt="Toggle Button">
+  </div>
+</div>
