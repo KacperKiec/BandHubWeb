@@ -6,24 +6,40 @@
   width: 20%;
   border-right: 1px solid black;
   padding-right: 20px;
-  position: relative;
-  transition: opacity 350ms ease-in-out, transform 350ms ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 350ms ease-in-out;
   z-index: 9;
+  background-color: #ffffff;
 }
 
 .navbar.hide {
   transform: translateX(-90%);
+  z-index: 1;
+  .option{
+    opacity: 0;
+    transition: opacity 350ms ease-in-out;
+  }
 }
 
 .option{
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: left;
   align-items: center;
   height: 8%;
   width: 90%;
   border: 1px solid red;
   margin: 5px;
   cursor: pointer;
+  opacity: 1;
+  transition: opacity 350ms ease-in-out;
+}
+
+.option label{
+  cursor: pointer;
+  margin: 50px;
 }
 
 .nav-button{
@@ -48,9 +64,13 @@
 }
 
 .navbar.show #arrow{
-  transform: rotate(180deg);
+  transform: rotate(-180deg);
 }
 
 .navbar.hide #arrow{
   transform: rotate(0deg);
+}
+
+.icon{
+  margin-left: 20px;
 }

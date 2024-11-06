@@ -1,0 +1,8 @@
+router-outlet{
+  position: absolute;
+  left: 3%;
+  height: 100px;
+  width: 100px;
+  background-color: yellow;
+  opacity: 0.5;
+}
