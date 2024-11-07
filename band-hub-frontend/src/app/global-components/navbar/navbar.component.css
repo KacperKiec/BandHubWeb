@@ -6,7 +6,7 @@
   width: 20%;
   border-right: 1px solid black;
   padding-right: 20px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   transition: transform 350ms ease-in-out;

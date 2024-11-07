@@ -1,8 +1,10 @@
-router-outlet{
-  position: absolute;
-  left: 3%;
-  height: 100px;
-  width: 100px;
-  background-color: yellow;
-  opacity: 0.5;
+.container{
+  position: relative;
+  left: 2.1%;
 }
+
+app-footer{
+  position: relative;
+  top: 100%;
+}
+

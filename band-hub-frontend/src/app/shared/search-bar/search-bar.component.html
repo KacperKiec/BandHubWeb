@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="upper">
+    <div class="search-field search-bar-display">
+      <input placeholder="Szukaj" type="text">
+      <img ngSrc="/icons8-search-50.png" height="22" width="22" alt="Search Icon">
+    </div>
+
+
+    <div class="filter-bar search-bar-display" (click)="toggleDropdown()">
+      <label>Filtry</label>
+      <img ngSrc="/icons8-sliders-30.png" height="22" width="22" alt="Filters Icon">
+    </div>
+  </div>
+
+  <div class="added-params" id="param-box"></div>
+
+  <div class="dropdown-menu" [class.show]="dropdownStatus">
+    <ul class="filters-list">
+      <li *ngFor="let filter of filters; let i = index">
+        <div class="filters-element">
+          <label>{{filter}}</label>
+          <input type="text" [(ngModel)]="filterValue[i]">
+          <button (click)="addParam(i)">Dodaj</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
