@@ -88,6 +88,7 @@
   list-style: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   width: 100%;
+  height: 25px;
   text-align: center;
   margin: 0;
   padding: 2px 0;
@@ -107,20 +108,22 @@
 
 .filters-element label{
   margin-left: 10px;
-  width: 20%
+  width: 30%
 }
 
 .filters-element button{
   margin-left: 10px;
+  margin-right: 5px;
 }
 
-.filters-element input{
-  width: 65%;
+.filters-element input, .filters-element select{
+  width: 55%;
   margin-right: 10px;
   margin-left: 10px;
 }
 
 .added-params{
+  margin: 5px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -131,4 +134,10 @@
 .param-element{
   border: 1px solid deeppink;
   border-radius: 15px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.param-element label{
+  cursor: pointer;
 }

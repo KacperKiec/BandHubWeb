@@ -1,5 +1,5 @@
-import {Component, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
-import {NgForOf, NgOptimizedImage} from '@angular/common';
+import {Component, ElementRef, HostListener, Input, OnInit, Output} from '@angular/core';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -8,22 +8,24 @@ import {FormsModule} from '@angular/forms';
   imports: [
     NgOptimizedImage,
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements OnInit{
   public dropdownStatus = false;
-  @Input() public parametersNumber: number = 3;
+  private isCheckboxClicked: boolean[] = [];
 
-  filters= ["asf", "agasdg", "asgsdg"];
+  @Input() filters: {label: string, type: string, options?: string[]}[] = [];
+  @Output() currentFilters: {name: string, value: string }[]= [];
   filterValue: string[] = [];
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(private el: ElementRef) {}
 
   ngOnInit(): void {
-    this.filterValue = new Array<string>(this.parametersNumber);
+    this.filterValue = new Array<string>(this.filters.length);
   }
 
   toggleDropdown() {
@@ -39,28 +41,53 @@ export class SearchBarComponent {
 
   addParam(index: number){
     const inputValue = this.filterValue[index];
+    console.log(this.currentFilters)
+    if(this.filters[index].type === 'checkbox'){
+      const isLookingFor = this.currentFilters.find(filter => filter.name === this.filters[index].label);
+
+      if(isLookingFor){
+        if(inputValue) {
+          isLookingFor.value = 'tak';
+          this.isCheckboxClicked[index] = true;
+        } else {
+          isLookingFor.value = 'nie';
+          this.isCheckboxClicked[index] = false;
+        }
+        //this.updateCheckboxParamObject(index);
+        return;
+      } else {
+        this.isCheckboxClicked[index] = !!inputValue;
+        this.currentFilters.push({name: this.filters[index].label, value: this.isCheckboxClicked[index] ? 'tak' : 'nie'});
+      }
+      return;
+    }
+
     if (inputValue) {
-      console.log("nie puste!");
-      this.addParamObject(index);
-    } else {
-      console.log("puste!");
+      if (this.isParamOnList(this.filters[index].label, inputValue)) return;
+
+      const addedFilter = this.currentFilters.find(filter => filter.name === this.filters[index].label);
+      if (addedFilter && addedFilter.value !== inputValue) {
+        this.currentFilters.push({name: this.filters[index].label, value: inputValue});
+      } else {
+        this.currentFilters.push({name: this.filters[index].label, value: inputValue});
+      }
     }
   }
 
-  private addParamObject(index: number){
-    const inputValue = this.filterValue[index];
-    const paramName: string = this.filters[index];
+  private isParamOnList(name: string, value: string): boolean {
+    if(this.currentFilters.length === 0) return false;
 
-    const paramElement = this.renderer.createElement('div');
-    const paramText = this.renderer.createElement('label');
-    this.renderer.setProperty(paramText, 'textContent', `${paramName}: ${inputValue}`);
-    this.renderer.appendChild(paramElement, paramText);
-    this.renderer.addClass(paramElement, 'param-element');
+    let valueExists = false;
 
-    const paramBox = document.getElementById('param-box');
+    this.currentFilters.forEach(filter => {
+      if(filter.name.toLowerCase().includes(name.toLowerCase())) {
+        if(filter.value === value) valueExists = true;
+      }
+    });
+    return valueExists;
+  }
 
-    if(paramBox){
-      paramBox.appendChild(paramElement);
-    }
+  public removeParam(index: number): void {
+    this.currentFilters.splice(index, 1);
   }
 }
