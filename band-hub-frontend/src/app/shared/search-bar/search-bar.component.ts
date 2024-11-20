@@ -1,6 +1,7 @@
-import {Component, ElementRef, HostListener, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {filterElement} from '../../core/models/types';
 
 @Component({
   selector: 'app-search-bar',
@@ -19,13 +20,19 @@ export class SearchBarComponent implements OnInit{
   private isCheckboxClicked: boolean[] = [];
 
   @Input() filters: {label: string, type: string, options?: string[]}[] = [];
-  @Output() currentFilters: {name: string, value: string }[]= [];
+  @Output() emitParams: EventEmitter<filterElement[]> = new EventEmitter();
+  currentFilters: filterElement[]= [];
   filterValue: string[] = [];
+  rangeValues: {min: number, max: number}[] = [];
+  searchFieldContent = '';
+
+  @Input() placeholderText = '';
 
   constructor(private el: ElementRef) {}
 
   ngOnInit(): void {
     this.filterValue = new Array<string>(this.filters.length);
+    this.rangeValues = this.filters.map(() => ({ min: 0, max: 99 }));
   }
 
   toggleDropdown() {
@@ -41,7 +48,7 @@ export class SearchBarComponent implements OnInit{
 
   addParam(index: number){
     const inputValue = this.filterValue[index];
-    console.log(this.currentFilters)
+
     if(this.filters[index].type === 'checkbox'){
       const isLookingFor = this.currentFilters.find(filter => filter.name === this.filters[index].label);
 
@@ -53,7 +60,6 @@ export class SearchBarComponent implements OnInit{
           isLookingFor.value = 'nie';
           this.isCheckboxClicked[index] = false;
         }
-        //this.updateCheckboxParamObject(index);
         return;
       } else {
         this.isCheckboxClicked[index] = !!inputValue;
@@ -61,9 +67,19 @@ export class SearchBarComponent implements OnInit{
       }
       return;
     }
+    else if(this.filters[index].type === 'range'){
+      const isExisting = this.currentFilters.find(filter => filter.name === this.filters[index].label);
+
+      if(isExisting){
+        isExisting.value = `${this.rangeValues[index].min} - ${this.rangeValues[index].max}`
+      } else {
+        this.currentFilters.push({name: this.filters[index].label, value: `${this.rangeValues[index].min} - ${this.rangeValues[index].max}`});
+      }
+      return;
+    }
 
     if (inputValue) {
-      if (this.isParamOnList(this.filters[index].label, inputValue)) return;
+      if (this.isParamOnList({name: this.filters[index].label, value: inputValue})) return;
 
       const addedFilter = this.currentFilters.find(filter => filter.name === this.filters[index].label);
       if (addedFilter && addedFilter.value !== inputValue) {
@@ -74,20 +90,36 @@ export class SearchBarComponent implements OnInit{
     }
   }
 
-  private isParamOnList(name: string, value: string): boolean {
+  private isParamOnList(data: filterElement): boolean {
     if(this.currentFilters.length === 0) return false;
 
     let valueExists = false;
 
     this.currentFilters.forEach(filter => {
-      if(filter.name.toLowerCase().includes(name.toLowerCase())) {
-        if(filter.value === value) valueExists = true;
+      if(filter.name.toLowerCase().includes(data.name.toLowerCase())) {
+        if(filter.value === data.value) valueExists = true;
       }
     });
     return valueExists;
   }
 
-  public removeParam(index: number): void {
+  removeParam(index: number): void {
     this.currentFilters.splice(index, 1);
+  }
+
+  updateRangeValues(index: number): void {
+    if (this.rangeValues[index].min > this.rangeValues[index].max) {
+      this.rangeValues[index].min === 0 ? this.rangeValues[index].min = 0 : this.rangeValues[index].min = this.rangeValues[index].max - 1;
+    }
+  }
+
+  confirmSearching(): void {
+    if(this.searchFieldContent) {
+      const existingName = this.currentFilters.find(filter => filter.name === 'name');
+      if(existingName){
+        existingName.value = this.searchFieldContent;
+      } else this.currentFilters.push({name: `${this.placeholderText}`,value: this.searchFieldContent });
+    }
+    this.emitParams.emit(this.currentFilters);
   }
 }

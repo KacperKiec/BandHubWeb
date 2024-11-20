@@ -1,8 +1,8 @@
 <div class="container">
   <div class="upper">
     <div class="search-field search-bar-display">
-      <input placeholder="Szukaj" type="text">
-      <img ngSrc="/icons8-search-50.png" height="22" width="22" alt="Search Icon">
+      <input [placeholder]="placeholderText" type="text" [(ngModel)]="searchFieldContent">
+      <img ngSrc="/icons8-search-50.png" height="22" width="22" alt="Search Icon" (click)="confirmSearching()">
     </div>
 
 
@@ -16,19 +16,34 @@
     <ul class="filters-list">
       <li *ngFor="let filter of filters; let i = index">
         <div class="filters-element">
-          <label>{{ filter.label }}</label>
+          <label class="filter-label">{{ filter.label }}</label>
 
-          <input *ngIf="filter.type === 'text'" type="text" [(ngModel)]="filterValue[i]">
+          <div class="filter-input" *ngIf="filter.type === 'text'">
+            <input type="text" [(ngModel)]="filterValue[i]">
+          </div>
 
-          <input *ngIf="filter.type === 'number'" type="number" [(ngModel)]="filterValue[i]">
+          <div class="filter-input" *ngIf="filter.type === 'number'">
+            <input type="number" [(ngModel)]="filterValue[i]">
+          </div>
 
-          <input *ngIf="filter.type === 'checkbox'" type="checkbox" [(ngModel)]="filterValue[i]">
+          <div class="filter-input" *ngIf="filter.type === 'checkbox'">
+            <input type="checkbox" [(ngModel)]="filterValue[i]" style="width: 100%">
+          </div>
 
-          <select *ngIf="filter.type === 'select'" [(ngModel)]="filterValue[i]">
-            <option *ngFor="let option of filter.options" [value]="option">{{ option }}</option>
-          </select>
+          <div class="filter-input" *ngIf="filter.type === 'select'">
+            <select [(ngModel)]="filterValue[i]" style="width: 100%">
+              <option *ngFor="let option of filter.options" [value]="option">{{ option }}</option>
+            </select>
+          </div>
 
-          <button (click)="addParam(i)">Dodaj</button>
+          <div class="filter-input range-wrapper" *ngIf="filter.type === 'range'">
+            <label class="range-label">Od:</label>
+            <input type="number" [(ngModel)]="rangeValues[i].min" [min]="filter?.options?.[0] || 0" [max]="filter?.options?.[1] || 99" (ngModelChange)="updateRangeValues(i)">
+            <label class="range-label">Do:</label>
+            <input type="number" [(ngModel)]="rangeValues[i].max" [min]="filter?.options?.[0] || 0" [max]="filter?.options?.[1] || 99" (ngModelChange)="updateRangeValues(i)">
+          </div>
+
+          <button class="filter-button" (click)="addParam(i)">Dodaj</button>
         </div>
       </li>
     </ul>

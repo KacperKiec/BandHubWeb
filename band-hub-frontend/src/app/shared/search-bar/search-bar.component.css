@@ -106,20 +106,33 @@
   width: 100%;
 }
 
-.filters-element label{
+.filter-label{
+  min-width: 30%;
   margin-left: 10px;
-  width: 30%
 }
 
-.filters-element button{
-  margin-left: 10px;
-  margin-right: 5px;
-}
-
-.filters-element input, .filters-element select{
+.filter-input{
+  box-sizing: border-box;
   width: 55%;
-  margin-right: 10px;
-  margin-left: 10px;
+  margin: 0 10px;
+}
+
+.filter-button{
+  width: 15%;
+  margin: 0 10px;
+}
+
+.range-wrapper{
+  display: flex;
+  flex-direction: row;
+}
+
+.range-wrapper input{
+  width: 30%;
+}
+
+.range-label{
+  margin: 0 5px;
 }
 
 .added-params{
