@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: music-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/music_db
+    username: music
+    password: music
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
