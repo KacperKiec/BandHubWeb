@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+#      routes:
+#        - id: music-service
+#          uri: lb://MUSIC-SERVICE
+#          predicates:
+#            - Path=/musician/**, /band/**
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+server:
+  port: 9000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

@@ -1,10 +1,10 @@
-package io.kk.bandhub.musicservice;
+package io.kk.bandhub.eurekaserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BandHubBackendApplicationTests {
+class EurekaServerApplicationTests {
 
     @Test
     void contextLoads() {
