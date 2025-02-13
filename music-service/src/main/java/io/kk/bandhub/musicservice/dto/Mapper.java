@@ -1,12 +1,19 @@
 package io.kk.bandhub.musicservice.dto;
 
 import io.kk.bandhub.musicservice.model.*;
+import io.kk.bandhub.musicservice.service.AccountServiceClient;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class Mapper {
+
+    private final AccountServiceClient accountServiceClient;
+
+    public Mapper(AccountServiceClient accountServiceClient) {
+        this.accountServiceClient = accountServiceClient;
+    }
 
     public BandDTO toBandDTO(Band band) {
         BandDTO dto = new BandDTO();
@@ -31,12 +38,31 @@ public class Mapper {
         dto.setBio(musician.getBio());
         dto.setLookingBand(musician.getIsLookingBand());
 
-        var genres = musician.getMusicianGenres().stream().map(MusicianGenre::getGenre).collect(Collectors.toSet());
-        dto.setGenres(genres);
+        if(musician.getMusicianGenres() != null) {
+            var genres = musician.getMusicianGenres().stream()
+                    .map(MusicianGenre::getGenre)
+                    .collect(Collectors.toSet());
+            dto.setGenres(genres);
+        }
 
-        var instruments = musician.getMusicianInstruments().stream().map(MusicianInstrument::getInstrument).collect(Collectors.toSet());
-        dto.setInstruments(instruments);
+        if(musician.getMusicianInstruments() != null) {
+            var instruments = musician.getMusicianInstruments().stream()
+                    .map(MusicianInstrument::getInstrument)
+                    .collect(Collectors.toSet());
+            dto.setInstruments(instruments);
+        }
+
+        AccountDTO account = accountServiceClient.getAccount(musician.getId());
+
+        if (account != null) {
+            dto.setFirstName(account.getFirstName());
+            dto.setLastName(account.getLastName());
+            dto.setBirthday(account.getBirthDate());
+            dto.setGender(account.getGender() != null ? (account.getGender() ? "Male" : "Female") : null);
+            dto.setCity(account.getCity());
+        }
 
         return dto;
     }
+
 }

@@ -3,8 +3,10 @@ package io.kk.bandhub.musicservice.service;
 import io.kk.bandhub.musicservice.dto.BandDTO;
 import io.kk.bandhub.musicservice.dto.Mapper;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
-import io.kk.bandhub.musicservice.exception.BandNotFoundException;
-import io.kk.bandhub.musicservice.exception.MusicianNotFoundException;
+import io.kk.bandhub.musicservice.exception.BandError;
+import io.kk.bandhub.musicservice.exception.BandException;
+import io.kk.bandhub.musicservice.exception.MusicianError;
+import io.kk.bandhub.musicservice.exception.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.BandRepository;
 import io.kk.bandhub.musicservice.repository.BandSpecification;
@@ -36,7 +38,7 @@ public class BandService {
     public BandDTO save(BandDTO bandDTO) {
 
         Musician founder = musicianRepository.findMusicianById(bandDTO.getFounderId())
-                .orElseThrow(() ->new MusicianNotFoundException("Musician with given id was not found"));
+                .orElseThrow(() ->new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
 
         Band band = new Band();
         band.setName(bandDTO.getName());
@@ -51,7 +53,7 @@ public class BandService {
 
         for(MusicianDTO musicianDTO : bandDTO.getMusicians()) {
             var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
-                    () -> new MusicianNotFoundException("Musician with given id was not found")
+                    () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
             );
             boolean isFounder = musicianDTO.getId().equals(bandDTO.getFounderId());
             BandMusician bandMusician = new BandMusician(band, musician, LocalDate.now(), isFounder);
@@ -65,7 +67,7 @@ public class BandService {
 
     public BandDTO getById(int id) {
         var band = bandRepository.findBandById(id)
-                .orElseThrow(() -> new BandNotFoundException("Band with given id was not found"));
+                .orElseThrow(() -> new BandException(BandError.BAND_NOT_FOUND));
         return mapper.toBandDTO(band);
     }
 
@@ -77,7 +79,7 @@ public class BandService {
             String name,
             List<String> cities,
             Integer founderId,
-            List<Genre> genres,
+            List<String> genres,
             Boolean isLookingMembers,
             Pageable pageable) {
 
@@ -92,7 +94,7 @@ public class BandService {
     @Transactional
     public BandDTO updateBand(BandDTO bandDTO) {
         var band = bandRepository.findBandById(bandDTO.getId()).orElseThrow(
-                () ->new BandNotFoundException("Band with given id was not found"));
+                () ->new BandException(BandError.BAND_NOT_FOUND));
 
         band.setName(bandDTO.getName());
         band.setIsLookingMembers(bandDTO.isLookingMembers());
@@ -124,7 +126,7 @@ public class BandService {
 
             if (!musicianExistsInBand) {
                 var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
-                        () -> new MusicianNotFoundException("Musician with id " + musicianDTO.getId() + " not found")
+                        () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
                 );
 
                 BandMusician newBandMusician = new BandMusician(band, musician, LocalDate.now(), false);
@@ -147,7 +149,7 @@ public class BandService {
     @Transactional
     public void deleteBand(int bandId) {
         var band = bandRepository.findBandById(bandId).orElseThrow(
-                () -> new BandNotFoundException("Band with given id was not found"));
+                () -> new BandException(BandError.BAND_NOT_FOUND));
         bandRepository.deleteBandById(bandId);
     }
 

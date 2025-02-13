@@ -39,7 +39,7 @@ public class BandSpecification {
     }
 
 
-    public static Specification<Band> hasGenres(List<Genre> genres) {
+    public static Specification<Band> hasGenres(List<String> genres) {
         return (root, query, builder) -> {
             if (genres == null || genres.isEmpty()) {
                 return builder.conjunction();
@@ -48,7 +48,7 @@ public class BandSpecification {
             Join<Band, BandGenre> bandGenreJoin = root.join("bandGenres");
             Join<BandGenre, Genre> genreJoin = bandGenreJoin.join("genre");
 
-            return genreJoin.get("id").in(genres.stream().map(Genre::getId).toList());
+            return genreJoin.get("name").in(genres);
         };
     }
 

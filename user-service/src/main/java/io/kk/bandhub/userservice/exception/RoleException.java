@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public class RoleException extends IllegalArgumentException {
 
-    private RoleError status;
+    private final RoleError status;
 
-    public RoleException(RoleError status) {super(status.getMessage());}
+    public RoleException(RoleError status) {
+        super(status.getMessage());
+        this.status = status;
+    }
 }

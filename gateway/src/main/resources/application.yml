@@ -3,15 +3,19 @@ spring:
     name: gateway-service
   cloud:
     gateway:
-#      routes:
-#        - id: music-service
-#          uri: lb://MUSIC-SERVICE
-#          predicates:
-#            - Path=/musician/**, /band/**
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+        - id: music-service
+          uri: lb://MUSIC-SERVICE
+          predicates:
+            - Path=/musician/**, /band/**
+        - id: user-service
+          uri: lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/account/**, /role/**
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
 server:
   port: 9000
 eureka:

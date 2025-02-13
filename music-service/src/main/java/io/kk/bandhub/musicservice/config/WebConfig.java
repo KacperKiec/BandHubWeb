@@ -8,4 +8,5 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @Configuration
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class WebConfig {
+
 }

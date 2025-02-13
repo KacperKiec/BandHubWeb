@@ -13,9 +13,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class MusicianDTO {
+    @NotNull(message = "Id cannot be null")
     private Integer id;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private LocalDate birthday;
     private String gender;
     private String city;

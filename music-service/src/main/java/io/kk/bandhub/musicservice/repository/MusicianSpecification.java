@@ -20,7 +20,7 @@ public class MusicianSpecification {
         };
     }
 
-    public static Specification<Musician> hasGenres(List<Genre> genres) {
+    public static Specification<Musician> hasGenres(List<String> genres) {
         return (root, query, builder) -> {
             if (genres == null || genres.isEmpty()) {
                 return builder.conjunction();
@@ -29,11 +29,11 @@ public class MusicianSpecification {
             Join<Musician, MusicianGenre> musicianGenreJoin = root.join("musicianGenres");
             Join<MusicianGenre, Genre> genreJoin = musicianGenreJoin.join("genre");
 
-            return genreJoin.get("id").in(genres.stream().map(Genre::getId).toList());
+            return genreJoin.get("name").in(genres);
         };
     }
 
-    public static Specification<Musician> hasInstruments(List<Instrument> instruments) {
+    public static Specification<Musician> hasInstruments(List<String> instruments) {
         return (root, query, builder) -> {
             if(instruments == null || instruments.isEmpty()) {
                 return builder.conjunction();
@@ -42,7 +42,7 @@ public class MusicianSpecification {
             Join<Musician, MusicianInstrument> musicianInstrumentJoin = root.join("musicianInstruments");
             Join<MusicianInstrument, Instrument> instrumentJoin = musicianInstrumentJoin.join("instrument");
 
-            return instrumentJoin.get("id").in(instruments.stream().map(Instrument::getId).toList());
+            return instrumentJoin.get("name").in(instruments);
         };
     }
 

@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public class AccountException extends IllegalArgumentException {
 
-    private AccountError status;
+    private final AccountError status;
 
-    public AccountException(AccountError status) {super(status.getMessage());}
+    public AccountException(AccountError status) {
+        super(status.getMessage());
+        this.status = status;
+    }
 }

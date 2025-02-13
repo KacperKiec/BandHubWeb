@@ -71,7 +71,7 @@ public class AccountSpecification {
         };
     }
 
-    public static Specification<Account> hasRoles(List<RoleDTO> roles) {
+    public static Specification<Account> hasRoles(List<String> roles) {
         return (root, query, builder) -> {
             if (roles == null || roles.isEmpty()) {
                 return builder.conjunction();
@@ -80,7 +80,7 @@ public class AccountSpecification {
             Join<Account, AccountRole> accountRoleJoin = root.join("accountRoles");
             Join<AccountRole, Role> roleJoin = accountRoleJoin.join("role");
 
-            return roleJoin.get("id").in(roles.stream().map(RoleDTO::getId).toList());
+            return roleJoin.get("name").in(roles);
         };
     }
 

@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,20 +41,18 @@ public class MusicianController {
     }
 
     @GetMapping(value = "/all")
-    ResponseEntity<Page<MusicianDTO>> getAllMusicians(@RequestParam (defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    ResponseEntity<Page<MusicianDTO>> getAllMusicians(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(service.getAll(pageable));
     }
 
     @GetMapping(value = "/search")
     ResponseEntity<Page<MusicianDTO>> searchMusician(
-            @RequestParam (defaultValue = "0") int page,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) List<Genre> genres,
-            @RequestParam(required = false) List<Instrument> instruments,
+            @RequestParam(required = false) List<String> genres,
+            @RequestParam(required = false) List<String> instruments,
             @RequestParam(required = false) Boolean isLookingForBand) {
 
-        Pageable pageable = PageRequest.of(page, 10);
         var musicians = service.findMusiciansByFilters(cities, genres, instruments, isLookingForBand, pageable);
         return ResponseEntity.ok(musicians);
     }

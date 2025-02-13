@@ -5,7 +5,6 @@ import io.kk.bandhub.userservice.dto.RoleDTO;
 import io.kk.bandhub.userservice.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -82,7 +81,7 @@ public class AccountController {
             @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) Boolean gender,
             @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) List<RoleDTO> roles) {
+            @RequestParam(required = false) List<String> roles) {
 
         var accounts = accountService.findAllWithSpec(email, firstName, lastName, minAge, maxAge, gender, cities, roles);
         return ResponseEntity.ok(accounts);
@@ -97,7 +96,7 @@ public class AccountController {
             @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) Boolean gender,
             @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) List<RoleDTO> roles,
+            @RequestParam(required = false) List<String> roles,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
         var accounts = accountService.findAllWithSpec(email, firstName, lastName, minAge, maxAge, gender, cities, roles, pageable);

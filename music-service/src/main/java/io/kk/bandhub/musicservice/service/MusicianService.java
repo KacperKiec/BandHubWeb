@@ -2,7 +2,8 @@ package io.kk.bandhub.musicservice.service;
 
 import io.kk.bandhub.musicservice.dto.Mapper;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
-import io.kk.bandhub.musicservice.exception.MusicianNotFoundException;
+import io.kk.bandhub.musicservice.exception.MusicianError;
+import io.kk.bandhub.musicservice.exception.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.MusicianRepository;
 import io.kk.bandhub.musicservice.repository.MusicianSpecification;
@@ -27,31 +28,43 @@ public class MusicianService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public MusicianDTO save(MusicianDTO musicianDTO) {
+
+        var existingMusician = musicianRepository.findMusicianById(musicianDTO.getId());
+        if(existingMusician.isPresent()) {
+            throw new MusicianException(MusicianError.MUSICIAN_ALREADY_EXISTS);
+        }
+
         Musician musician = new Musician();
         musician.setId(musicianDTO.getId());
         musician.setBio(musicianDTO.getBio());
         musician.setIsLookingBand(musicianDTO.isLookingBand());
 
-        for(Genre genre : musicianDTO.getGenres()) {
-            MusicianGenre musicianGenre = new MusicianGenre(musician, genre);
-            musician.addMusicianGenre(musicianGenre);
+        if(musicianDTO.getGenres() != null) {
+            for (Genre genre : musicianDTO.getGenres()) {
+                MusicianGenre musicianGenre = new MusicianGenre(musician, genre);
+                musician.addMusicianGenre(musicianGenre);
+            }
         }
 
-        for (Instrument instrument : musicianDTO.getInstruments()) {
-            MusicianInstrument musicianInstrument = new MusicianInstrument(musician, instrument);
-            musician.addMusicianInstrument(musicianInstrument);
+        if(musicianDTO.getInstruments() != null) {
+            for (Instrument instrument : musicianDTO.getInstruments()) {
+                MusicianInstrument musicianInstrument = new MusicianInstrument(musician, instrument);
+                musician.addMusicianInstrument(musicianInstrument);
+            }
         }
 
-        var savedMusician = musicianRepository.save(musician);
+        var mappedMusician = mapper.toMusicianDTO(musician);
+        musicianRepository.save(musician);
 
-        return mapper.toMusicianDTO(savedMusician);
+        return mappedMusician;
     }
 
     @Transactional
     public MusicianDTO updateMusician(MusicianDTO musicianDTO) {
         var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
-                () ->new MusicianNotFoundException("Musician with given id was not found"));
+                () ->new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
 
         musician.setId(musicianDTO.getId());
         musician.setBio(musicianDTO.getBio());
@@ -104,14 +117,14 @@ public class MusicianService {
 
     public MusicianDTO getById(int id) {
         var musician = musicianRepository.findMusicianById(id)
-                .orElseThrow(() -> new MusicianNotFoundException("Musician with given id was not found"));
+                .orElseThrow(() -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
         return mapper.toMusicianDTO(musician);
     }
 
     public Page<MusicianDTO> findMusiciansByFilters(
             List<String> cities,
-            List<Genre> genres,
-            List<Instrument> instruments,
+            List<String> genres,
+            List<String> instruments,
             Boolean isLookingForBand,
             Pageable pageable) {
 
@@ -126,7 +139,7 @@ public class MusicianService {
     @Transactional
     public void deleteMusician(int musicianId) {
         var musician = musicianRepository.findMusicianById(musicianId).orElseThrow(
-                () -> new MusicianNotFoundException("Musician with given id was not found")
+                () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
         );
         musicianRepository.deleteMusicianById(musicianId);
     }

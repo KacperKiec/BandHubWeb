@@ -9,7 +9,6 @@ import io.kk.bandhub.userservice.exception.RoleError;
 import io.kk.bandhub.userservice.exception.RoleException;
 import io.kk.bandhub.userservice.model.Account;
 import io.kk.bandhub.userservice.model.AccountRole;
-import io.kk.bandhub.userservice.model.Role;
 import io.kk.bandhub.userservice.repository.AccountRepository;
 import io.kk.bandhub.userservice.repository.AccountSpecification;
 import io.kk.bandhub.userservice.repository.RoleRepository;
@@ -108,7 +107,7 @@ public class AccountService {
             Integer maxAge,
             Boolean gender,
             List<String> cities,
-            List<RoleDTO> roles ) {
+            List<String> roles ) {
 
         Specification<Account> spec = Specification.where(AccountSpecification.hasEmail(email))
                 .and(AccountSpecification.hasFirstName(firstName))
@@ -129,7 +128,7 @@ public class AccountService {
             Integer maxAge,
             Boolean gender,
             List<String> cities,
-            List<RoleDTO> roles,
+            List<String> roles,
             Pageable pageable ) {
 
         Specification<Account> spec = Specification.where(AccountSpecification.hasEmail(email))
