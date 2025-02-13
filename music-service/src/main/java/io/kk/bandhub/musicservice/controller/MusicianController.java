@@ -1,12 +1,9 @@
 package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
-import io.kk.bandhub.musicservice.model.Genre;
-import io.kk.bandhub.musicservice.model.Instrument;
 import io.kk.bandhub.musicservice.service.MusicianService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -60,6 +57,12 @@ public class MusicianController {
     @PutMapping()
     ResponseEntity<MusicianDTO> updateMusician(@RequestBody @Valid MusicianDTO musicianDTO) {
         return ResponseEntity.ok(service.updateMusician(musicianDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    ResponseEntity<Void> deleteMusician(@PathVariable Integer id) {
+        service.deleteMusician(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

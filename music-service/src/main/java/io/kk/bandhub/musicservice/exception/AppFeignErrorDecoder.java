@@ -11,6 +11,10 @@ public class AppFeignErrorDecoder implements ErrorDecoder {
         if (response.status() == 404) {
             throw new MusicianException(MusicianError.ACCOUNT_DOESNT_EXISTS);
         }
-        return null;
+        if (response.status() == 500) {
+            return new Exception("Internal server error");
+        }
+
+        return new Exception("General Feign Exception");
     }
 }

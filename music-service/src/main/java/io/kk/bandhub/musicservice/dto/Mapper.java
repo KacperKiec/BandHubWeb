@@ -33,6 +33,18 @@ public class Mapper {
     }
 
     public MusicianDTO toMusicianDTO(Musician musician) {
+        AccountDTO account = accountServiceClient.getAccount(musician.getId());
+
+        return setDTOFields(musician, account);
+    }
+
+    public MusicianDTO toMusicianDTOReg(Musician musician) {
+        AccountDTO account = accountServiceClient.getAccountInRegistration(musician.getId());
+
+        return setDTOFields(musician, account);
+    }
+
+    private MusicianDTO setDTOFields(Musician musician, AccountDTO account) {
         MusicianDTO dto = new MusicianDTO();
         dto.setId(musician.getId());
         dto.setBio(musician.getBio());
@@ -52,7 +64,6 @@ public class Mapper {
             dto.setInstruments(instruments);
         }
 
-        AccountDTO account = accountServiceClient.getAccount(musician.getId());
 
         if (account != null) {
             dto.setFirstName(account.getFirstName());

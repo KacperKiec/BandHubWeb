@@ -5,8 +5,8 @@ import io.kk.bandhub.musicservice.dto.MusicianDTO;
 import io.kk.bandhub.musicservice.exception.MusicianError;
 import io.kk.bandhub.musicservice.exception.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
-import io.kk.bandhub.musicservice.repository.MusicianRepository;
-import io.kk.bandhub.musicservice.repository.MusicianSpecification;
+import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
+import io.kk.bandhub.musicservice.repository.musician.MusicianSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +55,7 @@ public class MusicianService {
             }
         }
 
-        var mappedMusician = mapper.toMusicianDTO(musician);
+        var mappedMusician = mapper.toMusicianDTOReg(musician);
         musicianRepository.save(musician);
 
         return mappedMusician;
