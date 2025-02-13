@@ -15,6 +15,20 @@ public class Mapper {
         this.accountServiceClient = accountServiceClient;
     }
 
+    public GenreDTO toGenreDTO(Genre genre) {
+        GenreDTO genreDTO = new GenreDTO();
+        genreDTO.setId(genre.getId());
+        genreDTO.setName(genre.getName());
+        return genreDTO;
+    }
+
+    public InstrumentDTO toInstrumentDTO(Instrument instrument) {
+        InstrumentDTO instrumentDTO = new InstrumentDTO();
+        instrumentDTO.setId(instrument.getId());
+        instrumentDTO.setName(instrument.getName());
+        return instrumentDTO;
+    }
+
     public BandDTO toBandDTO(Band band) {
         BandDTO dto = new BandDTO();
         dto.setId(band.getId());

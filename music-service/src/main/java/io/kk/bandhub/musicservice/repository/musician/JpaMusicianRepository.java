@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.repository;
+package io.kk.bandhub.musicservice.repository.musician;
 
 import io.kk.bandhub.musicservice.model.Musician;
 import org.springframework.data.jpa.repository.JpaRepository;

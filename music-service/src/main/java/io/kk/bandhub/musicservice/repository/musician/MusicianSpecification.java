@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.repository;
+package io.kk.bandhub.musicservice.repository.musician;
 
 import io.kk.bandhub.musicservice.model.*;
 import jakarta.persistence.criteria.Join;
