@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=venue
+      - POSTGRES_PASSWORD=venue
+      - POSTGRES_DB=venue_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - venue_db_vol:/var/lib/postgresql/data
+    networks:
+      - venue-network
+
+volumes:
+  venue_db_vol:
+
+networks:
+  venue-network:
+    driver: bridge

@@ -62,7 +62,7 @@ public class Mapper {
         MusicianDTO dto = new MusicianDTO();
         dto.setId(musician.getId());
         dto.setBio(musician.getBio());
-        dto.setLookingBand(musician.getIsLookingBand());
+        dto.setIsLookingBand(musician.getIsLookingBand());
 
         if(musician.getMusicianGenres() != null) {
             var genres = musician.getMusicianGenres().stream()

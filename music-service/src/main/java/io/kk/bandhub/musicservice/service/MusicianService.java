@@ -39,7 +39,7 @@ public class MusicianService {
         Musician musician = new Musician();
         musician.setId(musicianDTO.getId());
         musician.setBio(musicianDTO.getBio());
-        musician.setIsLookingBand(musicianDTO.isLookingBand());
+        musician.setIsLookingBand(musicianDTO.getIsLookingBand());
 
         if(musicianDTO.getGenres() != null) {
             for (Genre genre : musicianDTO.getGenres()) {
@@ -68,7 +68,7 @@ public class MusicianService {
 
         musician.setId(musicianDTO.getId());
         musician.setBio(musicianDTO.getBio());
-        musician.setIsLookingBand(musicianDTO.isLookingBand());
+        musician.setIsLookingBand(musicianDTO.getIsLookingBand());
 
         for (Genre genre : musicianDTO.getGenres()) {
             boolean genreExistsInMusician = musician.getMusicianGenres().stream()

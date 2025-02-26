@@ -25,7 +25,7 @@ public class MusicianDTO {
     private String bio;
 
     @NotNull(message = "Looking band flag cannot be null")
-    private boolean isLookingBand;
+    private Boolean isLookingBand;
 
     private Set<Genre> genres;
     private Set<Instrument> instruments;
