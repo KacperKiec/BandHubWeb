@@ -11,8 +11,8 @@ public class VenueDTO {
 
     @NotNull
     private Integer ownerId;
-    private String ownerFirstName;
-    private String ownerLastname;
+
+    private AccountDTO ownerDTO;
 
     @NotNull
     private String name;

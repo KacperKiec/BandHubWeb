@@ -2,8 +2,8 @@ package io.kk.bandhub.musicservice.service;
 
 import io.kk.bandhub.musicservice.dto.InstrumentDTO;
 import io.kk.bandhub.musicservice.dto.Mapper;
-import io.kk.bandhub.musicservice.exception.InstrumentError;
-import io.kk.bandhub.musicservice.exception.InstrumentException;
+import io.kk.bandhub.musicservice.exception.instrument.InstrumentError;
+import io.kk.bandhub.musicservice.exception.instrument.InstrumentException;
 import io.kk.bandhub.musicservice.model.Instrument;
 import io.kk.bandhub.musicservice.repository.instrument.InstrumentRepository;
 import org.springframework.data.domain.Page;

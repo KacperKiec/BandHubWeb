@@ -34,7 +34,13 @@ public class VenueService {
         }
 
         Venue venue = new Venue();
-        return setVenueFields(dto, venue);
+        setVenueFields(dto, venue);
+
+        var mappedVenue = mapper.toVenueDTOReg(venue);
+        venueRepository.save(venue);
+        mappedVenue.setId(venue.getId());
+
+        return mappedVenue;
     }
 
     @Transactional
@@ -43,17 +49,17 @@ public class VenueService {
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
         );
 
-        return setVenueFields(venueDTO, existingVenue);
+        return mapper.toVenueDTO(setVenueFields(venueDTO, existingVenue));
     }
 
-    private VenueDTO setVenueFields(VenueDTO venueDTO, Venue existingVenue) {
-        existingVenue.setName(venueDTO.getName());
-        existingVenue.setDescription(venueDTO.getDescription());
-        existingVenue.setCapacity(venueDTO.getCapacity());
-        existingVenue.setAddress(venueDTO.getAddress());
-        existingVenue.setCity(venueDTO.getCity());
-        existingVenue.setOwnerId(venueDTO.getOwnerId());
-        return mapper.toVenueDTO(venueRepository.save(existingVenue));
+    private Venue setVenueFields(VenueDTO venueDTO, Venue venue) {
+        venue.setName(venueDTO.getName());
+        venue.setDescription(venueDTO.getDescription());
+        venue.setCapacity(venueDTO.getCapacity());
+        venue.setAddress(venueDTO.getAddress());
+        venue.setCity(venueDTO.getCity());
+        venue.setOwnerId(venueDTO.getOwnerId());
+        return venue;
     }
 
     public VenueDTO findById(Integer id) {

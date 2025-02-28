@@ -51,7 +51,7 @@ public class OfferService {
 
     private OfferDTO setOfferFields(OfferDTO offerDTO, Offer offer) {
         offer.setDate(offerDTO.getDate());
-        offer.setStatus(OfferStatus.ACTIVE);
+        offer.setStatus(OfferStatus.active);
         offer.setEndTime(offerDTO.getEndTime());
         offer.setStartTime(offerDTO.getStartTime());
         offer.setPricePerHour(BigDecimal.valueOf(offerDTO.getPricePerHour()));

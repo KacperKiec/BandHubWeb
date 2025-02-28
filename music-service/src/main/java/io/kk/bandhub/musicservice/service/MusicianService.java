@@ -2,8 +2,8 @@ package io.kk.bandhub.musicservice.service;
 
 import io.kk.bandhub.musicservice.dto.Mapper;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
-import io.kk.bandhub.musicservice.exception.MusicianError;
-import io.kk.bandhub.musicservice.exception.MusicianException;
+import io.kk.bandhub.musicservice.exception.musician.MusicianError;
+import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianSpecification;

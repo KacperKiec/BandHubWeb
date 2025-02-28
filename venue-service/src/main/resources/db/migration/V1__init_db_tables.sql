@@ -8,8 +8,6 @@ CREATE TABLE venue (
     description varchar(150)
 );
 
-CREATE TYPE offer_status AS ENUM ('ACTIVE', 'CLAIMED', 'CANCELED');
-
 CREATE TABLE offer (
     id SERIAL PRIMARY KEY,
     venue_id INTEGER NOT NULL,
@@ -17,7 +15,7 @@ CREATE TABLE offer (
     date date NOT NULL,
     start_time time NOT NULL,
     end_time time NOT NULL,
-    status offer_status NOT NULL,
+    status varchar(20) CHECK (status IN ('ACTIVE', 'CLAIMED', 'CANCELED')) NOT NULL,
     FOREIGN KEY (venue_id) REFERENCES venue(id) ON DELETE CASCADE
 );
 

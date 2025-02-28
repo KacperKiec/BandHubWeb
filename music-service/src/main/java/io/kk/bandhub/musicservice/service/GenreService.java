@@ -2,8 +2,8 @@ package io.kk.bandhub.musicservice.service;
 
 import io.kk.bandhub.musicservice.dto.GenreDTO;
 import io.kk.bandhub.musicservice.dto.Mapper;
-import io.kk.bandhub.musicservice.exception.GenreError;
-import io.kk.bandhub.musicservice.exception.GenreException;
+import io.kk.bandhub.musicservice.exception.genre.GenreError;
+import io.kk.bandhub.musicservice.exception.genre.GenreException;
 import io.kk.bandhub.musicservice.model.Genre;
 import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
 import org.springframework.data.domain.Page;

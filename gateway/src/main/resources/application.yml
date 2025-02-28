@@ -12,6 +12,10 @@ spring:
           uri: lb://ACCOUNT-SERVICE
           predicates:
             - Path=/account/**, /role/**
+        - id: venue-service
+          uri: lb://VENUE-SERVICE
+          predicates:
+            - Path=/venue/**, /booking/**, /offer/**
 #      discovery:
 #        locator:
 #          enabled: true

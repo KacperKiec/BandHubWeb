@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.exception;
+package io.kk.bandhub.musicservice.exception.instrument;
 
 import lombok.Getter;
 

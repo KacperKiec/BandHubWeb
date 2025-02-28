@@ -1,6 +1,10 @@
 package io.kk.bandhub.musicservice.exception;
 
 import io.kk.bandhub.musicservice.dto.RegistrationException;
+import io.kk.bandhub.musicservice.exception.band.BandError;
+import io.kk.bandhub.musicservice.exception.band.BandException;
+import io.kk.bandhub.musicservice.exception.musician.MusicianError;
+import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

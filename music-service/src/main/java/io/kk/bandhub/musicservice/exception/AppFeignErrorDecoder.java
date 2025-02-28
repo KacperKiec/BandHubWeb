@@ -2,6 +2,8 @@ package io.kk.bandhub.musicservice.exception;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import io.kk.bandhub.musicservice.exception.musician.MusicianError;
+import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import org.springframework.stereotype.Controller;
 
 @Controller

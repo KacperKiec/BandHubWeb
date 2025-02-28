@@ -1,12 +1,12 @@
 package io.kk.bandhub.venueservice.model;
 
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,7 +46,7 @@ public class Offer {
     private LocalTime endTime;
 
     @NotNull
-    @Column(name = "status", columnDefinition = "offer_status not null")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
 

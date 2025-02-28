@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "booking")
+@RequestMapping(value = "/booking")
 public class BookingController {
 
     private final BookingService bookingService;

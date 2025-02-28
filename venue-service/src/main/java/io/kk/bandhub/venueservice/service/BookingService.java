@@ -40,7 +40,7 @@ public class BookingService {
         var offer = offerRepository.findById(bookingDTO.getOfferId()).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
         );
-        offer.setStatus(OfferStatus.CLAIMED);
+        offer.setStatus(OfferStatus.claimed);
         booking.setOffer(offer);
         offerRepository.save(offer);
         return mapper.toBookingDTO(bookingRepository.save(booking));
