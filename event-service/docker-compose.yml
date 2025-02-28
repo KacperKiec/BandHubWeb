@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=event
+      - POSTGRES_PASSWORD=event
+      - POSTGRES_DB=event_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - event_db_vol:/var/lib/postgresql/data
+    networks:
+      - event-network
+
+volumes:
+  event_db_vol:
+
+networks:
+  event-network:
+    driver: bridge
