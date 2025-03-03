@@ -7,7 +7,7 @@ spring:
         - id: music-service
           uri: lb://MUSIC-SERVICE
           predicates:
-            - Path=/musician/**, /band/**
+            - Path=/musician/**, /band/**, /genre/**, /instrument/**
         - id: user-service
           uri: lb://ACCOUNT-SERVICE
           predicates:
@@ -16,6 +16,10 @@ spring:
           uri: lb://VENUE-SERVICE
           predicates:
             - Path=/venue/**, /booking/**, /offer/**
+        - id: event-service
+          uri: lb://EVENT-SERVICE
+          predicates:
+            - Path=/event/**
 #      discovery:
 #        locator:
 #          enabled: true

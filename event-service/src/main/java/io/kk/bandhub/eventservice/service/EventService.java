@@ -29,7 +29,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventDTO createEvent(EventDTO eventDTO) {
+    public void createEvent(EventDTO eventDTO) {
         var existingEvent = eventRepository.findByVenueIdAndOrganizerIdAndDateAndStartTimeAndName(eventDTO.getVenueId(), eventDTO.getOrganizerId(), eventDTO.getDate(), eventDTO.getStartTime(), eventDTO.getName());
         if (existingEvent.isPresent()) {
             throw new EventException(EventError.EVENT_ALREADY_EXISTS);
@@ -45,12 +45,10 @@ public class EventService {
         event.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
         event.setDescription(eventDTO.getDescription());
         event.setName(eventDTO.getName());
+        event.setBandId(eventDTO.getBandId());
 
         var mappedEvent = mapper.toEventDTO(event);
         eventRepository.save(event);
-
-        mappedEvent.setId(event.getId());
-        return mappedEvent;
     }
 
     @Transactional
@@ -67,8 +65,10 @@ public class EventService {
         existingEvent.setName(eventDTO.getName());
         existingEvent.setDescription(eventDTO.getDescription());
         existingEvent.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
+        existingEvent.setBandId(eventDTO.getBandId());
 
         var mappedEvent = mapper.toEventDTO(existingEvent);
+        mappedEvent.setOrganizerDTO(eventDTO.getOrganizerDTO());
         eventRepository.save(existingEvent);
         return mappedEvent;
     }

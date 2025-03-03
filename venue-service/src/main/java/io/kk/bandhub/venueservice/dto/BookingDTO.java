@@ -12,8 +12,12 @@ public class BookingDTO {
 
     @NotNull
     private Integer offerId;
-
     private String venueName;
+
+    @NotNull
+    private Boolean toPublish;
+
+    private EventDTO event;
 
     @NotNull
     private Integer tenantId;

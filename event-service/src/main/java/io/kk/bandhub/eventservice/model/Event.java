@@ -55,4 +55,7 @@ public class Event {
     @Column(name = "ticket_price", precision = 10, scale = 2)
     private BigDecimal ticketPrice;
 
+    @Column(name = "band_id")
+    private Integer bandId;
+
 }

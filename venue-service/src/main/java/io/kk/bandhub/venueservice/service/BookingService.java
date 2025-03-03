@@ -1,7 +1,6 @@
 package io.kk.bandhub.venueservice.service;
 
-import io.kk.bandhub.venueservice.dto.BookingDTO;
-import io.kk.bandhub.venueservice.dto.Mapper;
+import io.kk.bandhub.venueservice.dto.*;
 import io.kk.bandhub.venueservice.exception.OfferError;
 import io.kk.bandhub.venueservice.exception.OfferException;
 import io.kk.bandhub.venueservice.model.Booking;
@@ -10,6 +9,7 @@ import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
 import io.kk.bandhub.venueservice.repository.booking.BookingSpecification;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,11 +23,13 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final OfferRepository offerRepository;
+    private final RabbitTemplate rabbitTemplate;
     private final Mapper mapper;
 
-    public BookingService(BookingRepository bookingRepository, OfferRepository offerRepository, Mapper mapper) {
+    public BookingService(BookingRepository bookingRepository, OfferRepository offerRepository, RabbitTemplate rabbitTemplate, Mapper mapper) {
         this.bookingRepository = bookingRepository;
         this.offerRepository = offerRepository;
+        this.rabbitTemplate = rabbitTemplate;
         this.mapper = mapper;
     }
 
@@ -40,10 +42,20 @@ public class BookingService {
         var offer = offerRepository.findById(bookingDTO.getOfferId()).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
         );
+        if(offer.getStatus() != OfferStatus.active) {
+            throw new OfferException(OfferError.OFFER_NOT_FOUND);
+        }
         offer.setStatus(OfferStatus.claimed);
         booking.setOffer(offer);
         offerRepository.save(offer);
-        return mapper.toBookingDTO(bookingRepository.save(booking));
+        var mappedBooking = mapper.toBookingDTO(bookingRepository.save(booking));
+        mappedBooking.setToPublish(bookingDTO.getToPublish());
+
+        if(bookingDTO.getToPublish()) {
+            rabbitTemplate.convertAndSend("event-queue", bookingDTO.getEvent());
+        }
+
+        return mappedBooking;
     }
 
     public void deleteBooking(Integer bookingId) {
@@ -66,10 +78,13 @@ public class BookingService {
     public Page<BookingDTO> getBookings(
             Pageable pageable,
             Integer tenantId,
-            Integer offerId) {
+            Integer offerId,
+            OfferStatus status) {
 
         Specification<Booking> spec = BookingSpecification.hasOfferId(offerId)
-                .and(BookingSpecification.hasTenantId(tenantId));
+                .and(BookingSpecification.hasTenantId(tenantId))
+                .and(BookingSpecification.hasStatus(status));
+
         return bookingRepository.findAll(spec, pageable).map(mapper::toBookingDTO);
     }
 }

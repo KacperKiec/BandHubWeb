@@ -1,15 +1,16 @@
 package io.kk.bandhub.musicservice.service;
 
-import io.kk.bandhub.musicservice.dto.BandDTO;
-import io.kk.bandhub.musicservice.dto.Mapper;
-import io.kk.bandhub.musicservice.dto.MusicianDTO;
+import io.kk.bandhub.musicservice.dto.*;
 import io.kk.bandhub.musicservice.exception.band.BandError;
 import io.kk.bandhub.musicservice.exception.band.BandException;
+import io.kk.bandhub.musicservice.exception.genre.GenreError;
+import io.kk.bandhub.musicservice.exception.genre.GenreException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.band.BandRepository;
 import io.kk.bandhub.musicservice.repository.band.BandSpecification;
+import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -27,14 +28,17 @@ import java.util.List;
 public class BandService {
     private final BandRepository bandRepository;
     private final MusicianRepository musicianRepository;
+    private final GenreRepository genreRepository;
     private final Mapper mapper;
 
-    public BandService(final BandRepository bandRepository, MusicianRepository musicianRepository, Mapper mapper) {
+    public BandService(final BandRepository bandRepository, MusicianRepository musicianRepository, GenreRepository genreRepository, Mapper mapper) {
         this.bandRepository = bandRepository;
         this.musicianRepository = musicianRepository;
+        this.genreRepository = genreRepository;
         this.mapper = mapper;
     }
 
+    @Transactional
     public BandDTO save(BandDTO bandDTO) {
 
         Musician founder = musicianRepository.findMusicianById(bandDTO.getFounderId())
@@ -46,8 +50,11 @@ public class BandService {
         band.setCity(bandDTO.getCity());
         band.setIsLookingMembers(bandDTO.isLookingMembers());
 
-        for(Genre genre : bandDTO.getGenres()) {
-            BandGenre bandGenre = new BandGenre(band, genre);
+        for(GenreDTO genre : bandDTO.getGenres()) {
+            var exitingGenre = genreRepository.findById(genre.getId()).orElseThrow(
+                    () -> new GenreException(GenreError.GENRE_NOT_FOUND)
+            );
+            BandGenre bandGenre = new BandGenre(band, exitingGenre);
             band.addBandGenre(bandGenre);
         }
 
@@ -69,6 +76,13 @@ public class BandService {
         var band = bandRepository.findBandById(id)
                 .orElseThrow(() -> new BandException(BandError.BAND_NOT_FOUND));
         return mapper.toBandDTO(band);
+    }
+
+    public BandEvtDTO getBandEvtById(int id) {
+        var band = bandRepository.findBandById(id).orElseThrow(
+                () -> new BandException(BandError.BAND_NOT_FOUND)
+        );
+        return mapper.toBandEvtDTO(band);
     }
 
     public Page<BandDTO> getAll(Pageable pageable) {
@@ -101,19 +115,22 @@ public class BandService {
         band.setCity(bandDTO.getCity());
         band.setBio(bandDTO.getBio());
 
-        for(Genre genre : bandDTO.getGenres()) {
+        for(GenreDTO genre : bandDTO.getGenres()) {
+            var g = genreRepository.findById(genre.getId()).orElseThrow(
+                    () -> new GenreException(GenreError.GENRE_NOT_FOUND)
+            );
             boolean genreExistsInBand = band.getBandGenres().stream()
-                    .anyMatch(bandGenre -> bandGenre.getGenre().equals(genre));
+                    .anyMatch(bandGenre -> bandGenre.getGenre().equals(g));
 
             if (!genreExistsInBand) {
-                BandGenre newBandGenre = new BandGenre(band, genre);
+                BandGenre newBandGenre = new BandGenre(band, g);
                 band.addBandGenre(newBandGenre);
             }
         }
 
         for (BandGenre bandGenre : band.getBandGenres()) {
             boolean genreExistsInDTO = bandDTO.getGenres().stream()
-                    .anyMatch(genre -> bandGenre.getGenre().equals(genre));
+                    .anyMatch(genre -> bandGenre.getGenre().getId().equals(genre.getId()));
 
             if (!genreExistsInDTO) {
                 band.removeBandGenre(bandGenre);

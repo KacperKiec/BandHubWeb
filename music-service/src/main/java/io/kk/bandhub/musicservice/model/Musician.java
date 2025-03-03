@@ -27,10 +27,10 @@ public class Musician {
     @Column(name = "bio")
     private String bio;
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MusicianGenre> musicianGenres;
 
-    @OneToMany(mappedBy = "musician")
+    @OneToMany(mappedBy = "musician", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MusicianInstrument> musicianInstruments;
 
     public void addMusicianGenre(MusicianGenre musicianGenre) {

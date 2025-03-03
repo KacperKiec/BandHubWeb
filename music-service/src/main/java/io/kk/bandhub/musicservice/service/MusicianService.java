@@ -1,10 +1,18 @@
 package io.kk.bandhub.musicservice.service;
 
+import io.kk.bandhub.musicservice.dto.GenreDTO;
+import io.kk.bandhub.musicservice.dto.InstrumentDTO;
 import io.kk.bandhub.musicservice.dto.Mapper;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
+import io.kk.bandhub.musicservice.exception.genre.GenreError;
+import io.kk.bandhub.musicservice.exception.genre.GenreException;
+import io.kk.bandhub.musicservice.exception.instrument.InstrumentError;
+import io.kk.bandhub.musicservice.exception.instrument.InstrumentException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
+import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
+import io.kk.bandhub.musicservice.repository.instrument.InstrumentRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianSpecification;
 import jakarta.transaction.Transactional;
@@ -21,10 +29,14 @@ import java.util.List;
 @Service
 public class MusicianService {
     private final MusicianRepository musicianRepository;
+    private final GenreRepository genreRepository;
+    private final InstrumentRepository instrumentRepository;
     private final Mapper mapper;
 
-    public MusicianService(MusicianRepository musicianRepository, Mapper mapper) {
+    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, Mapper mapper) {
         this.musicianRepository = musicianRepository;
+        this.genreRepository = genreRepository;
+        this.instrumentRepository = instrumentRepository;
         this.mapper = mapper;
     }
 
@@ -42,15 +54,21 @@ public class MusicianService {
         musician.setIsLookingBand(musicianDTO.getIsLookingBand());
 
         if(musicianDTO.getGenres() != null) {
-            for (Genre genre : musicianDTO.getGenres()) {
-                MusicianGenre musicianGenre = new MusicianGenre(musician, genre);
+            for (GenreDTO genre : musicianDTO.getGenres()) {
+                var g = genreRepository.findById(genre.getId()).orElseThrow(
+                        () -> new GenreException(GenreError.GENRE_NOT_FOUND)
+                );
+                MusicianGenre musicianGenre = new MusicianGenre(musician, g);
                 musician.addMusicianGenre(musicianGenre);
             }
         }
 
         if(musicianDTO.getInstruments() != null) {
-            for (Instrument instrument : musicianDTO.getInstruments()) {
-                MusicianInstrument musicianInstrument = new MusicianInstrument(musician, instrument);
+            for (InstrumentDTO instrument : musicianDTO.getInstruments()) {
+                var i = instrumentRepository.findById(instrument.getId()).orElseThrow(
+                        () -> new InstrumentException(InstrumentError.INSTRUMENT_NOT_FOUND)
+                );
+                MusicianInstrument musicianInstrument = new MusicianInstrument(musician, i);
                 musician.addMusicianInstrument(musicianInstrument);
             }
         }
@@ -70,38 +88,44 @@ public class MusicianService {
         musician.setBio(musicianDTO.getBio());
         musician.setIsLookingBand(musicianDTO.getIsLookingBand());
 
-        for (Genre genre : musicianDTO.getGenres()) {
+        for (GenreDTO genre : musicianDTO.getGenres()) {
+            var g = genreRepository.findById(genre.getId()).orElseThrow(
+                    () -> new GenreException(GenreError.GENRE_NOT_FOUND)
+            );
             boolean genreExistsInMusician = musician.getMusicianGenres().stream()
-                    .anyMatch(musicianGenre -> musicianGenre.getGenre().equals(genre));
+                    .anyMatch(musicianGenre -> musicianGenre.getGenre().getId().equals(genre.getId()));
 
             if (!genreExistsInMusician) {
-                MusicianGenre newMusicianGenre = new MusicianGenre(musician, genre);
+                MusicianGenre newMusicianGenre = new MusicianGenre(musician, g);
                 musician.addMusicianGenre(newMusicianGenre);
             }
         }
 
         for (MusicianGenre musicianGenre : musician.getMusicianGenres()) {
             boolean genreExistsInDTO = musicianDTO.getGenres().stream()
-                    .anyMatch(genre -> musicianGenre.getGenre().equals(genre));
+                    .anyMatch(genre -> musicianGenre.getGenre().getId().equals(genre.getId()));
 
             if (!genreExistsInDTO) {
                 musician.removeMusicianGenre(musicianGenre);
             }
         }
 
-        for (Instrument instrument : musicianDTO.getInstruments()) {
+        for (InstrumentDTO instrument : musicianDTO.getInstruments()) {
+            var i = instrumentRepository.findById(instrument.getId()).orElseThrow(
+                    () -> new InstrumentException(InstrumentError.INSTRUMENT_NOT_FOUND)
+            );
             boolean instrumentExistsInMusician = musician.getMusicianInstruments().stream()
-                    .anyMatch(musicianInstrument -> musicianInstrument.getInstrument().equals(instrument));
+                    .anyMatch(musicianInstrument -> musicianInstrument.getInstrument().getId().equals(instrument.getId()));
 
             if (!instrumentExistsInMusician) {
-                MusicianInstrument newMusicianInstrument = new MusicianInstrument(musician, instrument);
+                MusicianInstrument newMusicianInstrument = new MusicianInstrument(musician, i);
                 musician.addMusicianInstrument(newMusicianInstrument);
             }
         }
 
         for (MusicianInstrument musicianInstrument : musician.getMusicianInstruments()) {
             boolean instrumentExistsInDTO = musicianDTO.getInstruments().stream()
-                    .anyMatch(instrument -> musicianInstrument.getInstrument().equals(instrument));
+                    .anyMatch(instrument -> musicianInstrument.getInstrument().getId().equals(instrument.getId()));
 
             if (!instrumentExistsInDTO) {
                 musician.removeMusicianInstrument(musicianInstrument);

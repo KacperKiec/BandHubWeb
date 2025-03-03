@@ -1,6 +1,7 @@
 package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.BookingDTO;
+import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -59,9 +60,10 @@ public class BookingController {
     ResponseEntity<Page<BookingDTO>> getBookings(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) Integer offerId,
-            @RequestParam(required = false) Integer tenantId) {
+            @RequestParam(required = false) Integer tenantId,
+            @RequestParam(required = false)OfferStatus status) {
 
-        var result = bookingService.getBookings(pageable, offerId, tenantId);
+        var result = bookingService.getBookings(pageable, offerId, tenantId, status);
         return ResponseEntity.ok(result);
     }
 }

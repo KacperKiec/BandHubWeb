@@ -5,6 +5,8 @@ import io.kk.bandhub.musicservice.model.Band;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -18,4 +20,7 @@ public interface BandRepository {
     Optional<Band> findBandById(Integer id);
     Page<Band> findAll(Pageable pageable);
     Page<Band> findAll(Specification<Band> spec, Pageable pageable);
+
+    @Query("SELECT bm.musician.id FROM BandMusician bm WHERE bm.band.id = :bid AND bm.isFounder = true")
+    public Integer getFounderId(@Param("bid") Integer bid);
 }

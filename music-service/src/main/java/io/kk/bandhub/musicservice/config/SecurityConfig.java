@@ -23,7 +23,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/musician/**").permitAll()
                 .requestMatchers("/band/**").permitAll()
-                .requestMatchers("/profile/**").permitAll()
+                .requestMatchers("/genre/**").permitAll()
                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();

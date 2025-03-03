@@ -1,6 +1,5 @@
 package io.kk.bandhub.musicservice.dto;
 
-import io.kk.bandhub.musicservice.model.Genre;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -28,6 +27,6 @@ public class BandDTO {
     private boolean isLookingMembers;
 
     private Set<MusicianDTO> musicians = new HashSet<>();
-    private Set<Genre> genres = new HashSet<>();
+    private Set<GenreDTO> genres = new HashSet<>();
     private Integer founderId;
 }

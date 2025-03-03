@@ -3,6 +3,8 @@ package io.kk.bandhub.musicservice.repository.band;
 import io.kk.bandhub.musicservice.model.Band;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**

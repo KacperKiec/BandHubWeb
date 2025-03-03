@@ -17,6 +17,8 @@ public class EventDTO {
     private Integer organizerId;
 
     private AccountDTO organizerDTO;
+    private Integer bandId;
+    private BandDTO bandDTO;
 
     @NotNull
     private Integer venueId;

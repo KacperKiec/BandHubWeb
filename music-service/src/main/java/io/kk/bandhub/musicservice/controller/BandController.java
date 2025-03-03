@@ -1,6 +1,7 @@
 package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.BandDTO;
+import io.kk.bandhub.musicservice.dto.BandEvtDTO;
 import io.kk.bandhub.musicservice.model.Genre;
 import io.kk.bandhub.musicservice.service.BandService;
 import jakarta.validation.Valid;
@@ -38,6 +39,12 @@ public class BandController {
     @GetMapping(value = "/{id}")
     ResponseEntity<BandDTO> getBandById(@PathVariable int id) {
         return ResponseEntity.ok(service.getById(id));
+    }
+
+    @GetMapping(value = "/evt/{id}")
+    ResponseEntity<BandEvtDTO> getBandEventById(@PathVariable Integer id) {
+        var result = service.getBandEvtById(id);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/all")

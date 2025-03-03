@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -37,11 +38,11 @@ public class Band {
     @Column(name = "bio", length = 400)
     private String bio;
 
-    @OneToMany(mappedBy = "band")
-    private Set<BandMusician> bandMusicians;
+    @OneToMany(mappedBy = "band", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BandMusician> bandMusicians = new HashSet<>();
 
-    @OneToMany(mappedBy = "band")
-    private Set<BandGenre> bandGenres;
+    @OneToMany(mappedBy = "band", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BandGenre> bandGenres = new HashSet<>();
 
     public void addBandMusician(BandMusician bandMusician) {
         bandMusicians.add(bandMusician);

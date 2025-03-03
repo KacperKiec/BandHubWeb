@@ -1,7 +1,5 @@
 package io.kk.bandhub.musicservice.dto;
 
-import io.kk.bandhub.musicservice.model.Genre;
-import io.kk.bandhub.musicservice.model.Instrument;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -27,6 +25,6 @@ public class MusicianDTO {
     @NotNull(message = "Looking band flag cannot be null")
     private Boolean isLookingBand;
 
-    private Set<Genre> genres;
-    private Set<Instrument> instruments;
+    private Set<GenreDTO> genres;
+    private Set<InstrumentDTO> instruments;
 }

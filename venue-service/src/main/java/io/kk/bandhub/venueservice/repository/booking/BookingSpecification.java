@@ -1,6 +1,7 @@
 package io.kk.bandhub.venueservice.repository.booking;
 
 import io.kk.bandhub.venueservice.model.Booking;
+import io.kk.bandhub.venueservice.model.OfferStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookingSpecification {
@@ -20,6 +21,15 @@ public class BookingSpecification {
                 return builder.conjunction();
             }
             return builder.equal(root.get("tenantId"), tenantId);
+        };
+    }
+
+    public static Specification<Booking> hasStatus(OfferStatus status) {
+        return (root, query, builder) -> {
+            if(status == null) {
+                return builder.conjunction();
+            }
+            return builder.equal(root.get("status"), status);
         };
     }
 }
