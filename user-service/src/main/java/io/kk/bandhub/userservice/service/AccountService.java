@@ -9,6 +9,7 @@ import io.kk.bandhub.userservice.exception.RoleError;
 import io.kk.bandhub.userservice.exception.RoleException;
 import io.kk.bandhub.userservice.model.Account;
 import io.kk.bandhub.userservice.model.AccountRole;
+import io.kk.bandhub.userservice.model.Role;
 import io.kk.bandhub.userservice.repository.AccountRepository;
 import io.kk.bandhub.userservice.repository.AccountSpecification;
 import io.kk.bandhub.userservice.repository.RoleRepository;
@@ -16,21 +17,27 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class AccountService {
+public class AccountService{
 
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     private final Mapper mapper;
 
-    public AccountService(AccountRepository accountRepository, RoleRepository roleRepository, Mapper mapper) {
+    public AccountService(AccountRepository accountRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, Mapper mapper) {
         this.accountRepository = accountRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
     }
 
@@ -76,7 +83,7 @@ public class AccountService {
 
     private void setAccountFields(Account existingAccount, String email, String password, String firstName, String lastName, LocalDate birthDate, Boolean gender, String city) {
         existingAccount.setEmail(email);
-        existingAccount.setPassword(password);
+        existingAccount.setPassword(passwordEncoder.encode(password));
         existingAccount.setFirstName(firstName);
         existingAccount.setLastName(lastName);
         existingAccount.setBirthDate(birthDate);
@@ -86,6 +93,13 @@ public class AccountService {
 
     public AccountDTO findById(Integer id) {
         var existingAccount = accountRepository.findAccountById(id).orElseThrow(
+                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
+        );
+        return mapper.toAccountDTO(existingAccount);
+    }
+
+    public AccountDTO findByEmail(String email) {
+        var existingAccount = accountRepository.findAccountByEmail(email).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
         return mapper.toAccountDTO(existingAccount);

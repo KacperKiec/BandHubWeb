@@ -11,7 +11,7 @@ spring:
         - id: user-service
           uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/account/**, /role/**
+            - Path=/account/**, /role/**, /auth/**, /logout
         - id: venue-service
           uri: lb://VENUE-SERVICE
           predicates:

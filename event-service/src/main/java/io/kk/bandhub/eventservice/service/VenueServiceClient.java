@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface VenueServiceClient {
 
     @GetMapping("/venue/{id}")
-    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetAccount")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenue")
     VenueDTO getVenue(@PathVariable Integer id);
 
-    default VenueDTO fallbackGetAccount(Integer id, Throwable throwable) {
+    default VenueDTO fallbackGetVenue(Integer id, Throwable throwable) {
         VenueDTO v = new VenueDTO();
         v.setId(id);
         v.setName("unknown");

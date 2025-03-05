@@ -47,7 +47,7 @@ public class EventService {
         event.setName(eventDTO.getName());
         event.setBandId(eventDTO.getBandId());
 
-        var mappedEvent = mapper.toEventDTO(event);
+        var mappedEvent = mapper.toEventDTOReg(event);
         eventRepository.save(event);
     }
 
@@ -67,8 +67,7 @@ public class EventService {
         existingEvent.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
         existingEvent.setBandId(eventDTO.getBandId());
 
-        var mappedEvent = mapper.toEventDTO(existingEvent);
-        mappedEvent.setOrganizerDTO(eventDTO.getOrganizerDTO());
+        var mappedEvent = mapper.toEventDTOReg(existingEvent);
         eventRepository.save(existingEvent);
         return mappedEvent;
     }

@@ -1,4 +1,4 @@
-package io.kk.bandhub.venueservice.dto;
+package io.kk.bandhub.venueservice.exception;
 
 import lombok.Getter;
 

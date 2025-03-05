@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "account_role")
-public class AccountRole {
+public class AccountRole implements GrantedAuthority {
     @EmbeddedId
     private AccountRoleId id;
 
@@ -21,7 +22,7 @@ public class AccountRole {
     private Account account;
 
     @MapsId("roleId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
@@ -37,5 +38,10 @@ public class AccountRole {
 
     public AccountRole() {
 
+    }
+
+    @Override
+    public String getAuthority() {
+        return getRole().getName();
     }
 }

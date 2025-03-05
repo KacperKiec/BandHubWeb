@@ -2,8 +2,8 @@ package io.kk.bandhub.eventservice.controller;
 
 import io.kk.bandhub.eventservice.dto.EventDTO;
 import io.kk.bandhub.eventservice.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,11 +20,9 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
-    private final RabbitTemplate rabbitTemplate;
 
-    public EventController(EventService eventService, RabbitTemplate rabbitTemplate) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @GetMapping(value = "/all")
@@ -55,6 +53,12 @@ public class EventController {
     ResponseEntity<Void> deleteEvent(@PathVariable Integer id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    ResponseEntity<EventDTO> updateEvent(@RequestBody @Valid EventDTO eventDTO) {
+        var result = eventService.updateEvent(eventDTO);
+        return ResponseEntity.ok(result);
     }
 
     @RabbitListener(queues = "event-queue")

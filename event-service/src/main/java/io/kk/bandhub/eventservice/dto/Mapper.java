@@ -20,6 +20,22 @@ public class Mapper {
     }
 
     public EventDTO toEventDTO(Event event) {
+        EventDTO eventDTO = setEventFields(event);
+        eventDTO.setBandDTO(musicServiceClient.getBand(event.getBandId()));
+        eventDTO.setVenueId(event.getVenueId());
+        eventDTO.setVenueDTO(venueServiceClient.getVenue(event.getVenueId()));
+        return eventDTO;
+    }
+
+    public EventDTO toEventDTOReg(Event event) {
+        EventDTO eventDTO = setEventFields(event);
+        eventDTO.setBandDTO(musicServiceClient.getBandReg(event.getBandId()));
+        eventDTO.setVenueId(event.getVenueId());
+        eventDTO.setVenueDTO(venueServiceClient.getVenue(event.getVenueId()));
+        return eventDTO;
+    }
+
+    private EventDTO setEventFields(Event event) {
         EventDTO eventDTO = new EventDTO();
         eventDTO.setId(event.getId());
         eventDTO.setName(event.getName());
@@ -31,9 +47,6 @@ public class Mapper {
         eventDTO.setOrganizerId(event.getOrganizerId());
         eventDTO.setOrganizerDTO(accountServiceClient.getAccount(event.getOrganizerId()));
         eventDTO.setBandId(event.getBandId());
-        eventDTO.setBandDTO(musicServiceClient.getBand(event.getBandId()));
-        eventDTO.setVenueId(event.getVenueId());
-        eventDTO.setVenueDTO(venueServiceClient.getVenue(event.getVenueId()));
         return eventDTO;
     }
 }

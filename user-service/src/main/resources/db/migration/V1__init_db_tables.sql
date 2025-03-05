@@ -1,7 +1,7 @@
 CREATE TABLE account (
     id SERIAL PRIMARY KEY,
     email varchar(50) UNIQUE NOT NULL,
-    password varchar(50) NOT NULL,
+    password varchar(150) NOT NULL,
     first_name varchar(30) NOT NULL,
     last_name varchar(30) NOT NULL,
     birth_date date NOT NULL,

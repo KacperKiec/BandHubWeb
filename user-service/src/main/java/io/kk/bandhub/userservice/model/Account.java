@@ -6,16 +6,21 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "account")
-public class Account {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDefault("nextval('account_id_seq'")
@@ -27,9 +32,9 @@ public class Account {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Size(max = 50)
+    @Size(max = 150)
     @NotNull
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 150)
     private String password;
 
     @Size(max = 30)
@@ -54,7 +59,7 @@ public class Account {
     @Column(name = "city", length = 50)
     private String city;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountRole> accountRoles = new HashSet<>();
 
     public void addAccountRole(AccountRole accountRole) {
@@ -63,5 +68,17 @@ public class Account {
 
     public void removeAccountRole(AccountRole accountRole) {
         accountRoles.remove(accountRole);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return accountRoles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
     }
 }
