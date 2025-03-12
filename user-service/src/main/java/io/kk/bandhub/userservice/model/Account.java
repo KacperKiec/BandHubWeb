@@ -6,21 +6,16 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "account")
-public class Account implements UserDetails {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ColumnDefault("nextval('account_id_seq'")
@@ -70,15 +65,4 @@ public class Account implements UserDetails {
         accountRoles.remove(accountRole);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return accountRoles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().getName()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
 }

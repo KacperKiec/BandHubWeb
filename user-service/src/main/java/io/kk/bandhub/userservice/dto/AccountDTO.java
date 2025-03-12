@@ -1,6 +1,5 @@
 package io.kk.bandhub.userservice.dto;
 
-import io.kk.bandhub.userservice.model.Role;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

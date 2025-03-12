@@ -1,8 +1,6 @@
-package io.kk.bandhub.userservice.security;
+package io.kk.bandhub.authservice.service;
 
-import io.kk.bandhub.userservice.exception.AccountError;
-import io.kk.bandhub.userservice.exception.AccountException;
-import io.kk.bandhub.userservice.service.AccountAuthService;
+import io.kk.bandhub.authservice.exception.AuthException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,7 +30,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         UserDetails userDetails = accountAuthService.loadUserByUsername(email);
 
         if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new AccountException(AccountError.ACCOUNT_AUTHENTICATION_FAILURE);
+            throw new AuthException("Authentication with given credentials failure");
         }
 
         var token = jwtService.generateToken(userDetails);

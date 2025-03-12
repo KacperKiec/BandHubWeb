@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.security.core.GrantedAuthority;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "account_role")
-public class AccountRole implements GrantedAuthority {
+public class AccountRole {
     @EmbeddedId
     private AccountRoleId id;
 
@@ -38,10 +37,5 @@ public class AccountRole implements GrantedAuthority {
 
     public AccountRole() {
 
-    }
-
-    @Override
-    public String getAuthority() {
-        return getRole().getName();
     }
 }

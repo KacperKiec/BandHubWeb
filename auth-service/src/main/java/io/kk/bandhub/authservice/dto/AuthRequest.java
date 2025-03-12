@@ -1,4 +1,4 @@
-package io.kk.bandhub.userservice.dto;
+package io.kk.bandhub.authservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;

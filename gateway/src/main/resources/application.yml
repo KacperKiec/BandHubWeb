@@ -11,7 +11,7 @@ spring:
         - id: user-service
           uri: lb://ACCOUNT-SERVICE
           predicates:
-            - Path=/account/**, /role/**, /auth/**, /logout
+            - Path=/account/**, /role/**, /logout
         - id: venue-service
           uri: lb://VENUE-SERVICE
           predicates:
@@ -20,6 +20,10 @@ spring:
           uri: lb://EVENT-SERVICE
           predicates:
             - Path=/event/**
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**, /key/**
 #      discovery:
 #        locator:
 #          enabled: true

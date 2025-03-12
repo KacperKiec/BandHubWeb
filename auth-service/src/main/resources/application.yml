@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: auth-service
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          oidc-client:
+            registration:
+              client-id: "oidc-client"
+              client-secret: "{noop}secret"
+              client-authentication-methods:
+                - "private_key_jwt"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "http://127.0.0.1:8020/login/oauth2/code/oidc-client"
+              post-logout-redirect-uris:
+                - "http://127.0.0.1:8020/"
+              scopes:
+                - "openid"
+                - "profile"
+            require-authorization-consent: true
+server:
+  port: 8020
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

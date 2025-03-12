@@ -60,6 +60,12 @@ public class AccountController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "/email")
+    public ResponseEntity<AccountDTO> getAccountByEmail(@RequestParam String email) {
+        var result = accountService.findByEmail(email);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping
     public ResponseEntity<List<AccountDTO>> getAllAccounts() {
         return ResponseEntity.ok(accountService.findAll());

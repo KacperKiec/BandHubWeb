@@ -1,7 +1,7 @@
-package io.kk.bandhub.userservice.controller;
+package io.kk.bandhub.authservice.controller;
 
-import io.kk.bandhub.userservice.dto.AuthRequest;
-import io.kk.bandhub.userservice.security.JwtService;
+import io.kk.bandhub.authservice.dto.AuthRequest;
+import io.kk.bandhub.authservice.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
