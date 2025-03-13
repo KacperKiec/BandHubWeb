@@ -23,7 +23,7 @@ spring:
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth/**, /key/**
+            - Path=/auth/**, /key/**, /oauth2/**
 #      discovery:
 #        locator:
 #          enabled: true
