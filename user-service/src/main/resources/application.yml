@@ -21,13 +21,15 @@ spring:
         jwt:
           jwk-set-uri: http://localhost:9000/key/jwks.json
           jws-algorithms: RS256
+          issuer-uri: http://localhost:8020
 server:
   port: 8090
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-#logging:
-#  level:
-#    org.springframework.security: DEBUG
-#    org.springframework.security.oauth2: DEBUG
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG

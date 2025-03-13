@@ -31,3 +31,7 @@ eureka:
 app:
   services:
     account-url: http://localhost:9000/account/email?email=
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
