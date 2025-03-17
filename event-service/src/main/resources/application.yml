@@ -21,12 +21,26 @@ spring:
     username: dev
     password: dev
     virtual-host: /
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/key/jwks.json
+          jws-algorithms: RS256
+          issuer-uri: http://localhost:8020
 server:
   port: 8060
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+app:
+  services:
+    token-url: http://localhost:8020/oauth2/token
+  oauth2:
+    client-id: oidc-client
+    client-secret: secret
+    scope: read
 resilience4j:
   circuitbreaker:
     instances:
@@ -35,7 +49,12 @@ resilience4j:
         minimum-number-of-calls: 5
         automatic-transition-from-open-to-half-open-enabled: true
         wait-duration-in-open-state:
-          seconds: 5
+          seconds: 10
         permitted-number-of-calls-in-half-open-state: 3
         sliding-window-size: 10
         sliding-window-type: count_based
+logging:
+  level:
+    io.github.resilience4j.circuitbreaker: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG

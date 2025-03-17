@@ -2,6 +2,7 @@ package io.kk.bandhub.authservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,19 +11,47 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class OAuth2Client {
-    private final String url = "http://localhost:8020/oauth2/token";
+    private final String url;
+    private final String clientId;
+    private final String clientSecret;
+    private final String scope;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    private String accessToken;
+    private long tokenExpirationTime;
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public OAuth2Client(@Value("${app.services.token-url}") String url,
+                        @Value("${app.oauth2.client-id}") String clientId,
+                        @Value("${app.oauth2.client-secret}") String clientSecret,
+                        @Value("${app.oauth2.scope}") String scope) {
+        this.url = url;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.scope = scope;
+    }
 
     public String getAccessToken() {
-        RestTemplate restTemplate = new RestTemplate();
+        lock.lock();
+        //System.out.println(System.currentTimeMillis() - tokenExpirationTime);
+        try {
+            if (accessToken == null || System.currentTimeMillis() >= tokenExpirationTime) {
+                refreshAccessToken();
+            }
+            return accessToken;
+        } finally {
+            lock.unlock();
+        }
+    }
 
-        String clientId = "oidc-client";
-        String clientSecret = "secret";
+    private void refreshAccessToken() {
+
         String grantType = "client_credentials";
-        String scope = "read";
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", grantType);
@@ -39,16 +68,17 @@ public class OAuth2Client {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                entity,
-                String.class
-        );
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        //System.out.println(response.getBody());
 
         try {
             JsonNode jsonResponse = objectMapper.readTree(response.getBody());
-            return jsonResponse.get("access_token").asText();
+            this.accessToken = jsonResponse.get("access_token").asText();
+            int expiresIn = jsonResponse.get("expires_in").asInt();
+            //System.out.println(expiresIn);
+            this.tokenExpirationTime = System.currentTimeMillis() + (expiresIn * 1000L) - 5000;
+            //System.out.println(System.currentTimeMillis());
+            // System.out.println(this.tokenExpirationTime);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse OAuth2 token response", e);
         }

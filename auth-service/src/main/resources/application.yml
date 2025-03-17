@@ -8,7 +8,7 @@ spring:
           oidc-client:
             registration:
               client-id: "oidc-client"
-              client-secret: "{noop}secret"
+              client-secret: "secret"
               client-authentication-methods:
                 - "private_key_jwt"
               authorization-grant-types:
@@ -31,6 +31,11 @@ eureka:
 app:
   services:
     account-url: http://localhost:9000/account/email?email=
+    token-url: http://localhost:8020/oauth2/token
+  oauth2:
+    client-id: oidc-client
+    client-secret: secret
+    scope: read
 logging:
   level:
     org.springframework.security: DEBUG

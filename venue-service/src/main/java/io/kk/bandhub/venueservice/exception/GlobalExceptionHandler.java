@@ -1,6 +1,9 @@
 package io.kk.bandhub.venueservice.exception;
 
-import jakarta.validation.ConstraintViolationException;
+import io.kk.bandhub.venueservice.exception.offer.OfferError;
+import io.kk.bandhub.venueservice.exception.offer.OfferException;
+import io.kk.bandhub.venueservice.exception.venue.VenueError;
+import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

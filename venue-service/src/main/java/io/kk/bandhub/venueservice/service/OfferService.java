@@ -2,10 +2,10 @@ package io.kk.bandhub.venueservice.service;
 
 import io.kk.bandhub.venueservice.dto.Mapper;
 import io.kk.bandhub.venueservice.dto.OfferDTO;
-import io.kk.bandhub.venueservice.exception.OfferError;
-import io.kk.bandhub.venueservice.exception.OfferException;
-import io.kk.bandhub.venueservice.exception.VenueError;
-import io.kk.bandhub.venueservice.exception.VenueException;
+import io.kk.bandhub.venueservice.exception.offer.OfferError;
+import io.kk.bandhub.venueservice.exception.offer.OfferException;
+import io.kk.bandhub.venueservice.exception.venue.VenueError;
+import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Offer;
 import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;

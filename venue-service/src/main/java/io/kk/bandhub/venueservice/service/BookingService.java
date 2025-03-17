@@ -1,8 +1,8 @@
 package io.kk.bandhub.venueservice.service;
 
 import io.kk.bandhub.venueservice.dto.*;
-import io.kk.bandhub.venueservice.exception.OfferError;
-import io.kk.bandhub.venueservice.exception.OfferException;
+import io.kk.bandhub.venueservice.exception.offer.OfferError;
+import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.repository.booking.BookingRepository;

@@ -2,8 +2,8 @@ package io.kk.bandhub.venueservice.service;
 
 import io.kk.bandhub.venueservice.dto.Mapper;
 import io.kk.bandhub.venueservice.dto.VenueDTO;
-import io.kk.bandhub.venueservice.exception.VenueError;
-import io.kk.bandhub.venueservice.exception.VenueException;
+import io.kk.bandhub.venueservice.exception.venue.VenueError;
+import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Venue;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
 import io.kk.bandhub.venueservice.repository.venue.VenueSpecification;

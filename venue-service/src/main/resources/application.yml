@@ -21,12 +21,26 @@ spring:
     username: dev
     password: dev
     virtual-host: /
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/key/jwks.json
+          jws-algorithms: RS256
+          issuer-uri: http://localhost:8020
 server:
   port: 8070
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+app:
+  services:
+    token-url: http://localhost:8020/oauth2/token
+  oauth2:
+    client-id: oidc-client
+    client-secret: secret
+    scope: read
 resilience4j:
   circuitbreaker:
     instances:
