@@ -3,7 +3,9 @@ package io.kk.bandhub.eventservice.controller;
 import io.kk.bandhub.eventservice.dto.EventDTO;
 import io.kk.bandhub.eventservice.service.EventService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -61,7 +63,7 @@ public class EventController {
         return ResponseEntity.ok(result);
     }
 
-    @RabbitListener(queues = "event-queue")
+    @RabbitListener(queues = "#{getQueue}")
     public void createEvent(EventDTO eventDTO) {
         eventService.createEvent(eventDTO);
     }
