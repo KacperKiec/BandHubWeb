@@ -41,6 +41,10 @@ app:
     client-id: oidc-client
     client-secret: secret
     scope: read
+  rabbit:
+    queue: "event-queue"
+    exchange: "event-exchange"
+    routing-key: "add.event"
 resilience4j:
   circuitbreaker:
     instances:

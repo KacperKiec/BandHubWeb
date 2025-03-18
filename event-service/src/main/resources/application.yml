@@ -41,6 +41,10 @@ app:
     client-id: oidc-client
     client-secret: secret
     scope: read
+  rabbit:
+    queue: "event-queue"
+    exchange: "event-exchange"
+    routing-key: "add.event"
 resilience4j:
   circuitbreaker:
     instances:
@@ -49,12 +53,12 @@ resilience4j:
         minimum-number-of-calls: 5
         automatic-transition-from-open-to-half-open-enabled: true
         wait-duration-in-open-state:
-          seconds: 10
+          seconds: 5
         permitted-number-of-calls-in-half-open-state: 3
         sliding-window-size: 10
         sliding-window-type: count_based
 logging:
   level:
-    io.github.resilience4j.circuitbreaker: DEBUG
+    #io.github.resilience4j.circuitbreaker: DEBUG
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG

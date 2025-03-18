@@ -28,7 +28,7 @@ public interface MusicServiceClient {
         return bandDTO;
     }
 
-    default void fallbackGetBandReg(Throwable throwable) {
+    default BandDTO fallbackGetBandReg(Throwable throwable) {
         throw new EventException(EventError.EVENT_BAND_NOT_FOUND);
     }
 }
