@@ -10,6 +10,7 @@ import io.kk.bandhub.venueservice.repository.booking.BookingSpecification;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,12 +26,14 @@ public class BookingService {
     private final OfferRepository offerRepository;
     private final RabbitTemplate rabbitTemplate;
     private final Mapper mapper;
+    private final String queueName;
 
-    public BookingService(BookingRepository bookingRepository, OfferRepository offerRepository, RabbitTemplate rabbitTemplate, Mapper mapper) {
+    public BookingService(BookingRepository bookingRepository, OfferRepository offerRepository, RabbitTemplate rabbitTemplate, Mapper mapper, @Value("${app.rabbit.queue}") String queueName) {
         this.bookingRepository = bookingRepository;
         this.offerRepository = offerRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.mapper = mapper;
+        this.queueName = queueName;
     }
 
     @Transactional
@@ -52,7 +55,7 @@ public class BookingService {
         mappedBooking.setToPublish(bookingDTO.getToPublish());
 
         if(bookingDTO.getToPublish()) {
-            rabbitTemplate.convertAndSend("event-queue", bookingDTO.getEvent());
+            rabbitTemplate.convertAndSend(queueName, bookingDTO.getEvent());
         }
 
         return mappedBooking;

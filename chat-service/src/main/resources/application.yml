@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: chat-service
+  data:
+    mongodb:
+      uri: mongodb://dev:dev@host.docker.internal:27017/chat_db?authSource=admin
+      database: chat_db
+
+server:
+  port: 8040
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.messaging: DEBUG

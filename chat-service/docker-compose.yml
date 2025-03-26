@@ -1,0 +1,16 @@
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - chat_db_vol:/data/db
+    networks:
+      - chat-network
+
+volumes:
+  chat_db_vol:
+
+networks:
+  chat-network:
+    driver: bridge
