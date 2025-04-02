@@ -15,9 +15,9 @@
 }
 
 .navbar.hide {
-  transform: translateX(-90%);
+  transform: translateX(-100%);
   z-index: 1;
-  .option{
+  .option, .nav-button{
     opacity: 0;
     transition: opacity 350ms ease-in-out;
   }

@@ -1,5 +1,5 @@
 <div class="navbar" [ngClass]="{'show': isMenuOpen, 'hide': !isMenuOpen}">
-  <div class="option" routerLink="home">
+  <div class="option" routerLink="/home">
     <img class="icon" ngSrc="/icons8-menu-64.png" height="32" width="32" alt="Menu Icon">
     <label>Start</label>
   </div>
@@ -7,7 +7,7 @@
     <img class="icon" ngSrc="/icons8-musician-50.png" height="32" width="32" alt="Musician Icon">
     <label>Muzycy</label>
   </div>
-  <div class="option" routerLink="bands">
+  <div class="option" routerLink="/bands">
     <img class="icon" ngSrc="/icons8-drums-30.png" height="32" width="32" alt="Band Icon">
     <label>Zespoły</label>
   </div>
@@ -17,7 +17,7 @@
   </div>
   <div class="option">
     <img class="icon" ngSrc="/icons8-team-48.png" height="32" width="32" alt="Friends Icon">
-    <label>Znajomi</label>
+    <label>Czat</label>
   </div>
   <div class="option">
     <img *ngIf="isUserLoggedIn" class="icon" ngSrc="/icons8-sign-out-30.png" height="32" width="32" alt="Sign Out Icon">

@@ -1,3 +1,18 @@
 <div class="container">
-  naglowek
+  <div class="nav-button">
+    <img id="menu" (click)="openMenu()" ngSrc="/icons8-menu-64.png" height="32" width="32" alt="Toggle Button">
+  </div>
+  <div class="title" routerLink="/home">TYTUL</div>
+  <div class="right-section">
+    <div>
+      <label>Powiadomienia</label>
+    </div>
+    <div class="log-status">
+      <label *ngIf="isUserLoggedIn">Wyloguj</label>
+      <img *ngIf="isUserLoggedIn" class="icon" ngSrc="/icons8-sign-out-30.png" height="16" width="16" alt="Sign Out Icon">
+
+      <label *ngIf="!isUserLoggedIn">Zaloguj</label>
+      <img *ngIf="!isUserLoggedIn" class="icon" ngSrc="/icons8-sign-in-50.png" height="16" width="16" alt="Sign In Icon">
+    </div>
+  </div>
 </div>

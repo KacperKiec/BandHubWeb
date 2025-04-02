@@ -9,7 +9,6 @@ import io.kk.bandhub.userservice.exception.RoleError;
 import io.kk.bandhub.userservice.exception.RoleException;
 import io.kk.bandhub.userservice.model.Account;
 import io.kk.bandhub.userservice.model.AccountRole;
-import io.kk.bandhub.userservice.model.Role;
 import io.kk.bandhub.userservice.repository.AccountRepository;
 import io.kk.bandhub.userservice.repository.AccountSpecification;
 import io.kk.bandhub.userservice.repository.RoleRepository;
@@ -17,9 +16,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

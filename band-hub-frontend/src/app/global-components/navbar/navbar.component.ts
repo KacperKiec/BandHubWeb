@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, Input} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, Output, SimpleChanges} from '@angular/core';
 import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {RouterLink, RouterOutlet} from '@angular/router';
 
@@ -16,19 +16,34 @@ import {RouterLink, RouterOutlet} from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  isMenuOpen = false;
+  @Input() isMenuOpen = false;
   @Input() isUserLoggedIn = false;
+  @Output() closeMenuEmitter = new EventEmitter<boolean>();
+
+  private count: number = 0;
 
   constructor(private el: ElementRef) {}
 
+  setMenuStatus(open: boolean) {
+    this.isMenuOpen = open;
+    console.log("isMenuOpen: " + this.isMenuOpen);
+  }
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    this.closeMenuEmitter.emit(this.isMenuOpen);
+    this.count = 0;
   }
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: MouseEvent) {
     if(!this.el.nativeElement.contains(event.target)) {
-      this.isMenuOpen = false;
+      this.count++;
+      if (this.count === 2) {
+        this.isMenuOpen = false;
+        this.closeMenuEmitter.emit(this.isMenuOpen);
+        this.count = 0;
+      }
     }
   }
 }
