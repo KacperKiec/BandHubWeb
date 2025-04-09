@@ -1,33 +1,41 @@
 <div class="navbar" [ngClass]="{'show': isMenuOpen, 'hide': !isMenuOpen}">
   <div class="option" routerLink="/home">
-    <img class="icon" ngSrc="/icons8-menu-64.png" height="32" width="32" alt="Menu Icon">
+    <img class="icon" ngSrc="/icons8-home-48.png" height="32" width="32" alt="Menu Icon">
     <label>Start</label>
   </div>
   <div class="option" routerLink="/musicians">
-    <img class="icon" ngSrc="/icons8-musician-50.png" height="32" width="32" alt="Musician Icon">
+    <img class="icon" ngSrc="/icons8-electric-guitar-64.png" height="32" width="32" alt="Musician Icon">
     <label>Muzycy</label>
   </div>
   <div class="option" routerLink="/bands">
-    <img class="icon" ngSrc="/icons8-drums-30.png" height="32" width="32" alt="Band Icon">
+    <img class="icon" ngSrc="/icons8-drums-60.png" height="32" width="32" alt="Band Icon">
     <label>Zespoły</label>
   </div>
   <div class="option">
-    <img class="icon" ngSrc="/icons8-user-30.png" height="32" width="32" alt="User Icon">
+    <img class="icon" ngSrc="/icons8-event-48.png" height="32" width="32" alt="Band Icon">
+    <label>Wydarzenia</label>
+  </div>
+  <div class="option">
+    <img class="icon" ngSrc="/icons8-place-50.png" height="32" width="32" alt="Band Icon">
+    <label>Lokale</label>
+  </div>
+  <div class="option">
+    <img class="icon" ngSrc="/icons8-user-48.png" height="32" width="32" alt="User Icon">
     <label>Profil</label>
   </div>
   <div class="option">
-    <img class="icon" ngSrc="/icons8-team-48.png" height="32" width="32" alt="Friends Icon">
+    <img class="icon" ngSrc="/icons8-chat-message-48.png" height="32" width="32" alt="Friends Icon">
     <label>Czat</label>
   </div>
   <div class="option">
-    <img *ngIf="isUserLoggedIn" class="icon" ngSrc="/icons8-sign-out-30.png" height="32" width="32" alt="Sign Out Icon">
+    <img *ngIf="isUserLoggedIn" class="icon" ngSrc="/icons8-log-out-48.png" height="32" width="32" alt="Sign Out Icon">
     <label *ngIf="isUserLoggedIn">Wyloguj</label>
 
-    <img *ngIf="!isUserLoggedIn" class="icon" ngSrc="/icons8-sign-in-50.png" height="32" width="32" alt="Sign In Icon">
+    <img *ngIf="!isUserLoggedIn" class="icon" ngSrc="/icons8-enter-48.png" height="32" width="32" alt="Sign In Icon">
     <label *ngIf="!isUserLoggedIn">Zaloguj</label>
   </div>
 
   <div class="nav-button" (click)="toggleMenu()">
-    <img id="arrow" ngSrc="/arrow.png" height="32" width="32" alt="Toggle Button">
+    <img id="arrow" ngSrc="/icons8-arrow-48.png" height="24" width="24" alt="Toggle Button">
   </div>
 </div>

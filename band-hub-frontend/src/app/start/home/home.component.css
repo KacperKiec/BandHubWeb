@@ -7,7 +7,6 @@
 }
 
 .feature {
-  /*border: 1px green solid;*/
   color: #E4DCC6;
   width: 33.333333%;
   height: 100%;
@@ -18,14 +17,23 @@
   position: relative;
   overflow: hidden;
   pointer-events: auto;
+
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-composite: intersect;
+
+  webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  webkit-mask-composite: source-in;
 }
 
 .feature-title {
   font-size: 34px;
   padding-bottom: 5px;
-  z-index: 2;
+  z-index: 3;
   cursor: pointer;
-  /*transform: translateY(50%);*/
 }
 
 .feature-desc {
@@ -39,7 +47,7 @@
   justify-content: center;
   text-align: center;
   margin: 0 auto;
-  z-index: 2;
+  z-index: 3;
 }
 
 .feature:hover img {

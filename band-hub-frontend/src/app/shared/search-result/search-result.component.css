@@ -1,0 +1,81 @@
+.result-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 80%;
+  height: 100%;
+  padding: 20px;
+}
+
+.results-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 100%;
+  height: 95%;
+  padding: 20px;
+}
+
+.result-element {
+  display: flex;
+  flex-direction: column;
+  width: 29vh;
+  height: 40vh;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #615D55;
+  background-color: rgba(14, 20, 24, 0.5);
+  margin: 5px;
+}
+
+.result-element:hover {
+  cursor: pointer;
+}
+
+.pic {
+  border-radius: 10px;
+  margin: 10px auto 5px;
+  height: 25vh;
+  width: 25vh;
+}
+
+.name-label {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.genres-label {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.city-label {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.state-label {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.page-panel {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto 10px;
+}
+
+.page-panel img {
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.left-arrow {
+  transform: rotate(90deg);
+}
+
+.right-arrow {
+  transform: rotate(-90deg);
+}

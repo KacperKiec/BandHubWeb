@@ -18,6 +18,5 @@ export class AppComponent {
 
   setMenuStatus(open: boolean) {
     this.isMenuOpen = open;
-    console.log("app: " + this.isMenuOpen)
   }
 }

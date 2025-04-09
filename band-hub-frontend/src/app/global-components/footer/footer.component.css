@@ -1,8 +1,12 @@
 .container{
-  background-color: bisque;
+  background-color: #0E1418;
+  border-top: 1px #615D55 solid;
+  color: #E4DCC6;
+  font-size: 12px;
   width: 100%;
   height: 100%;
   text-align: center;
-  position: relative;
+  position: sticky;
+  bottom: 0;
   margin-bottom: 0;
 }

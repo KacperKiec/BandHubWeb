@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {filterElement} from '../../core/models/types';
@@ -33,6 +33,12 @@ export class SearchBarComponent implements OnInit{
   ngOnInit(): void {
     this.filterValue = new Array<string>(this.filters.length);
     this.rangeValues = this.filters.map(() => ({ min: 0, max: 99 }));
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['filters'] && this.filters) {
+      this.filters.sort((a, b) => b.type.localeCompare(a.type));
+    }
   }
 
   toggleDropdown() {
@@ -114,12 +120,27 @@ export class SearchBarComponent implements OnInit{
   }
 
   confirmSearching(): void {
+    const filtersToEmit: filterElement[] = [];
+
     if(this.searchFieldContent) {
-      const existingName = this.currentFilters.find(filter => filter.name === 'name');
+      const existingName = this.currentFilters.find(filter => filter.name === `${this.placeholderText}`);
       if(existingName){
         existingName.value = this.searchFieldContent;
       } else this.currentFilters.push({name: `${this.placeholderText}`,value: this.searchFieldContent });
     }
-    this.emitParams.emit(this.currentFilters);
+
+    for (let index in this.currentFilters) {
+      if (this.currentFilters[index].value === 'nie') {
+        filtersToEmit.push({ name: this.currentFilters[index].name, value: 'false' });
+        continue;
+      } else if (this.currentFilters[index].value === 'tak') {
+        filtersToEmit.push({ name: this.currentFilters[index].name, value: 'true' });
+        continue;
+      } else if (this.currentFilters[index].name === 'name') continue;
+      filtersToEmit.push(this.currentFilters[index]);
+    }
+
+    console.log(filtersToEmit)
+    this.emitParams.emit(filtersToEmit);
   }
 }

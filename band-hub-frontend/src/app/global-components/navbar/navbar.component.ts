@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {RouterLink, RouterOutlet} from '@angular/router';
 
@@ -23,11 +23,6 @@ export class NavbarComponent {
   private count: number = 0;
 
   constructor(private el: ElementRef) {}
-
-  setMenuStatus(open: boolean) {
-    this.isMenuOpen = open;
-    console.log("isMenuOpen: " + this.isMenuOpen);
-  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

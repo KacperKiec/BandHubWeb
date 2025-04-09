@@ -4,16 +4,25 @@
   min-height: 100vh;
 }
 
+app-navbar {
+  z-index: 30;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 app-header {
+  z-index: 20;
   height: 10vh;
-  position: relative;
+  position: sticky;
   top: 0;
 }
 
 app-footer {
+  z-index: 20;
   width: 100%;
   height: 3vh;
-  position: absolute;
+  position: fixed;
   bottom: 0;
 }
 

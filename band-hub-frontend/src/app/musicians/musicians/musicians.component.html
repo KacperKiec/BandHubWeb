@@ -1,3 +1,4 @@
-<div class="container main-stage">
+<div class="container">
   <app-search-bar [filters]="filters" [placeholderText]="placeholderText" (emitParams)="getParams($event)"></app-search-bar>
+  <app-search-result [results]="musiciansToDisplay"></app-search-result>
 </div>

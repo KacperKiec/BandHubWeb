@@ -1,8 +1,29 @@
 .container{
+  min-height: 87vh;
+  height: 100%;
+  width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: #E4DCC6;
+}
+
+.container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4)), url("/assets/musician.jpg");
 }
 
 app-search-bar{
   height: 100px;
+  width: 30%;
+  margin: 10px auto 0px;
 }
+
