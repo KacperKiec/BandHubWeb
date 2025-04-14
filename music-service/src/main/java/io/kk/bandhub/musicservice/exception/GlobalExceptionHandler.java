@@ -1,6 +1,5 @@
 package io.kk.bandhub.musicservice.exception;
 
-import io.kk.bandhub.musicservice.dto.RegistrationException;
 import io.kk.bandhub.musicservice.exception.band.BandError;
 import io.kk.bandhub.musicservice.exception.band.BandException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;

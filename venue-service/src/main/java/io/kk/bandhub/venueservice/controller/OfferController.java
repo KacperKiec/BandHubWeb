@@ -1,6 +1,7 @@
 package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.OfferDTO;
+import io.kk.bandhub.venueservice.model.OfferPurpose;
 import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.service.OfferService;
 import jakarta.validation.Valid;
@@ -68,9 +69,10 @@ public class OfferController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) OfferStatus status,
+            @RequestParam(required = false) OfferPurpose purpose,
             @RequestParam(required = false)LocalDate date) {
 
-        var result = offerService.searchOffers(cities, status, date, pageable);
+        var result = offerService.searchOffers(cities, status, purpose, date, pageable);
         return ResponseEntity.ok(result);
     }
 }

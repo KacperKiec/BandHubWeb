@@ -1,9 +1,6 @@
 package io.kk.bandhub.musicservice.service;
 
-import io.kk.bandhub.musicservice.dto.GenreDTO;
-import io.kk.bandhub.musicservice.dto.InstrumentDTO;
-import io.kk.bandhub.musicservice.dto.Mapper;
-import io.kk.bandhub.musicservice.dto.MusicianDTO;
+import io.kk.bandhub.musicservice.dto.*;
 import io.kk.bandhub.musicservice.exception.genre.GenreError;
 import io.kk.bandhub.musicservice.exception.genre.GenreException;
 import io.kk.bandhub.musicservice.exception.instrument.InstrumentError;
@@ -17,11 +14,14 @@ import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Service class for provide data and methods for MusicianController
@@ -31,12 +31,14 @@ public class MusicianService {
     private final MusicianRepository musicianRepository;
     private final GenreRepository genreRepository;
     private final InstrumentRepository instrumentRepository;
+    private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
 
-    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, Mapper mapper) {
+    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, AccountServiceClient accountServiceClient, Mapper mapper) {
         this.musicianRepository = musicianRepository;
         this.genreRepository = genreRepository;
         this.instrumentRepository = instrumentRepository;
+        this.accountServiceClient = accountServiceClient;
         this.mapper = mapper;
     }
 
@@ -146,18 +148,49 @@ public class MusicianService {
     }
 
     public Page<MusicianDTO> findMusiciansByFilters(
-            List<String> cities,
             List<String> genres,
             List<String> instruments,
             Boolean isLookingForBand,
-            Pageable pageable) {
+            Pageable pageable,
+            String firstName,
+            String lastName,
+            Integer minAge,
+            Integer maxAge,
+            List<String> cities) {
 
-        Specification<Musician> spec = Specification.where(MusicianSpecification.hasCities(cities))
-                .and(MusicianSpecification.hasGenres(genres))
+        Specification<Musician> spec = Specification.where(MusicianSpecification.hasGenres(genres))
                 .and(MusicianSpecification.hasInstruments(instruments))
                 .and(MusicianSpecification.isLookingForBand(isLookingForBand));
 
-        return musicianRepository.findAll(spec, pageable).map(mapper::toMusicianDTO);
+        var musicianResult = musicianRepository.findAll(spec, pageable).map(mapper::toMusicianDTO);
+
+        if(firstName == null && lastName == null && minAge == null && maxAge == null && (cities == null || cities.isEmpty())) {
+            return musicianResult;
+        }
+
+        Page<AccountDTO> accountResult;
+        try {
+            accountResult = accountServiceClient.getAccountsWithParams(firstName, lastName, minAge, maxAge, cities);
+        } catch (Exception e) {
+            return musicianResult;
+        }
+
+        Map<Integer, AccountDTO> accountMap = accountResult.getContent().stream()
+                .collect(Collectors.toMap(AccountDTO::getId, account -> account));
+
+        List<MusicianDTO> enrichedMusicians = musicianResult.getContent().stream()
+                .filter(musician -> accountMap.containsKey(musician.getId()))
+                .peek(musician -> {
+                    AccountDTO account = accountMap.get(musician.getId());
+                    musician.setFirstName(account.getFirstName());
+                    musician.setLastName(account.getLastName());
+                    musician.setBirthday(account.getBirthDate());
+                    musician.setGender(account.getGender() != null ? (account.getGender() ? "Male" : "Female") : null);
+                    musician.setCity(account.getCity());
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(enrichedMusicians, pageable, enrichedMusicians.size());
     }
 
     @Transactional

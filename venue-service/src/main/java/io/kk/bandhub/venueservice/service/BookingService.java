@@ -4,6 +4,7 @@ import io.kk.bandhub.venueservice.dto.*;
 import io.kk.bandhub.venueservice.exception.offer.OfferError;
 import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.model.Booking;
+import io.kk.bandhub.venueservice.model.OfferPurpose;
 import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
 import io.kk.bandhub.venueservice.repository.booking.BookingSpecification;
@@ -52,9 +53,8 @@ public class BookingService {
         booking.setOffer(offer);
         offerRepository.save(offer);
         var mappedBooking = mapper.toBookingDTO(bookingRepository.save(booking));
-        mappedBooking.setToPublish(bookingDTO.getToPublish());
 
-        if(bookingDTO.getToPublish()) {
+        if(offer.getPurpose().equals(OfferPurpose.concert)) {
             rabbitTemplate.convertAndSend(queueName, bookingDTO.getEvent());
         }
 

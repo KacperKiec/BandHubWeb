@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum GenreError {
     GENRE_NOT_FOUND("Genre was not found"),
-    GENRE_ALREADY_EXISTS("Genre with given parameters alreadt exists");
+    GENRE_ALREADY_EXISTS("Genre with given parameters already exists");
 
     private final String message;
 

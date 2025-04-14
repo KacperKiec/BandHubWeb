@@ -7,6 +7,7 @@ import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
 import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Offer;
+import io.kk.bandhub.venueservice.model.OfferPurpose;
 import io.kk.bandhub.venueservice.model.OfferStatus;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import io.kk.bandhub.venueservice.repository.offer.OfferSpecification;
@@ -51,10 +52,11 @@ public class OfferService {
 
     private OfferDTO setOfferFields(OfferDTO offerDTO, Offer offer) {
         offer.setDate(offerDTO.getDate());
-        offer.setStatus(OfferStatus.active);
+        offer.setStatus(offerDTO.getStatus());
         offer.setEndTime(offerDTO.getEndTime());
         offer.setStartTime(offerDTO.getStartTime());
         offer.setPricePerHour(BigDecimal.valueOf(offerDTO.getPricePerHour()));
+        offer.setPurpose(offerDTO.getPurpose());
 
         var venue = venueRepository.findById(offerDTO.getVenueId()).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
@@ -85,11 +87,13 @@ public class OfferService {
     public Page<OfferDTO> searchOffers(
             List<String> cities,
             OfferStatus status,
+            OfferPurpose purpose,
             LocalDate date,
             Pageable pageable) {
 
         Specification<Offer> spec = OfferSpecification.hasCity(cities)
                 .and(OfferSpecification.hasDate(date))
+                .and(OfferSpecification.hasPurpose(purpose))
                 .and(OfferSpecification.hasStatus(status));
 
         return offerRepository.findAll(spec, pageable).map(mapper::toOfferDTO);

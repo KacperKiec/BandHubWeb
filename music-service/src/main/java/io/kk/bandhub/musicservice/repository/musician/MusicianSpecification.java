@@ -11,15 +11,6 @@ import java.util.List;
  * */
 public class MusicianSpecification {
 
-    public static Specification<Musician> hasCities(List<String> cities) {
-        return (root, query, builder) -> {
-            if (cities == null || cities.isEmpty()) {
-                return builder.conjunction();
-            }
-            return root.get("city").in(cities);
-        };
-    }
-
     public static Specification<Musician> hasGenres(List<String> genres) {
         return (root, query, builder) -> {
             if (genres == null || genres.isEmpty()) {

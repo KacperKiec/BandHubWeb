@@ -51,6 +51,7 @@ public class Mapper {
         offerDTO.setVenueName(offer.getVenue().getName());
         offerDTO.setPricePerHour(offer.getPricePerHour().doubleValue());
         offerDTO.setStatus(offer.getStatus());
+        offerDTO.setPurpose(offer.getPurpose());
         return offerDTO;
     }
 

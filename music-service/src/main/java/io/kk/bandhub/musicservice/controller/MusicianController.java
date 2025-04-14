@@ -45,12 +45,16 @@ public class MusicianController {
     @GetMapping(value = "/search")
     ResponseEntity<Page<MusicianDTO>> searchMusician(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) Integer minAge,
+            @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) List<String> genres,
             @RequestParam(required = false) List<String> instruments,
             @RequestParam(required = false) Boolean isLookingForBand) {
 
-        var musicians = service.findMusiciansByFilters(cities, genres, instruments, isLookingForBand, pageable);
+        var musicians = service.findMusiciansByFilters(genres, instruments, isLookingForBand, pageable, firstName, lastName, minAge, maxAge, cities);
         return ResponseEntity.ok(musicians);
     }
 

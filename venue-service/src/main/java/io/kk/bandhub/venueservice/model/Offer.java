@@ -50,4 +50,8 @@ public class Offer {
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
 
+    @NotNull
+    @Column(name = "purpose", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OfferPurpose purpose;
 }
