@@ -3,6 +3,12 @@ spring:
     name: gateway-service
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       routes:
         - id: music-service
           uri: lb://MUSIC-SERVICE

@@ -1,22 +1,31 @@
-<div class="result-container">
-  <div class="results-grid">
-    <div class="result-element" *ngFor="let result of results">
-      <img [src]="result.image" alt="Profile pic" class="pic">
+<div class="wrapper">
+  <div class="result-container">
+    <div class="results-grid">
+      <div class="result-element" *ngFor="let result of results" (click)="goToDetails(result.id)">
+        <img [src]="result.image" alt="Profile pic" class="pic">
 
-      <label [innerText]="result.name" class="name-label"></label>
+        <label [innerText]="result.name" class="name-label"></label>
 
-      <label *ngIf="result.genres.length <= 3" [innerText]="'🎶' + result.genres.join(', ')" class="genres-label"></label>
-      <label *ngIf="result.genres.length > 3" [innerText]="'🎶' + result.genres.slice(0, 3) + ', ...'" class="genres-label"></label>
+        <label *ngIf="result.genres.length <= 3" [innerText]="'🎶' + result.genres.join(', ')" class="genres-label"></label>
+        <label *ngIf="result.genres.length > 3" [innerText]="'🎶' + result.genres.slice(0, 3) + ', ...'" class="genres-label"></label>
 
-      <label [innerText]="'📍' + result.city" class="city-label"></label>
+        <label [innerText]="'📍' + result.city" class="city-label"></label>
 
-      <label class="state-label">{{ result.isLookingFor ? '✅Szuka współpracy' : '❌Nie szuka współpracy' }}</label>
+        <label class="state-label">{{ result.isLookingFor ? '✅Szuka współpracy' : '❌Nie szuka współpracy' }}</label>
+      </div>
     </div>
-  </div>
 
-  <div class="page-panel">
-    <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
-    <div class="page-numbers">1...3</div>
-    <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
+    <div class="page-panel">
+      <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+        <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
+      </button>
+
+      <div class="page-numbers">Strona {{currentPage + 1}} z {{totalPages}}</div>
+
+      <button class="page-button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage + 1 === totalPages">
+        <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
+      </button>
+    </div>
+
   </div>
 </div>

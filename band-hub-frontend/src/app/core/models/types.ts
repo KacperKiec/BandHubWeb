@@ -17,6 +17,7 @@ export interface Musician {
   isLookingBand: boolean;
   genres: Genre[];
   instruments: Instrument[];
+  image?: string
 }
 
 export interface Band {
@@ -37,4 +38,21 @@ export interface SearchDisplayItem {
   genres: Genre[];
   isLookingFor: boolean;
   image: string;
+}
+
+export type ErrorResponse = {
+  errorCode: string;
+  message: string;
+}
+
+export interface Page<T> {
+  content: T[];
+  page: PageInfo
+}
+
+export type PageInfo = {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
 }

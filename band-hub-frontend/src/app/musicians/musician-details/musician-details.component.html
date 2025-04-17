@@ -1,0 +1,43 @@
+<div class="wrapper">
+  <div class="musician-details-container">
+    <div class="header">
+      <img [src]="musician.image" alt="Profile pic" class="profile-pic">
+      <div class="basic-info">
+        <h1>{{ musician.firstName }} {{ musician.lastName }}</h1>
+        <p class="location">📍 {{ musician.city }}</p>
+        <p class="status">{{ musician.isLookingBand ? '✅ Szuka zespołu' : '❌ Nie szuka zespołu' }}</p>
+      </div>
+    </div>
+
+    <div class="bio">
+      <h2>📝 Bio</h2>
+      <p>{{ musician.bio }}</p>
+    </div>
+
+    <div class="details-grid">
+      <div>
+        <h3>🎶 Gatunki</h3>
+        <ul>
+          <li *ngFor="let genre of musician.genres">{{ genre }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>🎸 Instrumenty</h3>
+        <ul>
+          <li *ngFor="let instrument of musician.instruments">{{ instrument }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>🎂 Wiek</h3>
+        <p>{{ calculateAge(musician.birthday) }} lat</p>
+      </div>
+    </div>
+
+    <div class="chat-action" (click)="startChat(musician.id)">
+      <img class="icon" ngSrc="/icons8-chat-message-black-48.png" height="19" width="19" alt="Friends Icon">
+      <p>Rozpocznij czat</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+.wrapper {
+  padding: 20px;
+}
+
+.musician-details-container {
+  width: 70%;
+  margin: 5px auto 15px;
+  padding: 3rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.basic-info h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.status {
+  font-weight: bold;
+}
+
+.bio, .details-grid {
+  margin-top: 2rem;
+}
+
+.details-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.details-grid div {
+  flex: 1;
+}
+
+.chat-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 5px;
+  width: 15%;
+  margin-top: 2rem;
+  text-align: center;
+  border-radius: 25px;
+  border: 1px solid #615D55;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.chat-action img {
+  cursor: pointer;
+}
+
+.chat-action p {
+  padding: 0;
+  margin: 0 2px;
+}

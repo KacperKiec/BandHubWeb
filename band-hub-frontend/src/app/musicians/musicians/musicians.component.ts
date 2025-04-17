@@ -4,6 +4,8 @@ import {Genre} from '../../core/models/genre.model';
 import {Instrument} from '../../core/models/instrument.model';
 import {filterElement, Musician, SearchDisplayItem} from '../../core/models/types';
 import {SearchResultComponent} from '../../shared/search-result/search-result.component';
+import {MusicianApiService} from '../../services/musician-service/musician-api.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-musicians',
@@ -27,6 +29,11 @@ export class MusiciansComponent {
   @Output() musiciansToDisplay: SearchDisplayItem[];
 
   searchingParams: {name: string, value: string}[]= [];
+  preparedParams: {name: string, value: string[]}[]=[];
+
+  currentPage = 0;
+  pageSize = 10;
+  totalPages = 0;
 
   sampleMusicians: Musician[] = [
     <Musician>{
@@ -151,14 +158,35 @@ export class MusiciansComponent {
     }
   ];
 
-  constructor() {
+  constructor(private musicianApiService: MusicianApiService, private router: Router) {
     this.musiciansToDisplay = this.sampleMusicians.map(this.mapMusicianToDisplayItem);
+  }
+
+  ngOnInit() {
+    this.loadPage(this.currentPage);
+  }
+
+  loadPage(page: number) {
+    this.musicianApiService.getMusiciansWithParams(this.preparedParams, page, this.pageSize).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.totalPages = response.page.totalPages;
+        this.currentPage = response.page.number;
+        this.musiciansToDisplay = response.content.map(this.mapMusicianToDisplayItem);
+      },
+      error: (err) => console.error('Error occurred:', err)
+    });
+  }
+
+  goToDetails(id: number) {
+    this.router.navigate(['/musicians', id]);
   }
 
   getParams(data: filterElement[]): void{
     this.searchingParams = data;
-    const preparedData = this.prepareData();
-    console.log(preparedData);
+    this.preparedParams = this.prepareData();
+    console.log(this.preparedParams);
+    this.loadPage(0);
   }
 
   private prepareData(): {name: string, value: string[]}[] {
