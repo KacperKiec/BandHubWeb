@@ -1,0 +1,39 @@
+<div class="wrapper">
+  <div class="band-details-container">
+    <div class="header">
+      <img [src]="band.image" alt="Profile pic" class="profile-pic">
+      <div class="basic-info">
+        <h1>{{band.name}}</h1>
+        <p class="location">📍 {{ band.city }}</p>
+        <p class="status">{{ band.isLookingMembers ? '✅ Szuka muzyków' : '❌ Nie szuka muzyków' }}</p>
+      </div>
+    </div>
+
+    <div class="bio">
+      <h2>📝 Bio</h2>
+      <p>{{ band.bio }}</p>
+    </div>
+
+    <div class="details-grid">
+      <div>
+        <h3>🎶 Gatunki</h3>
+        <ul>
+          <li *ngFor="let genre of band.genres">{{ genre }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>👥 Członkowie zespołu</h3>
+        <div class="band-members">
+          <div *ngFor="let member of band.musicians" class="member-tile" (click)="getMusicianDetails(member.id)">
+            <label class="member-name">{{member.firstName}} {{member.lastName}}</label>
+
+            <label *ngIf="member.instruments.length <= 3" [innerText]="'🎸' + member.instruments.join(', ')" class="instruments-label"></label>
+            <label *ngIf="member.instruments.length > 3" [innerText]="'🎸' + member.instruments.slice(0, 3) + ', ...'" class="instruments-label"></label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

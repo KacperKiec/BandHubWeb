@@ -115,6 +115,7 @@
 }
 
 .filter-label{
+  font-size: 14px;
   min-width: 30%;
   margin-left: 10px;
 }
@@ -155,6 +156,7 @@
 }
 
 .param-element{
+  font-size: 14px;
   background-color: #0E1418;
   border: 2px solid #615D55;
   border-radius: 15px;

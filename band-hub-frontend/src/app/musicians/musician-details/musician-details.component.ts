@@ -34,12 +34,12 @@ export class MusicianDetailsComponent {
     image: '/assets/user.jpg'
   };
 
-  constructor(private route: ActivatedRoute, private musicianService: MusicianApiService) {}
+  constructor(private route: ActivatedRoute, private musicianApiService: MusicianApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    // this.musicianService.getMusicianById(id).subscribe(musician => {
+    // this.musicianApiService.getMusicianById(id).subscribe(musician => {
     //   this.musician = musician;
     // });
 

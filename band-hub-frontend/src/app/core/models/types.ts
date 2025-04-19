@@ -17,7 +17,7 @@ export interface Musician {
   isLookingBand: boolean;
   genres: Genre[];
   instruments: Instrument[];
-  image?: string
+  image?: string;
 }
 
 export interface Band {
@@ -29,6 +29,7 @@ export interface Band {
   musicians: Musician[];
   genres: Genre[];
   founderId: number;
+  image?: string;
 }
 
 export interface SearchDisplayItem {

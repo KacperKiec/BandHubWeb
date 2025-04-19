@@ -1,0 +1,16 @@
+.container{
+  min-height: 87vh;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #E4DCC6;
+}
+
+app-search-bar{
+  height: 100px;
+  width: 30%;
+  margin: 10px auto 0px;
+}
+
