@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #E4DCC6;
+  width: 50%;
+  height: 50%;
+  margin: 8% auto;
+}
+
+.credential {
+  width: 60%;
+  height: 15%;
+  margin: 10px auto 10px;
+}
+
+.credential input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  font-size: 16px;
+  padding: 0 10px;
+}
+
+.credential input::placeholder {
+  text-align: center;
+}
+
+.help-label {
+  margin: 0 auto;
+}
+
+.help-label label{
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.confirm-button, .register-button {
+  border: 1px solid #615D55;
+  border-radius: 25px;
+  background-color: #0E1418;
+  width: fit-content;
+  height: fit-content;
+  padding: 5px 10px;
+  margin: 20px auto;
+}
+
+.confirm-button label {
+  cursor: pointer;
+}
+
+.border-div {
+  width: 40%;
+  border: 1px solid #615D55;
+  margin-bottom: 5px;
+}
+
+.question-label {
+  font-size: 14px;
+}
+
+.register-button label {
+  cursor: pointer;
+  font-size: 14px;
+}

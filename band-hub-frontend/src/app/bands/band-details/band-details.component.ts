@@ -109,4 +109,8 @@ export class BandDetailsComponent {
   getMusicianDetails(id: number) {
     this.router.navigate(['/musicians', id]);
   }
+
+  goToBandEvents() {
+    console.log("band events");
+  }
 }

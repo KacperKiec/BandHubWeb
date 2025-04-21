@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="credential">
+    <input placeholder="Email" required>
+  </div>
+  <div class="credential">
+    <input placeholder="Hasło" type="password" required>
+  </div>
+  <div class="help-label" (click)="remindPassword()">
+    <label>Zapomnialem hasła</label>
+  </div>
+  <div class="confirm-button" (click)="confirmLogin()">
+    <label>Zaloguj się</label>
+  </div>
+
+  <div class="border-div"></div>
+  <label class="question-label">Nie masz konta?</label>
+
+  <div class="register-button" (click)="register()">
+    <label>Zarejestruj się</label>
+  </div>
+</div>

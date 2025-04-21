@@ -7,7 +7,7 @@
     <div>
       <label>Powiadomienia</label>
     </div>
-    <div class="log-status">
+    <div class="log-button" (click)="logIn()">
       <label *ngIf="isUserLoggedIn">Wyloguj</label>
 
       <label *ngIf="!isUserLoggedIn">Zaloguj</label>
