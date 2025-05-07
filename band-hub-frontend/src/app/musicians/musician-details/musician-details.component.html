@@ -30,6 +30,13 @@
       </div>
 
       <div>
+        <h3>🥁 Zespoły</h3>
+        <ul>
+          <li class="band-tile" *ngFor="let band of musicianBands" (click)="getBandDetails(band.id)">{{ band.name }}</li>
+        </ul>
+      </div>
+
+      <div>
         <h3>🎂 Wiek</h3>
         <p>{{ calculateAge(musician.birthday) }} lat</p>
       </div>

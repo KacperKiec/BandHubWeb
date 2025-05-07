@@ -8,6 +8,7 @@ import io.kk.bandhub.musicservice.exception.instrument.InstrumentException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.model.*;
+import io.kk.bandhub.musicservice.repository.band_musician.BandMusicianRepository;
 import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
 import io.kk.bandhub.musicservice.repository.instrument.InstrumentRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
@@ -31,13 +32,15 @@ public class MusicianService {
     private final MusicianRepository musicianRepository;
     private final GenreRepository genreRepository;
     private final InstrumentRepository instrumentRepository;
+    private final BandMusicianRepository bandMusicianRepository;
     private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
 
-    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, AccountServiceClient accountServiceClient, Mapper mapper) {
+    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, BandMusicianRepository bandMusicianRepository, AccountServiceClient accountServiceClient, Mapper mapper) {
         this.musicianRepository = musicianRepository;
         this.genreRepository = genreRepository;
         this.instrumentRepository = instrumentRepository;
+        this.bandMusicianRepository = bandMusicianRepository;
         this.accountServiceClient = accountServiceClient;
         this.mapper = mapper;
     }
@@ -191,6 +194,11 @@ public class MusicianService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(enrichedMusicians, pageable, enrichedMusicians.size());
+    }
+
+    public List<BandDTO> getMusicianBands(Integer id) {
+        var bands = bandMusicianRepository.getBandMusiciansByMusicianId(id).stream().map(BandMusician::getBand).toList();
+        return bands.stream().map(mapper::toBandDTO).toList();
     }
 
     @Transactional

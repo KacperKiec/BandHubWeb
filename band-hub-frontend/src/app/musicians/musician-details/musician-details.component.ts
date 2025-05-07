@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
-import {ActivatedRoute} from '@angular/router';
-import {Musician} from '../../core/models/types';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Band, Musician} from '../../core/models/types';
 import {Genre} from '../../core/models/genre.model';
 import {Instrument} from '../../core/models/instrument.model';
 import {NgForOf, NgOptimizedImage} from '@angular/common';
@@ -19,6 +19,7 @@ import {NgForOf, NgOptimizedImage} from '@angular/common';
 export class MusicianDetailsComponent {
 
   musician!: Musician;
+  musicianBands!: Band[];
 
   sampleMusician: Musician = <Musician>{
     id: 1,
@@ -34,22 +35,33 @@ export class MusicianDetailsComponent {
     image: '/assets/user.jpg'
   };
 
-  constructor(private route: ActivatedRoute, private musicianApiService: MusicianApiService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private musicianApiService: MusicianApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    // this.musicianApiService.getMusicianById(id).subscribe(musician => {
-    //   this.musician = musician;
-    // });
+    this.musicianApiService.getMusicianById(id).subscribe(musician => {
+      if(!musician.image) {
+        musician.image = 'assets/user.jpg'
+      }
+      this.musician = musician;
+    });
 
-    this.musician = this.sampleMusician;
+    this.musicianApiService.getMusicianBands(id).subscribe(bands => {
+      this.musicianBands = bands;
+    })
+
+    //this.musician = this.sampleMusician;
   }
 
   calculateAge(birthday: Date): number {
     const birth = new Date(birthday);
     const ageDifMs = Date.now() - birth.getTime();
     return Math.floor(ageDifMs / (1000 * 60 * 60 * 24 * 365.25));
+  }
+
+  getBandDetails(id: number) {
+    this.router.navigate(['/bands', id]);
   }
 
   startChat(id: number) {

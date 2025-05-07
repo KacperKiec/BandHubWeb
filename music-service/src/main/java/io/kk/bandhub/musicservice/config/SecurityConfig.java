@@ -27,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/musician/**").permitAll()
-                .requestMatchers("/band/**").authenticated()
+                .requestMatchers("/band/**").permitAll()
                 .requestMatchers("/genre/**").permitAll()
                 .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler

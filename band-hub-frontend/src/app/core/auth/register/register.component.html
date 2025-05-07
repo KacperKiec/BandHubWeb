@@ -1,1 +1,51 @@
-<p>register works!</p>
+<div class="container">
+  <form class="form-container" #registerForm="ngForm" (ngSubmit)="submitForm()">
+
+    <div class="personal-info">
+
+      <div class="names">
+        <input name="firstName" [(ngModel)]="formData.firstName" placeholder="Imie" required>
+        <input name="lastName" [(ngModel)]="formData.lastName" placeholder="Nazwisko" required>
+      </div>
+
+      <div class="date-of-birth">
+        <select name="day" [(ngModel)]="formData.day" required>
+          <option [ngValue]="null" disabled>Dzień</option>
+          <option *ngFor="let day of days" [ngValue]="day">{{ day }}</option>
+        </select>
+
+        <select name="month" [(ngModel)]="formData.month" required>
+          <option [ngValue]="null" disabled>Miesiąc</option>
+          <option *ngFor="let month of months" [ngValue]="month.value">{{ month.name }}</option>
+        </select>
+
+        <select name="year" [(ngModel)]="formData.year" required>
+          <option [ngValue]="null" disabled>Rok</option>
+          <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+        </select>
+      </div>
+
+      <div class="gender-select">
+        <select name="gender" [(ngModel)]="formData.gender" required>
+          <option [ngValue]="null" disabled>Płeć</option>
+          <option [ngValue]="true">Mężczyzna</option>
+          <option [ngValue]="false">Kobieta</option>
+        </select>
+      </div>
+
+      <div class="location-info">
+        <app-address-search (address)="getAddress($event)"></app-address-search>
+      </div>
+
+    </div>
+
+    <div class="account-info">
+      <input name="email" [(ngModel)]="formData.email" placeholder="Email" required>
+      <input name="password" [(ngModel)]="formData.password" type="password" placeholder="Hasło" required>
+      <input name="repeatPassword" [(ngModel)]="formData.repeatPassword" type="password" placeholder="Powtórz hasło" required>
+    </div>
+
+    <button class="register-button" type="submit">Zarejestruj</button>
+
+  </form>
+</div>

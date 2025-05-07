@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {catchError, Observable, tap} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Musician, Page} from '../../core/models/types';
+import {Band, Musician, Page} from '../../core/models/types';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
 
 @Injectable({
@@ -23,6 +23,14 @@ export class MusicianApiService {
 
   getMusicianById(id: number): Observable<Musician> {
     return this.http.get<Musician>(`${this.apiURL}/${id}`)
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  getMusicianBands(id: number): Observable<Band[]> {
+    return this.http.get<Band[]>(`${this.apiURL}/${id}/bands`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

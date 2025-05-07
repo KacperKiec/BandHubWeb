@@ -14,7 +14,7 @@
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   flex-wrap: wrap;
   margin: 0 auto;
   width: 100%;
@@ -31,7 +31,7 @@
   border-radius: 10px;
   border: 1px solid #615D55;
   background-color: rgba(14, 20, 24, 0.5);
-  margin: 5px;
+  margin: 10px 5px;
 }
 
 .result-element:hover {

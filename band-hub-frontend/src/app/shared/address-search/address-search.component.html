@@ -1,0 +1,15 @@
+<input
+  class="location-input"
+  type="text"
+  [(ngModel)]="searchTerm"
+  (input)="onSearch()"
+  placeholder="Miasto"
+  name="location"
+  autocomplete="off"
+>
+
+<ul class="suggestions-list" *ngIf="suggestions.length > 0">
+  <li class="suggestion" *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+    {{ suggestion.formatted }}
+  </li>
+</ul>

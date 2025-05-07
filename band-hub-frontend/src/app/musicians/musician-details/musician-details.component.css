@@ -48,6 +48,10 @@
   flex: 1;
 }
 
+.band-tile {
+  cursor: pointer;
+}
+
 .chat-action {
   display: flex;
   flex-direction: row;

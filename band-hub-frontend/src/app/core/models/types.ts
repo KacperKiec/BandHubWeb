@@ -6,6 +6,17 @@ export interface filterElement {
   value: string,
 }
 
+export interface Account {
+  firstName: string,
+  lastName: string,
+  birthday: Date,
+  gender: boolean,
+  email: string,
+  password: string,
+  city: string,
+  country: string
+}
+
 export interface Musician {
   id: number;
   firstName: string;
@@ -56,4 +67,14 @@ export type PageInfo = {
   totalElements: number;
   size: number;
   number: number;
+}
+
+export interface Address {
+  street: string;
+  number: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
 }

@@ -1,5 +1,6 @@
 package io.kk.bandhub.musicservice.controller;
 
+import io.kk.bandhub.musicservice.dto.BandDTO;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
 import io.kk.bandhub.musicservice.service.MusicianService;
 import jakarta.validation.Valid;
@@ -35,6 +36,11 @@ public class MusicianController {
     @GetMapping(value = "/{id}")
     ResponseEntity<MusicianDTO> getMusicianById(@PathVariable int id) {
         return ResponseEntity.ok(service.getById(id));
+    }
+
+    @GetMapping(value = "/{id}/bands")
+    ResponseEntity<List<BandDTO>> getMusicianBands(@PathVariable int id) {
+        return ResponseEntity.ok(service.getMusicianBands(id));
     }
 
     @GetMapping(value = "/all")

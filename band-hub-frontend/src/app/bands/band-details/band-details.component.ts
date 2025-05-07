@@ -99,11 +99,14 @@ export class BandDetailsComponent {
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    // this.musicianService.getMusicianById(id).subscribe(musician => {
-    //   this.musician = musician;
-    // });
+    this.bandApiService.getBandById(id).subscribe(band => {
+      if (!band.image) {
+        band.image = 'assets/user.jpg';
+      }
+      this.band = band;
+    });
 
-    this.band = this.sampleBand;
+    //this.band = this.sampleBand;
   }
 
   getMusicianDetails(id: number) {
