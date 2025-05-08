@@ -9,12 +9,13 @@ export interface filterElement {
 export interface Account {
   firstName: string,
   lastName: string,
-  birthday: Date,
+  birthDate: string,
   gender: boolean,
   email: string,
   password: string,
   city: string,
-  country: string
+  country: string,
+  roles: [{name: string}],
 }
 
 export interface Musician {

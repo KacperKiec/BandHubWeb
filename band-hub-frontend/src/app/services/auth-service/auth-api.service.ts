@@ -18,7 +18,8 @@ export class AuthApiService {
 
     return this.http.post(url, account)
       .pipe(
-        catchError((error) => this.errorHandler.handleError(error))
+        catchError((error) =>
+          this.errorHandler.handleError(error))
       );
   }
 }

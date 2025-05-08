@@ -46,7 +46,7 @@ public class AccountService{
         }
 
         Account account = new Account();
-        setAccountFields(account, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity());
+        setAccountFields(account, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity(), accountDTO.getCountry());
 
         for (RoleDTO role : accountDTO.getRoles()) {
             var existingRole = roleRepository.findRoleByName(role.getName()).orElseThrow(
@@ -72,12 +72,12 @@ public class AccountService{
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
 
-        setAccountFields(existingAccount, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity());
+        setAccountFields(existingAccount, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity(), accountDTO.getCountry());
 
         return mapper.toAccountDTO(accountRepository.save(existingAccount));
     }
 
-    private void setAccountFields(Account existingAccount, String email, String password, String firstName, String lastName, LocalDate birthDate, Boolean gender, String city) {
+    private void setAccountFields(Account existingAccount, String email, String password, String firstName, String lastName, LocalDate birthDate, Boolean gender, String city, String country) {
         existingAccount.setEmail(email);
         existingAccount.setPassword(passwordEncoder.encode(password));
         existingAccount.setFirstName(firstName);
@@ -85,6 +85,7 @@ public class AccountService{
         existingAccount.setBirthDate(birthDate);
         existingAccount.setGender(gender);
         existingAccount.setCity(city);
+        existingAccount.setCountry(country);
     }
 
     public AccountDTO findById(Integer id) {

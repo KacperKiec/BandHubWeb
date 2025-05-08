@@ -48,6 +48,7 @@ public class BandService {
         band.setName(bandDTO.getName());
         band.setBio(bandDTO.getBio());
         band.setCity(bandDTO.getCity());
+        band.setCountry(bandDTO.getCountry());
         band.setIsLookingMembers(bandDTO.isLookingMembers());
 
         for(GenreDTO genre : bandDTO.getGenres()) {
@@ -113,6 +114,7 @@ public class BandService {
         band.setName(bandDTO.getName());
         band.setIsLookingMembers(bandDTO.isLookingMembers());
         band.setCity(bandDTO.getCity());
+        band.setCountry(bandDTO.getCountry());
         band.setBio(bandDTO.getBio());
 
         for(GenreDTO genre : bandDTO.getGenres()) {

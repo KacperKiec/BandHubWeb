@@ -20,6 +20,9 @@ public class BandDTO {
     @Size(max = 20, message = "City name cannot exceed 20 characters")
     private String city;
 
+    @Size(max = 50, message = "City name cannot exceed 50 characters")
+    private String country;
+
     @Size(max = 400, message = "Bio cannot exceed 400 characters")
     private String bio;
 

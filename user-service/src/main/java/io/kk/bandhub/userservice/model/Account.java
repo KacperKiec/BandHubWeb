@@ -54,6 +54,10 @@ public class Account {
     @Column(name = "city", length = 50)
     private String city;
 
+    @Size(max = 50)
+    @Column(name = "country", length = 50)
+    private String country;
+
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountRole> accountRoles = new HashSet<>();
 

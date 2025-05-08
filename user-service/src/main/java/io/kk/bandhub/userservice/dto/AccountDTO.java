@@ -38,5 +38,9 @@ public class AccountDTO {
 
     @Size(max = 50)
     private String city;
+
+    @Size(max = 50)
+    private String country;
+
     private Set<RoleDTO> roles = new HashSet<>();
 }

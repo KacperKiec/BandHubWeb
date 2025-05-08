@@ -34,7 +34,7 @@
       </div>
 
       <div class="location-info">
-        <app-address-search (address)="getAddress($event)"></app-address-search>
+        <app-address-search [customClass]="'location-input'" (address)="getAddress($event)"></app-address-search>
       </div>
 
     </div>
@@ -48,4 +48,9 @@
     <button class="register-button" type="submit">Zarejestruj</button>
 
   </form>
+
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
 </div>

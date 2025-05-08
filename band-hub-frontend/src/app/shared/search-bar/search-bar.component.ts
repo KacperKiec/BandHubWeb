@@ -1,7 +1,8 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {filterElement} from '../../core/models/types';
+import {Address, filterElement} from '../../core/models/types';
+import {AddressSearchComponent} from '../address-search/address-search.component';
 
 @Component({
   selector: 'app-search-bar',
@@ -10,7 +11,8 @@ import {filterElement} from '../../core/models/types';
     NgOptimizedImage,
     NgForOf,
     FormsModule,
-    NgIf
+    NgIf,
+    AddressSearchComponent
   ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
@@ -50,6 +52,10 @@ export class SearchBarComponent implements OnInit{
     if(!this.el.nativeElement.contains(event.target)) {
       this.dropdownStatus = false;
     }
+  }
+
+  getAddress(index: number, address: Address) {
+    this.filterValue[index] = address.city;
   }
 
   addParam(index: number){

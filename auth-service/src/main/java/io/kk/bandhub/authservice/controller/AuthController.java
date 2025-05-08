@@ -2,6 +2,8 @@ package io.kk.bandhub.authservice.controller;
 
 import io.kk.bandhub.authservice.dto.AuthRequest;
 import io.kk.bandhub.authservice.service.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.time.*;
 
 @Controller
 @RequestMapping(value = "/auth")
@@ -25,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<String> login(@RequestBody AuthRequest request) {
+    ResponseEntity<Void> login(@RequestBody AuthRequest request, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -33,6 +37,17 @@ public class AuthController {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(token);
+        LocalDateTime now = LocalDateTime.now();
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(3600)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+        //System.out.println(cookie);
+        return ResponseEntity.ok().build();
     }
 }

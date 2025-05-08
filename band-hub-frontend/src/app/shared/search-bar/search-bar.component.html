@@ -18,8 +18,12 @@
         <div class="filters-element">
           <label class="filter-label">{{ filter.label }}</label>
 
-          <div class="filter-input" *ngIf="filter.type === 'text'">
+          <div class="filter-input" *ngIf="filter.type === 'text' && filter.label !== 'Miasto'">
             <input type="text" [(ngModel)]="filterValue[i]">
+          </div>
+
+          <div class="filter-input" *ngIf="filter.type === 'text' && filter.label === 'Miasto'">
+            <app-address-search [customClass]="'filter-input'" (address)="getAddress(i, $event)"></app-address-search>
           </div>
 
           <div class="filter-input" *ngIf="filter.type === 'number'">

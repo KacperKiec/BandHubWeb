@@ -13,12 +13,17 @@ export class ErrorHandlerService {
 
   handleError(error: HttpErrorResponse): Observable<never> {
     const statusCode = error.status;
-    const message = error.message;
+    const backendMessage = error.error?.message || error.message;
+    const errorCode = error.error?.errorCode || statusCode;
 
-    const fullErrorMessage = `Błąd ${statusCode}: ${message}`;
+    const fullErrorMessage = `Błąd: ${backendMessage} (kod: ${errorCode})`;
+    alert(fullErrorMessage); // Tu pokazujesz alert
+
+    // Możesz też wysłać to przez Subject, jak wcześniej:
     this.errorSubject.next(fullErrorMessage);
 
-    return throwError(() => new Error(fullErrorMessage));
+    return throwError(() => error); // Rzucasz oryginalny błąd dalej, jakby komponent chciał coś z nim jeszcze zrobić
   }
+
 
 }

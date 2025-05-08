@@ -37,10 +37,12 @@ public class JwtService {
         }
         String issuer = appIp + ":" + port;
 
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60);
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(expiration)
                 .claim("roles", roles)
                 .setIssuer("http://localhost:8020")
                 .signWith(privateKey, SignatureAlgorithm.RS256)

@@ -34,6 +34,10 @@ public class Band {
     @Column(name = "city", length = 20)
     private String city;
 
+    @Size(max = 20)
+    @Column(name = "country", length = 50)
+    private String country;
+
     @Size(max = 400)
     @Column(name = "bio", length = 400)
     private String bio;

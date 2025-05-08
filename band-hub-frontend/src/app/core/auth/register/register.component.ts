@@ -1,9 +1,10 @@
 import {Component, input, OnInit} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import { FormsModule} from '@angular/forms';
 import {AddressSearchComponent} from '../../../shared/address-search/address-search.component';
 import {Account, Address} from '../../models/types';
 import {AuthApiService} from '../../../services/auth-service/auth-api.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import {AuthApiService} from '../../../services/auth-service/auth-api.service';
     NgForOf,
     FormsModule,
     AddressSearchComponent,
+    NgIf,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -48,7 +50,9 @@ export class RegisterComponent implements OnInit{
     repeatPassword: ''
   };
 
-  constructor(private authApiService: AuthApiService) {
+  isLoading = false;
+
+  constructor(private authApiService: AuthApiService, private router: Router) {
   }
 
   ngOnInit() {
@@ -78,7 +82,7 @@ export class RegisterComponent implements OnInit{
     console.log('Dane formularza:', this.formData);
 
     for (let value of Object.values(this.formData)) {
-      if (!value) {
+      if (value === null) {
         alert('Uzupełnij wszystkie wymagane pola!');
         return;
       }
@@ -107,13 +111,25 @@ export class RegisterComponent implements OnInit{
       email: this.formData.email,
       password: this.formData.password,
       gender: this.formData.gender === true,
-      birthday: new Date(`${this.formData.year}-${this.formData.month}-${this.formData.day}`),
+      birthDate: `${this.formData.year}-${String(this.formData.month).padStart(2, '0')}-${String(this.formData.day).padStart(2, '0')}`,
       city: this.formData.city,
-      country: this.formData.country
+      country: this.formData.country,
+      roles: [{name: 'USER'}]
     };
 
+    this.isLoading = true;
+
     console.log(account)
-    //this.authApiService.registerAccount(account);
+    this.authApiService.registerAccount(account).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Błąd rejestracji:', err);
+
+        this.isLoading = false;
+      }
+    })
   }
 
   isValidDay(month: number, year: number, day: number): boolean {

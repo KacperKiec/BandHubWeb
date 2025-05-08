@@ -27,6 +27,7 @@ public class Mapper {
         accountDTO.setGender(account.getGender());
         accountDTO.setBirthDate(account.getBirthDate());
         accountDTO.setCity(account.getCity());
+        accountDTO.setCountry(account.getCountry());
 
         var roles = account.getAccountRoles().stream().map(AccountRole::getRole).map(this::toRoleDTO).collect(Collectors.toSet());
         accountDTO.setRoles(roles);

@@ -37,6 +37,7 @@ public class Mapper {
         dto.setId(band.getId());
         dto.setName(band.getName());
         dto.setCity(band.getCity());
+        dto.setCountry(band.getCountry());
         dto.setBio(band.getBio());
         dto.setLookingMembers(band.getIsLookingMembers());
         dto.setFounderId(bandRepository.getFounderId(band.getId()));

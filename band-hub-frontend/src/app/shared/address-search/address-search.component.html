@@ -1,7 +1,7 @@
 <input
-  class="location-input"
   type="text"
   [(ngModel)]="searchTerm"
+  [ngClass]="customClass"
   (input)="onSearch()"
   placeholder="Miasto"
   name="location"

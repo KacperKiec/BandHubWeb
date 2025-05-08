@@ -1,0 +1,1 @@
+ALTER TABLE band ADD COLUMN country varchar(50);

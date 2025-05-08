@@ -10,18 +10,22 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final JwtDecoder jwtDecoder;
 
-    public SecurityConfig(AuthenticationFailureHandler authenticationFailureHandler) {
+    public SecurityConfig(AuthenticationFailureHandler authenticationFailureHandler, JwtDecoder jwtDecoder) {
         this.authenticationFailureHandler = authenticationFailureHandler;
+        this.jwtDecoder = jwtDecoder;
     }
 
     @Bean
@@ -29,12 +33,14 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> registry
-                        .anyRequest().authenticated())
+                        .requestMatchers("/role/**").authenticated()
+                        .anyRequest().permitAll())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .addFilterBefore(new JwtCookieAuthenticationFilter(jwtDecoder), BasicAuthenticationFilter.class)
                 .build();
     }
 
@@ -48,7 +54,6 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
