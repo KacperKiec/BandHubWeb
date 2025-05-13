@@ -1,14 +1,17 @@
 package io.kk.bandhub.userservice.controller;
 
-import io.kk.bandhub.userservice.dto.AccountDTO;
-import io.kk.bandhub.userservice.dto.RoleDTO;
+import io.kk.bandhub.userservice.dto.*;
+import io.kk.bandhub.userservice.exception.AccountError;
+import io.kk.bandhub.userservice.exception.AccountException;
 import io.kk.bandhub.userservice.service.AccountService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +19,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/account")
+@AllArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
     @PostMapping
-    public ResponseEntity<AccountDTO> addAccount(@RequestBody @Valid AccountDTO accountDTO) {
-        var result = accountService.save(accountDTO);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<Void> addAccount(@RequestBody @Valid AccountRequestDTO accountRequestDTO) {
+        accountService.save(accountRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
@@ -37,8 +37,8 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<AccountDTO> updateAccount(@RequestBody @Valid AccountDTO accountDTO) {
-        var result = accountService.update(accountDTO);
+    public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO) {
+        var result = accountService.update(accountUpdateDTO);
         return ResponseEntity.ok(result);
     }
 
@@ -54,32 +54,50 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping(value = "/current")
+    public ResponseEntity<AccountResponseDTO> getCurrentAccount(Authentication authentication) {
+        String email;
+        try {
+            email = authentication.getName();
+        } catch (NullPointerException e) {
+            throw new AccountException(AccountError.ACCOUNT_NOT_FOUND);
+        }
+        var result = accountService.findByEmail(email);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(value = "/auth")
+    public ResponseEntity<AccountAuthDTO> getAccountToAuth(@RequestParam String email) {
+        var result = accountService.findToAuth(email);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AccountDTO> getAccount(@PathVariable Integer id) {
+    public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable Integer id) {
         var result = accountService.findById(id);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/email")
-    public ResponseEntity<AccountDTO> getAccountByEmail(@RequestParam String email) {
+    public ResponseEntity<AccountResponseDTO> getAccountByEmail(@RequestParam String email) {
         var result = accountService.findByEmail(email);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
         return ResponseEntity.ok(accountService.findAll());
     }
 
     @GetMapping(value = "/paged")
-    public ResponseEntity<Page<AccountDTO>> getAllAccounts(
+    public ResponseEntity<Page<AccountResponseDTO>> getAllAccounts(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable ) {
 
         return ResponseEntity.ok(accountService.findAll(pageable));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<AccountDTO>> findAllWithSpec(
+    public ResponseEntity<List<AccountResponseDTO>> findAllWithSpec(
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
@@ -94,7 +112,7 @@ public class AccountController {
     }
 
     @GetMapping("/search/paged")
-    public ResponseEntity<Page<AccountDTO>> findAllWithSpecPaged(
+    public ResponseEntity<Page<AccountResponseDTO>> findAllWithSpecPaged(
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,

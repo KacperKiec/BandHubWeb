@@ -11,9 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class AccountDTO {
-    private Integer id;
-
+public class AccountRequestDTO {
     @Size(max = 50)
     @NotNull
     private String email;

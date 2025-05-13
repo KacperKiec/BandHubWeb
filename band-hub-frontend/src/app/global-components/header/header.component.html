@@ -4,13 +4,20 @@
   </div>
   <div class="title" routerLink="/home">TYTUL</div>
   <div class="right-section">
-    <div>
+    <div class="user-tiles">
       <label>Powiadomienia</label>
     </div>
-    <div class="log-button" (click)="logIn()">
-      <label *ngIf="isUserLoggedIn">Wyloguj</label>
+    <div class="log-button" (click)="action()">
+<!--      <label *ngIf="isUserLoggedIn">Wyloguj</label>-->
+      <img *ngIf="isUserLoggedIn" ngSrc="/icons8-male-user-48.png" height="32" width="32">
 
       <label *ngIf="!isUserLoggedIn">Zaloguj</label>
     </div>
+
+    <div class="dropdown-menu" *ngIf="showDropdown" #dropdownMenu>
+      <div>Profil</div>
+      <div (click)="logOut()">Wyloguj</div>
+    </div>
+
   </div>
 </div>

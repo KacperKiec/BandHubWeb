@@ -1,9 +1,9 @@
 <div class="container">
   <div class="credential">
-    <input placeholder="Email" required>
+    <input placeholder="Email" [(ngModel)]="email" required>
   </div>
   <div class="credential">
-    <input placeholder="Hasło" type="password" required>
+    <input placeholder="Hasło" type="password" [(ngModel)]="password" required>
   </div>
   <div class="help-label" (click)="remindPassword()">
     <label>Zapomnialem hasła</label>

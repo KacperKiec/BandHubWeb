@@ -17,12 +17,11 @@ export class ErrorHandlerService {
     const errorCode = error.error?.errorCode || statusCode;
 
     const fullErrorMessage = `Błąd: ${backendMessage} (kod: ${errorCode})`;
-    alert(fullErrorMessage); // Tu pokazujesz alert
+    alert(fullErrorMessage);
 
-    // Możesz też wysłać to przez Subject, jak wcześniej:
     this.errorSubject.next(fullErrorMessage);
 
-    return throwError(() => error); // Rzucasz oryginalny błąd dalej, jakby komponent chciał coś z nim jeszcze zrobić
+    return throwError(() => error);
   }
 
 

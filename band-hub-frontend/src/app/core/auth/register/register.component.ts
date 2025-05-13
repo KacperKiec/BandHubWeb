@@ -5,6 +5,7 @@ import {AddressSearchComponent} from '../../../shared/address-search/address-sea
 import {Account, Address} from '../../models/types';
 import {AuthApiService} from '../../../services/auth-service/auth-api.service';
 import {Router} from '@angular/router';
+import {AuthService} from '../service/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -52,7 +53,7 @@ export class RegisterComponent implements OnInit{
 
   isLoading = false;
 
-  constructor(private authApiService: AuthApiService, private router: Router) {
+  constructor(private authApiService: AuthApiService, private router: Router, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -122,14 +123,22 @@ export class RegisterComponent implements OnInit{
     console.log(account)
     this.authApiService.registerAccount(account).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.authApiService.login(account.email, account.password).subscribe({
+          next: () => {
+            this.authService.setLoginStatus(true);
+            this.router.navigate(['/']);
+          },
+          error: (loginErr) => {
+            console.error('Logowanie nie powiodło się:', loginErr);
+            this.isLoading = false;
+          }
+        });
       },
       error: (err) => {
         console.error('Błąd rejestracji:', err);
-
         this.isLoading = false;
       }
-    })
+    });
   }
 
   isValidDay(month: number, year: number, day: number): boolean {

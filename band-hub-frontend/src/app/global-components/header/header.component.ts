@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../../core/auth/service/auth.service';
+import {AuthApiService} from '../../services/auth-service/auth-api.service';
 
 @Component({
   selector: 'app-header',
@@ -13,18 +15,50 @@ import {Router, RouterLink} from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
-  @Input() isUserLoggedIn = false;
+export class HeaderComponent implements OnInit{
+  isUserLoggedIn = false;
+  showDropdown = false;
+
+  @ViewChild('dropdownMenu') dropdownRef!: ElementRef;
+
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef) {
+  }
+
+  ngOnInit() {
+    this.authService.isLoggedIn$.subscribe(status => {
+      this.isUserLoggedIn = status;
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: MouseEvent) {
+    const clickedInsideDropdown = this.dropdownRef?.nativeElement.contains(event.target);
+    const clickedToggle = this.eRef.nativeElement.querySelector('.log-button')?.contains(event.target);
+
+    if (!clickedInsideDropdown && !clickedToggle) {
+      this.showDropdown = false;
+    }
   }
 
   openMenu() {
     this.emitOpeningMenu.emit(true);
   }
 
-  logIn() {
-    this.router.navigate(['auth/login']);
+  action() {
+    if(!this.isUserLoggedIn) {
+      this.router.navigate(['auth/login']);
+    } else {
+      this.showDropdown = !this.showDropdown;
+    }
   }
+
+  logOut() {
+    this.authApiService.logout().subscribe(() => {
+      this.authService.setLoginStatus(false);
+      this.showDropdown = false;
+    });
+  }
+
 }

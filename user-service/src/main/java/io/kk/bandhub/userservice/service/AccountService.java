@@ -1,8 +1,6 @@
 package io.kk.bandhub.userservice.service;
 
-import io.kk.bandhub.userservice.dto.AccountDTO;
-import io.kk.bandhub.userservice.dto.Mapper;
-import io.kk.bandhub.userservice.dto.RoleDTO;
+import io.kk.bandhub.userservice.dto.*;
 import io.kk.bandhub.userservice.exception.AccountError;
 import io.kk.bandhub.userservice.exception.AccountException;
 import io.kk.bandhub.userservice.exception.RoleError;
@@ -13,16 +11,18 @@ import io.kk.bandhub.userservice.repository.AccountRepository;
 import io.kk.bandhub.userservice.repository.AccountSpecification;
 import io.kk.bandhub.userservice.repository.RoleRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AccountService{
 
     private final AccountRepository accountRepository;
@@ -30,25 +30,25 @@ public class AccountService{
     private final PasswordEncoder passwordEncoder;
     private final Mapper mapper;
 
-    public AccountService(AccountRepository accountRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, Mapper mapper) {
-        this.accountRepository = accountRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
-    }
-
     @Transactional
-    public AccountDTO save(AccountDTO accountDTO) {
-        var existingAccount = accountRepository.findAccountByEmail(accountDTO.getEmail());
+    public void save(AccountRequestDTO accountRequestDTO) {
+        var existingAccount = accountRepository.findAccountByEmail(accountRequestDTO.getEmail());
 
         if (existingAccount.isPresent()) {
             throw new AccountException(AccountError.ACCOUNT_ALREADY_EXISTS);
         }
 
         Account account = new Account();
-        setAccountFields(account, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity(), accountDTO.getCountry());
+        account.setEmail(accountRequestDTO.getEmail());
+        account.setPassword(passwordEncoder.encode(accountRequestDTO.getPassword()));
+        account.setFirstName(accountRequestDTO.getFirstName());
+        account.setLastName(accountRequestDTO.getLastName());
+        account.setBirthDate(accountRequestDTO.getBirthDate());
+        account.setGender(accountRequestDTO.getGender());
+        account.setCity(accountRequestDTO.getCity());
+        account.setCountry(accountRequestDTO.getCountry());
 
-        for (RoleDTO role : accountDTO.getRoles()) {
+        for (RoleDTO role : accountRequestDTO.getRoles()) {
             var existingRole = roleRepository.findRoleByName(role.getName()).orElseThrow(
                     () -> new RoleException(RoleError.ROLE_NOT_FOUND)
             );
@@ -56,61 +56,68 @@ public class AccountService{
             account.addAccountRole(accountRole);
         }
 
-        return mapper.toAccountDTO(accountRepository.save(account));
+        accountRepository.save(account);
     }
 
     public void delete(Integer id) {
-        var existingAccount = accountRepository.findAccountById(id).orElseThrow(
+        accountRepository.findAccountById(id).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
         accountRepository.deleteById(id);
     }
 
     @Transactional
-    public AccountDTO update(AccountDTO accountDTO) {
-        var existingAccount = accountRepository.findAccountById(accountDTO.getId()).orElseThrow(
+    public AccountResponseDTO update(AccountUpdateDTO accountUpdateDTO) {
+        var existingAccount = accountRepository.findAccountById(accountUpdateDTO.getId()).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
 
-        setAccountFields(existingAccount, accountDTO.getEmail(), accountDTO.getPassword(), accountDTO.getFirstName(), accountDTO.getLastName(), accountDTO.getBirthDate(), accountDTO.getGender(), accountDTO.getCity(), accountDTO.getCountry());
-
+        existingAccount.setFirstName(accountUpdateDTO.getFirstName());
+        existingAccount.setLastName(accountUpdateDTO.getLastName());
+        existingAccount.setBirthDate(accountUpdateDTO.getBirthDate());
+        existingAccount.setGender(accountUpdateDTO.getGender());
+        existingAccount.setCity(accountUpdateDTO.getCity());
+        existingAccount.setCountry(accountUpdateDTO.getCountry());
         return mapper.toAccountDTO(accountRepository.save(existingAccount));
     }
 
-    private void setAccountFields(Account existingAccount, String email, String password, String firstName, String lastName, LocalDate birthDate, Boolean gender, String city, String country) {
-        existingAccount.setEmail(email);
-        existingAccount.setPassword(passwordEncoder.encode(password));
-        existingAccount.setFirstName(firstName);
-        existingAccount.setLastName(lastName);
-        existingAccount.setBirthDate(birthDate);
-        existingAccount.setGender(gender);
-        existingAccount.setCity(city);
-        existingAccount.setCountry(country);
+    public AccountAuthDTO findToAuth(String email) {
+        var existingAccount = accountRepository.findAccountByEmail(email).orElseThrow(
+                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
+        );
+
+
+        return AccountAuthDTO.builder()
+                        .id(existingAccount.getId())
+                        .email(existingAccount.getEmail())
+                        .password(existingAccount.getPassword())
+                        .roles(existingAccount.getAccountRoles().stream().map(AccountRole::getRole).map(mapper::toRoleDTO).collect(Collectors.toSet()))
+                        .build();
     }
 
-    public AccountDTO findById(Integer id) {
+    public AccountResponseDTO findById(Integer id) {
         var existingAccount = accountRepository.findAccountById(id).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
         return mapper.toAccountDTO(existingAccount);
     }
 
-    public AccountDTO findByEmail(String email) {
+    public AccountResponseDTO findByEmail(String email) {
         var existingAccount = accountRepository.findAccountByEmail(email).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
         return mapper.toAccountDTO(existingAccount);
     }
 
-    public List<AccountDTO> findAll() {
+    public List<AccountResponseDTO> findAll() {
         return accountRepository.findAll().stream().map(mapper::toAccountDTO).toList();
     }
 
-    public Page<AccountDTO> findAll(Pageable pageable) {
+    public Page<AccountResponseDTO> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable).map(mapper::toAccountDTO);
     }
 
-    public List<AccountDTO> findAllWithSpec(
+    public List<AccountResponseDTO> findAllWithSpec(
             String email,
             String firstName,
             String lastName,
@@ -131,7 +138,7 @@ public class AccountService{
         return accountRepository.findAll(spec).stream().map(mapper::toAccountDTO).toList();
     }
 
-    public Page<AccountDTO> findAllWithSpec(
+    public Page<AccountResponseDTO> findAllWithSpec(
             String email,
             String firstName,
             String lastName,

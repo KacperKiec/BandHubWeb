@@ -13,13 +13,29 @@ export class AuthApiService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
-  registerAccount(account: Account): Observable<any> {
+  registerAccount(account: Account): Observable<void> {
     const url = `${this.apiURL}/account`;
 
-    return this.http.post(url, account)
+    return this.http.post<void>(url, account)
       .pipe(
         catchError((error) =>
           this.errorHandler.handleError(error))
       );
+  }
+
+  login(email: string, password: string): Observable<void> {
+    return this.http.post<void>(`${this.apiURL}/auth/login`, { email, password }, { withCredentials: true })
+      .pipe(
+        catchError((error) =>
+          this.errorHandler.handleError(error))
+      );
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.apiURL}/auth/logout`, {}, { withCredentials: true })
+      .pipe(
+        catchError((error) =>
+          this.errorHandler.handleError(error))
+    );
   }
 }

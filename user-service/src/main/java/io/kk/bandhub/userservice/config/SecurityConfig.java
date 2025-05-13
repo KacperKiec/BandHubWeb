@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/role/**").authenticated()
+                        .requestMatchers("/role/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))

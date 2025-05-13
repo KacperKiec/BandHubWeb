@@ -1,4 +1,4 @@
-import {Component, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from './global-components/header/header.component';
 import {FooterComponent} from './global-components/footer/footer.component';
