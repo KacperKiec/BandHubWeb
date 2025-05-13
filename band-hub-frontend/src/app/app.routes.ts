@@ -8,6 +8,7 @@ import {LoginComponent} from './core/auth/login/login.component';
 import {RegisterComponent} from './core/auth/register/register.component';
 import {PasswordReminderComponent} from './core/auth/password-reminder/password-reminder.component';
 import {ProfileComponent} from './user/profile/profile.component';
+import {EditProfileComponent} from './user/edit/edit-profile/edit-profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
   { path: 'auth/register', component: RegisterComponent },
   { path: 'auth/remind', component: PasswordReminderComponent },
-  { path: 'profile', component: ProfileComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: 'profile/edit', component: EditProfileComponent },
 ]

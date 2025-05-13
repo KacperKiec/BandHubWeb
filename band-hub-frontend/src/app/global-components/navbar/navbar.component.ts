@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {AuthService} from '../../core/auth/service/auth.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit{
 
   private count: number = 0;
 
-  constructor(private el: ElementRef, private authService: AuthService) {}
+  constructor(private el: ElementRef, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe(status => {
@@ -46,6 +46,14 @@ export class NavbarComponent implements OnInit{
         this.closeMenuEmitter.emit(this.isMenuOpen);
         this.count = 0;
       }
+    }
+  }
+
+  goToCurrentUerProfile() {
+    if(this.isUserLoggedIn) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/auth/login']);
     }
   }
 }

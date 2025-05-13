@@ -100,6 +100,7 @@ public class Mapper {
             dto.setBirthday(account.getBirthDate());
             dto.setGender(account.getGender() != null ? (account.getGender() ? "Male" : "Female") : null);
             dto.setCity(account.getCity());
+            dto.setCountry(account.getCountry());
         }
 
         return dto;

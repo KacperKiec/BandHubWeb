@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
 import {Band, Musician} from '../../core/models/types';
-import {Genre} from '../../core/models/genre.model';
-import {Instrument} from '../../core/models/instrument.model';
+import {GenreEnum} from '../../core/models/genre.model';
+import {InstrumentEnum} from '../../core/models/instrument.model';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 
 @Component({
@@ -27,7 +27,7 @@ export class BandDetailsComponent {
     city: 'Krakow',
     bio: 'biobiobiobiob',
     isLookingMembers: true,
-    genres: [Genre.METAL, Genre.ROCK],
+    genres: [GenreEnum.METAL, GenreEnum.ROCK],
     musicians: [
       <Musician>{
         id: 1,
@@ -38,8 +38,8 @@ export class BandDetailsComponent {
         city: 'Krakow',
         bio: 'Davie Jones` bio',
         isLookingBand: true,
-        genres: [Genre.METAL, Genre.ROCK],
-        instruments: [Instrument.BASS, Instrument.KEYBOARD]
+        genres: [GenreEnum.METAL, GenreEnum.ROCK],
+        instruments: [InstrumentEnum.BASS, InstrumentEnum.KEYBOARD]
       },
       <Musician>{
         id: 2,
@@ -50,8 +50,8 @@ export class BandDetailsComponent {
         city: 'Berlin',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [Genre.POP, Genre.CLASSIC, Genre.INDIE],
-        instruments: [Instrument.VOICE, Instrument.DRUMS]
+        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
+        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
       },
       <Musician>{
         id: 2,
@@ -62,8 +62,8 @@ export class BandDetailsComponent {
         city: 'Berlin',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [Genre.POP, Genre.CLASSIC, Genre.INDIE],
-        instruments: [Instrument.VOICE, Instrument.DRUMS]
+        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
+        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
       },
       <Musician>{
         id: 2,
@@ -74,8 +74,8 @@ export class BandDetailsComponent {
         city: 'Berlin',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [Genre.POP, Genre.CLASSIC, Genre.INDIE],
-        instruments: [Instrument.VOICE, Instrument.DRUMS]
+        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
+        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
       },
       <Musician>{
         id: 2,
@@ -86,8 +86,8 @@ export class BandDetailsComponent {
         city: 'Berlin',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [Genre.POP, Genre.CLASSIC, Genre.INDIE],
-        instruments: [Instrument.VOICE, Instrument.DRUMS]
+        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
+        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
       }
     ],
     founderId: 1,

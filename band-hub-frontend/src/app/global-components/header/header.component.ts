@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild} from '@angular/core';
 import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../core/auth/service/auth.service';
@@ -54,10 +54,15 @@ export class HeaderComponent implements OnInit{
     }
   }
 
+  goToUserProfile() {
+    this.router.navigate(['/profile']);
+  }
+
   logOut() {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);
       this.showDropdown = false;
+      this.router.navigate(['/']);
     });
   }
 

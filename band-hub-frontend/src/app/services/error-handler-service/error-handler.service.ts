@@ -17,11 +17,11 @@ export class ErrorHandlerService {
     const errorCode = error.error?.errorCode || statusCode;
 
     const fullErrorMessage = `Błąd: ${backendMessage} (kod: ${errorCode})`;
-    alert(fullErrorMessage);
+    //alert(fullErrorMessage);
 
     this.errorSubject.next(fullErrorMessage);
 
-    return throwError(() => error);
+    return throwError(() => fullErrorMessage);
   }
 
 

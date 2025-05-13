@@ -2,6 +2,7 @@ package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.BandDTO;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
+import io.kk.bandhub.musicservice.dto.MusicianRequestDTO;
 import io.kk.bandhub.musicservice.service.MusicianService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,8 @@ public class MusicianController {
     }
 
     @PostMapping
-    ResponseEntity<MusicianDTO> addMusician(@RequestBody @Valid MusicianDTO musicianDTO) {
-        var savedMusician = service.save(musicianDTO);
+    ResponseEntity<MusicianDTO> addMusician(@RequestBody @Valid MusicianRequestDTO musicianRequestDTO) {
+        var savedMusician = service.save(musicianRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMusician);
     }
 

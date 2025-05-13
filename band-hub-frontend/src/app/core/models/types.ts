@@ -1,12 +1,12 @@
-import {Genre} from './genre.model';
-import {Instrument} from './instrument.model';
+import {GenreEnum} from './genre.model';
+import {InstrumentEnum} from './instrument.model';
 
 export interface filterElement {
   name: string,
   value: string,
 }
 
-export interface Account {
+export interface AccountRequest {
   firstName: string,
   lastName: string,
   birthDate: string,
@@ -18,6 +18,17 @@ export interface Account {
   roles: [{name: string}],
 }
 
+export interface AccountResponse {
+  id: number,
+  firstName: string,
+  lastName: string,
+  birthDate: Date,
+  gender: boolean
+  city: string,
+  country: string
+  image?: string;
+}
+
 export interface Musician {
   id: number;
   firstName: string;
@@ -25,11 +36,20 @@ export interface Musician {
   birthday: Date;
   gender: string;
   city: string;
+  country: string;
   bio: string;
   isLookingBand: boolean;
-  genres: Genre[];
-  instruments: Instrument[];
+  genres: GenreEnum[];
+  instruments: InstrumentEnum[];
   image?: string;
+}
+
+export interface MusicianRequest {
+  id: number,
+  bio: string,
+  isLookingBand: boolean,
+  genres: Genre[],
+  instruments: Instrument[]
 }
 
 export interface Band {
@@ -39,7 +59,7 @@ export interface Band {
   bio: string;
   isLookingMembers: boolean;
   musicians: Musician[];
-  genres: Genre[];
+  genres: GenreEnum[];
   founderId: number;
   image?: string;
 }
@@ -48,7 +68,7 @@ export interface SearchDisplayItem {
   id: number;
   name: string;
   city: string;
-  genres: Genre[];
+  genres: GenreEnum[];
   isLookingFor: boolean;
   image: string;
 }
@@ -78,4 +98,14 @@ export interface Address {
   country: string;
   latitude: number;
   longitude: number;
+}
+
+export interface Genre {
+  id: number,
+  name: string
+}
+
+export interface Instrument{
+  id: number,
+  name: string
 }

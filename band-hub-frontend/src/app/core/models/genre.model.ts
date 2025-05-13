@@ -1,4 +1,4 @@
-export enum Genre {
+export enum GenreEnum {
   ROCK = "Rock",
   METAL = "Metal",
   GRUNGE = "Grunge",

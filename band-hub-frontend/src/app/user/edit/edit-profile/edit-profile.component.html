@@ -1,0 +1,31 @@
+<div class="tab-container">
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'account'"
+      (click)="activeTab = 'account'">
+      🧍 Konto
+    </button>
+
+    <button
+      *ngIf="isMusician"
+      class="tab-button"
+      [class.active]="activeTab === 'musician'"
+      (click)="activeTab = 'musician'">
+      🎸 Muzyk
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'password'"
+      (click)="activeTab = 'password'">
+      🔒 Hasło
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <app-edit-account-form *ngIf="activeTab === 'account'"></app-edit-account-form>
+    <app-edit-musician-form *ngIf="activeTab === 'musician'"></app-edit-musician-form>
+    <app-edit-password-form *ngIf="activeTab === 'password'"></app-edit-password-form>
+  </div>
+</div>

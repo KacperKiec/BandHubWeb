@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Band, Musician} from '../../core/models/types';
-import {Genre} from '../../core/models/genre.model';
-import {Instrument} from '../../core/models/instrument.model';
+import {GenreEnum} from '../../core/models/genre.model';
+import {InstrumentEnum} from '../../core/models/instrument.model';
 import {NgForOf, NgOptimizedImage} from '@angular/common';
 
 @Component({
@@ -30,8 +30,8 @@ export class MusicianDetailsComponent {
     city: 'Krakow',
     bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium, nisi non vestibulum faucibus, massa nisl molestie risus, id hendrerit eros urna molestie libero. Ut malesuada vestibulum ante id porttitor. Nunc gravida vitae risus nec cursus. Nam eros orci, commodo at odio in, rhoncus facilisis dui. Suspendisse malesuada sem vel vehicula mattis. Nulla vel urna et arcu vulputate elementum quis in felis. Etiam quis mi quis nibh elementum blandit. Nunc eu molestie justo, feugiat sodales metus. Fusce non arcu vulputate, molestie velit eu, feugiat mauris. Cras molestie lectus a diam interdum accumsan. Proin nibh risus, fringilla a lorem in, placerat volutpat massa. Donec nec rhoncus magna, a varius sapien.',
     isLookingBand: true,
-    genres: [Genre.METAL, Genre.ROCK],
-    instruments: [Instrument.BASS, Instrument.KEYBOARD],
+    genres: [GenreEnum.METAL, GenreEnum.ROCK],
+    instruments: [InstrumentEnum.BASS, InstrumentEnum.KEYBOARD],
     image: '/assets/user.jpg'
   };
 

@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/musician/**").permitAll()
                 .requestMatchers("/band/**").permitAll()
                 .requestMatchers("/genre/**").permitAll()
+                .requestMatchers("/instrument/**").permitAll()
                 .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))

@@ -4,7 +4,7 @@
       <img [src]="musician.image" alt="Profile pic" class="profile-pic">
       <div class="basic-info">
         <h1>{{ musician.firstName }} {{ musician.lastName }}</h1>
-        <p class="location">📍 {{ musician.city }}</p>
+        <p class="location">📍 {{ musician.city }}, {{ musician.country }}</p>
         <p class="status">{{ musician.isLookingBand ? '✅ Szuka zespołu' : '❌ Nie szuka zespołu' }}</p>
       </div>
     </div>

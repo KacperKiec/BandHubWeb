@@ -14,4 +14,5 @@ public class AccountDTO {
     private LocalDate birthDate;
     private Boolean gender;
     private String city;
+    private String country;
 }

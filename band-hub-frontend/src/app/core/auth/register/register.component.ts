@@ -2,7 +2,7 @@ import {Component, input, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import { FormsModule} from '@angular/forms';
 import {AddressSearchComponent} from '../../../shared/address-search/address-search.component';
-import {Account, Address} from '../../models/types';
+import {AccountRequest, Address} from '../../models/types';
 import {AuthApiService} from '../../../services/auth-service/auth-api.service';
 import {Router} from '@angular/router';
 import {AuthService} from '../service/auth.service';
@@ -106,7 +106,7 @@ export class RegisterComponent implements OnInit{
       return;
     }
 
-    let account: Account = {
+    let account: AccountRequest = {
       firstName: this.formData.firstName,
       lastName: this.formData.lastName,
       email: this.formData.email,
@@ -130,12 +130,14 @@ export class RegisterComponent implements OnInit{
           },
           error: (loginErr) => {
             console.error('Logowanie nie powiodło się:', loginErr);
+            alert(loginErr);
             this.isLoading = false;
           }
         });
       },
       error: (err) => {
         console.error('Błąd rejestracji:', err);
+        alert(err);
         this.isLoading = false;
       }
     });

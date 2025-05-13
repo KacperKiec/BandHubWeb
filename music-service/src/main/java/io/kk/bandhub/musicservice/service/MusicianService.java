@@ -46,20 +46,20 @@ public class MusicianService {
     }
 
     @Transactional
-    public MusicianDTO save(MusicianDTO musicianDTO) {
+    public MusicianDTO save(MusicianRequestDTO musicianRequestDTO) {
 
-        var existingMusician = musicianRepository.findMusicianById(musicianDTO.getId());
+        var existingMusician = musicianRepository.findMusicianById(musicianRequestDTO.getId());
         if(existingMusician.isPresent()) {
             throw new MusicianException(MusicianError.MUSICIAN_ALREADY_EXISTS);
         }
 
         Musician musician = new Musician();
-        musician.setId(musicianDTO.getId());
-        musician.setBio(musicianDTO.getBio());
-        musician.setIsLookingBand(musicianDTO.getIsLookingBand());
+        musician.setId(musicianRequestDTO.getId());
+        musician.setBio(musicianRequestDTO.getBio());
+        musician.setIsLookingBand(musicianRequestDTO.getIsLookingBand());
 
-        if(musicianDTO.getGenres() != null) {
-            for (GenreDTO genre : musicianDTO.getGenres()) {
+        if(musicianRequestDTO.getGenres() != null) {
+            for (GenreDTO genre : musicianRequestDTO.getGenres()) {
                 var g = genreRepository.findById(genre.getId()).orElseThrow(
                         () -> new GenreException(GenreError.GENRE_NOT_FOUND)
                 );
@@ -68,8 +68,8 @@ public class MusicianService {
             }
         }
 
-        if(musicianDTO.getInstruments() != null) {
-            for (InstrumentDTO instrument : musicianDTO.getInstruments()) {
+        if(musicianRequestDTO.getInstruments() != null) {
+            for (InstrumentDTO instrument : musicianRequestDTO.getInstruments()) {
                 var i = instrumentRepository.findById(instrument.getId()).orElseThrow(
                         () -> new InstrumentException(InstrumentError.INSTRUMENT_NOT_FOUND)
                 );

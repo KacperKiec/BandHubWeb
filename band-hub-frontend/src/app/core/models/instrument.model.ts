@@ -1,4 +1,4 @@
-export enum Instrument {
+export enum InstrumentEnum {
   ACOUSTIC_GUITAR = "Gitara akustyczna",
   ELECTRIC_GUITAR = "Gitara elektrycza",
   BASS = "Bas",

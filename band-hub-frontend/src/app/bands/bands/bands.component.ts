@@ -1,7 +1,7 @@
 import {Component, Output} from '@angular/core';
 import {SearchBarComponent} from "../../shared/search-bar/search-bar.component";
 import {SearchResultComponent} from "../../shared/search-result/search-result.component";
-import {Genre} from '../../core/models/genre.model';
+import {GenreEnum} from '../../core/models/genre.model';
 import {Band, filterElement, SearchDisplayItem} from '../../core/models/types';
 import {Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
@@ -19,7 +19,7 @@ import {BandApiService} from '../../services/band-service/band-api.service';
 export class BandsComponent {
   @Output()filters: {label: string, type: string, options?: string[]}[] = [
     {label: "Miasto", type: "text"},
-    {label: "Gatunek", type: "select", options: Object.values(Genre)},
+    {label: "Gatunek", type: "select", options: Object.values(GenreEnum)},
     {label: "Szuka muzyków", type: "checkbox"}
   ];
   @Output() placeholderText = 'Nazwa';
@@ -39,7 +39,7 @@ export class BandsComponent {
       city: 'Krakow',
       bio: 'biobiobiobiob',
       isLookingMembers: true,
-      genres: [Genre.METAL, Genre.ROCK],
+      genres: [GenreEnum.METAL, GenreEnum.ROCK],
       founderId: 1
     }
   ];

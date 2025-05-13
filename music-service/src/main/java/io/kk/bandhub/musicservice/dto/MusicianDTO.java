@@ -18,6 +18,7 @@ public class MusicianDTO {
     private LocalDate birthday;
     private String gender;
     private String city;
+    private String country;
 
     @Size(max = 255, message = "Bio cannot exceed 400 characters")
     private String bio;

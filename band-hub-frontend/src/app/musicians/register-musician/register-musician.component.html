@@ -1,0 +1,57 @@
+<div class="register-container">
+  <h2>Zarejestruj się jako muzyk 🎵</h2>
+  <p class="subtitle">Uzupełnij informacje, które pozwolą innym Cię znaleźć.</p>
+
+  <form (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="bio">Bio</label>
+      <textarea id="bio" [(ngModel)]="musician.bio" name="bio" maxlength="400" rows="4" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Gatunki muzyczne</label>
+      <div class="custom-multiselect">
+        <div class="selected-options" (click)="toggleGenreDropdown()">
+          {{ getSelectedGenresText() }}
+        </div>
+        <div class="options" *ngIf="showGenreDropdown">
+          <label *ngFor="let genre of availableGenres">
+            {{ genre.name }}
+            <input type="checkbox"
+                   [checked]="musician.genres.includes(genre)"
+                   (change)="onGenreChange($event, genre)"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Instrumenty</label>
+      <div class="custom-multiselect">
+        <div class="selected-options" (click)="toggleInstrumentDropdown()">
+          {{ getSelectedInstrumentText() }}
+        </div>
+        <div class="options" *ngIf="showInstrumentDropdown">
+          <label *ngFor="let instrument of availableInstruments">
+            {{ instrument.name }}
+            <input type="checkbox"
+                   [checked]="musician.instruments.includes(instrument)"
+                   (change)="onInstrumentChange($event, instrument)"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-inline">
+        <input type="checkbox" id="isLookingBand" [(ngModel)]="musician.isLookingBand" name="isLookingBand" />
+        Szukam zespołu
+      </label>
+    </div>
+
+
+    <button type="submit" class="submit-btn">Zarejestruj się jako muzyk</button>
+  </form>
+</div>

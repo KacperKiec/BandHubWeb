@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
-import {Account} from '../../core/models/types';
+import {AccountRequest, AccountResponse} from '../../core/models/types';
 import {catchError, Observable} from 'rxjs';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class AuthApiService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
-  registerAccount(account: Account): Observable<void> {
+  registerAccount(account: AccountRequest): Observable<void> {
     const url = `${this.apiURL}/account`;
 
     return this.http.post<void>(url, account)
@@ -36,6 +36,6 @@ export class AuthApiService {
       .pipe(
         catchError((error) =>
           this.errorHandler.handleError(error))
-    );
+      );
   }
 }

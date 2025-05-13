@@ -1,1 +1,66 @@
-<p>profile works!</p>
+<div class="wrapper">
+  <div class="user-details-container">
+    <div class="header">
+      <img [src]="profile.image" alt="Profile pic" class="profile-pic">
+      <div class="basic-info">
+        <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
+        <p class="location">📍 {{ profile.city }}, {{ profile.country }}</p>
+      </div>
+    </div>
+
+    <div class="details-grid">
+      <div class="birthdate-tile">
+        <h3>🎂</h3>
+        <p>{{ profile.birthDate }}, {{ calculateAge(profile.birthDate) }} lat</p>
+      </div>
+
+      <div class="gender-tile">
+        <h3>👤</h3>
+        <p *ngIf="profile.gender">Mężczyzna</p>
+        <p *ngIf="!profile.gender">Kobieta</p>
+      </div>
+    </div>
+
+    <div class="user-actions">
+      <div class="edit-button" (click)="editData()">
+        <p>✏️ Edytuj dane</p>
+      </div>
+    </div>
+
+    <div class="become-musician-card" *ngIf="!isMusician">
+      <h2 *ngIf="!showForm">🎵 Dołącz do społeczności muzyków!</h2>
+      <p *ngIf="!showForm">Dodaj swój profil muzyczny, uzupełnij instrumenty i preferencje, a inni znajdą Cię szybciej!</p>
+      <button *ngIf="!showForm" class="btn" (click)="showRegistrationForm()">Zostań muzykiem</button>
+
+      <app-register-musician
+        *ngIf="showForm"
+        (registered)="handleMusicianRegistration($event)"
+        [userId]="profile.id">
+
+      </app-register-musician>
+    </div>
+    <div class="details-grid" *ngIf="isMusician">
+      <div>
+        <h3>🎶 Gatunki</h3>
+        <ul>
+          <li *ngFor="let genre of musician.genres">{{ genre }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>🎸 Instrumenty</h3>
+        <ul>
+          <li *ngFor="let instrument of musician.instruments">{{ instrument }}</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>🥁 Zespoły</h3>
+        <ul>
+<!--          <li class="band-tile" *ngFor="let band of musicianBands" (click)="getBandDetails(band.id)">{{ band.name }}</li>-->
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
