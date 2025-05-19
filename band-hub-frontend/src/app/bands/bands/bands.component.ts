@@ -2,9 +2,10 @@ import {Component, Output} from '@angular/core';
 import {SearchBarComponent} from "../../shared/search-bar/search-bar.component";
 import {SearchResultComponent} from "../../shared/search-result/search-result.component";
 import {GenreEnum} from '../../core/models/genre.model';
-import {Band, filterElement, SearchDisplayItem} from '../../core/models/shared.model';
+import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
+import {Band} from '../../core/models/band.model';
 
 @Component({
   selector: 'app-bands',

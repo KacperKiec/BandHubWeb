@@ -1,5 +1,5 @@
-import {Musician} from './shared.model';
 import {Genre} from './genre.model';
+import {Musician} from './musician.model';
 
 export interface Band {
   id: number;

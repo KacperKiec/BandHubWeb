@@ -2,10 +2,11 @@ import {Component, input, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import { FormsModule} from '@angular/forms';
 import {AddressSearchComponent} from '../../../shared/address-search/address-search.component';
-import {AccountRequest, Address} from '../../models/shared.model';
 import {AuthApiService} from '../../../services/auth-service/auth-api.service';
 import {Router} from '@angular/router';
 import {AuthService} from '../service/auth.service';
+import {Address} from '../../models/location.model';
+import {AccountRequest} from '../../models/account.model';
 
 @Component({
   selector: 'app-register',
