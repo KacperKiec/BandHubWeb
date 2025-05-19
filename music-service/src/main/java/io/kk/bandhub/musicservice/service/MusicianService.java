@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,6 +60,7 @@ public class MusicianService {
         musician.setIsLookingBand(musicianRequestDTO.getIsLookingBand());
 
         if(musicianRequestDTO.getGenres() != null) {
+            musician.setMusicianGenres(new HashSet<>());
             for (GenreDTO genre : musicianRequestDTO.getGenres()) {
                 var g = genreRepository.findById(genre.getId()).orElseThrow(
                         () -> new GenreException(GenreError.GENRE_NOT_FOUND)
@@ -69,6 +71,7 @@ public class MusicianService {
         }
 
         if(musicianRequestDTO.getInstruments() != null) {
+            musician.setMusicianInstruments(new HashSet<>());
             for (InstrumentDTO instrument : musicianRequestDTO.getInstruments()) {
                 var i = instrumentRepository.findById(instrument.getId()).orElseThrow(
                         () -> new InstrumentException(InstrumentError.INSTRUMENT_NOT_FOUND)

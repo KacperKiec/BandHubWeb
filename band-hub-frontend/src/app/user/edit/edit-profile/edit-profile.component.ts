@@ -3,10 +3,10 @@ import {EditAccountFormComponent} from '../edit-account-form/edit-account-form.c
 import {NgIf} from '@angular/common';
 import {EditMusicianFormComponent} from '../edit-musician-form/edit-musician-form.component';
 import {EditPasswordFormComponent} from '../edit-password-form/edit-password-form.component';
-import {AccountResponse, Musician} from '../../../core/models/types';
 import {UserApiService} from '../../../services/user-service/user-api.service';
 import {MusicianApiService} from '../../../services/musician-service/musician-api.service';
-import {Router} from '@angular/router';
+import {AccountResponse} from '../../../core/models/account.model';
+import {Musician} from '../../../core/models/musician.model';
 
 @Component({
   selector: 'app-edit-profile',

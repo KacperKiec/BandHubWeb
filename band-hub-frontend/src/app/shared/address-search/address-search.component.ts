@@ -2,7 +2,7 @@ import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, R
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {Address} from '../../core/models/types';
+import {Address} from '../../core/models/location.model';
 
 @Component({
   selector: 'app-address-search',

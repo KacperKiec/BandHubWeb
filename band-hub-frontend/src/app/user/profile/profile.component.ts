@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {AccountResponse, Musician} from '../../core/models/types';
 import {UserApiService} from '../../services/user-service/user-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {RegisterMusicianComponent} from '../../musicians/register-musician/register-musician.component';
+import {AccountResponse} from '../../core/models/account.model';
+import {Musician, MusicianRequest} from '../../core/models/musician.model';
 
 @Component({
   selector: 'app-profile',
@@ -56,13 +57,20 @@ export class ProfileComponent implements OnInit {
         if(musician) {
           this.isMusician = true;
           this.musician = musician;
+          console.log(musician)
         }
         else this.isMusician = false;
       })
     });
   }
 
-  handleMusicianRegistration(event: boolean) {
+  handleMusicianRegistration(event: MusicianRequest) {
+    this.musicianApiService.addMusician(event).subscribe(musician => {
+      if (musician) {
+        this.musician = musician;
+        this.isMusician = true;
+      }
+    });
     this.initData();
   }
 }

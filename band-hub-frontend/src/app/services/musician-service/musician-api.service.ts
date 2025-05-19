@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import {catchError, Observable, tap} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Band, Musician, Page} from '../../core/models/types';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
+import {Musician, MusicianRequest} from '../../core/models/musician.model';
+import {Page} from '../../core/models/pagination.model';
+import {Band} from '../../core/models/band.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,5 +59,10 @@ export class MusicianApiService {
       );
   }
 
-  //addMusician()
+  addMusician(musician: MusicianRequest): Observable<Musician> {
+    return this.http.post<Musician>(`${this.apiURL}`, musician, {withCredentials: true})
+      .pipe(
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
 }

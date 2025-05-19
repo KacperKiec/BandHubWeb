@@ -1,11 +1,12 @@
-import {Component, Output} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {SearchBarComponent} from '../../shared/search-bar/search-bar.component';
 import {GenreEnum} from '../../core/models/genre.model';
 import {InstrumentEnum} from '../../core/models/instrument.model';
-import {filterElement, Musician, SearchDisplayItem} from '../../core/models/types';
+import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {SearchResultComponent} from '../../shared/search-result/search-result.component';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 import {Router} from '@angular/router';
+import {Musician} from '../../core/models/musician.model';
 
 @Component({
   selector: 'app-musicians',
@@ -17,7 +18,7 @@ import {Router} from '@angular/router';
   templateUrl: './musicians.component.html',
   styleUrl: './musicians.component.css'
 })
-export class MusiciansComponent {
+export class MusiciansComponent implements OnInit {
   @Output()filters: {label: string, type: string, options?: string[]}[] = [
     {label: "Miasto", type: "text"},
     {label: "Gatunek", type: "select", options: Object.values(GenreEnum)},
@@ -43,10 +44,11 @@ export class MusiciansComponent {
       birthday: new Date(),
       gender: 'male',
       city: 'Krakow',
+      country: 'Poland',
       bio: 'Davie Jones` bio',
       isLookingBand: true,
-      genres: [GenreEnum.METAL, GenreEnum.ROCK],
-      instruments: [InstrumentEnum.BASS, InstrumentEnum.KEYBOARD]
+      genres: [],
+      instruments: []
     },
     <Musician>{
       id: 2,
@@ -55,106 +57,11 @@ export class MusiciansComponent {
       birthday: new Date(),
       gender: 'female',
       city: 'Berlin',
+      country: 'Germany',
       bio: 'Arnold Putler`s bio',
       isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
-    },
-    // <Musician>{
-    //   id: 2,
-    //   firstName: 'Arnold',
-    //   lastName: 'Putler',
-    //   birthday: new Date(),
-    //   gender: 'female',
-    //   city: 'Berlin',
-    //   bio: 'Arnold Putler`s bio',
-    //   isLookingBand: false,
-    //   genres: [Genre.POP, Genre.CLASSIC, Genre.INDIE],
-    //   instruments: [Instrument.VOICE, Instrument.DRUMS]
-    // },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-      instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
+      genres: [],
+      instruments: []
     }
   ];
 

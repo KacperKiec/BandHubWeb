@@ -2,7 +2,7 @@ import {Component, Output} from '@angular/core';
 import {SearchBarComponent} from "../../shared/search-bar/search-bar.component";
 import {SearchResultComponent} from "../../shared/search-result/search-result.component";
 import {GenreEnum} from '../../core/models/genre.model';
-import {Band, filterElement, SearchDisplayItem} from '../../core/models/types';
+import {Band, filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
 
@@ -37,9 +37,11 @@ export class BandsComponent {
       id: 1,
       name: 'AjronWejder',
       city: 'Krakow',
+      country: 'Poland',
       bio: 'biobiobiobiob',
       isLookingMembers: true,
-      genres: [GenreEnum.METAL, GenreEnum.ROCK],
+      genres: [],
+      musicians: [],
       founderId: 1
     }
   ];

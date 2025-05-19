@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {catchError, Observable} from 'rxjs';
-import {AccountResponse} from '../../core/models/types';
 import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
+import {AccountResponse} from '../../core/models/account.model';
 
 @Injectable({
   providedIn: 'root'

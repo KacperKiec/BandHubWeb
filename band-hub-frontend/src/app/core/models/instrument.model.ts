@@ -6,3 +6,8 @@ export enum InstrumentEnum {
   KEYBOARD = "Keyboard",
   VOICE = "Wokal"
 }
+
+export interface Instrument{
+  id: number,
+  name: string
+}

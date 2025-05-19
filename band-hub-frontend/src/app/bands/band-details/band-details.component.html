@@ -4,7 +4,7 @@
       <img [src]="band.image" alt="Profile pic" class="profile-pic">
       <div class="basic-info">
         <h1>{{band.name}}</h1>
-        <p class="location">📍 {{ band.city }}</p>
+        <p class="location">📍 {{ band.city }}, {{ band.country }}</p>
         <p class="status">{{ band.isLookingMembers ? '✅ Szuka muzyków' : '❌ Nie szuka muzyków' }}</p>
       </div>
     </div>
@@ -18,7 +18,7 @@
       <div>
         <h3>🎶 Gatunki</h3>
         <ul>
-          <li *ngFor="let genre of band.genres">{{ genre }}</li>
+          <li *ngFor="let genre of band.genres">{{ genre.name }}</li>
         </ul>
       </div>
 

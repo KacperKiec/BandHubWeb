@@ -1,8 +1,19 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Address, filterElement} from '../../core/models/types';
+import {filterElement} from '../../core/models/shared.model';
 import {AddressSearchComponent} from '../address-search/address-search.component';
+import {Address} from '../../core/models/location.model';
 
 @Component({
   selector: 'app-search-bar',
@@ -17,7 +28,7 @@ import {AddressSearchComponent} from '../address-search/address-search.component
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
-export class SearchBarComponent implements OnInit{
+export class SearchBarComponent implements OnInit, OnChanges {
   public dropdownStatus = false;
   private isCheckboxClicked: boolean[] = [];
 

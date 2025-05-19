@@ -18,14 +18,14 @@
       <div>
         <h3>🎶 Gatunki</h3>
         <ul>
-          <li *ngFor="let genre of musician.genres">{{ genre }}</li>
+          <li *ngFor="let genre of musician.genres">{{ genre.name }}</li>
         </ul>
       </div>
 
       <div>
         <h3>🎸 Instrumenty</h3>
         <ul>
-          <li *ngFor="let instrument of musician.instruments">{{ instrument }}</li>
+          <li *ngFor="let instrument of musician.instruments">{{ instrument.name }}</li>
         </ul>
       </div>
 

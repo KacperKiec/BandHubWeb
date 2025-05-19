@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="details-grid">
+    <div class="personal-info">
       <div class="birthdate-tile">
         <h3>🎂</h3>
         <p>{{ profile.birthDate }}, {{ calculateAge(profile.birthDate) }} lat</p>
@@ -18,12 +18,6 @@
         <h3>👤</h3>
         <p *ngIf="profile.gender">Mężczyzna</p>
         <p *ngIf="!profile.gender">Kobieta</p>
-      </div>
-    </div>
-
-    <div class="user-actions">
-      <div class="edit-button" (click)="editData()">
-        <p>✏️ Edytuj dane</p>
       </div>
     </div>
 
@@ -43,14 +37,14 @@
       <div>
         <h3>🎶 Gatunki</h3>
         <ul>
-          <li *ngFor="let genre of musician.genres">{{ genre }}</li>
+          <li *ngFor="let genre of musician.genres">{{ genre.name }}</li>
         </ul>
       </div>
 
       <div>
         <h3>🎸 Instrumenty</h3>
         <ul>
-          <li *ngFor="let instrument of musician.instruments">{{ instrument }}</li>
+          <li *ngFor="let instrument of musician.instruments">{{ instrument.name }}</li>
         </ul>
       </div>
 
@@ -59,6 +53,12 @@
         <ul>
 <!--          <li class="band-tile" *ngFor="let band of musicianBands" (click)="getBandDetails(band.id)">{{ band.name }}</li>-->
         </ul>
+      </div>
+    </div>
+
+    <div class="user-actions">
+      <div class="edit-button" (click)="editData()">
+        <p>✏️ Edytuj dane</p>
       </div>
     </div>
 

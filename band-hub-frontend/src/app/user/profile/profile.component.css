@@ -30,25 +30,47 @@
   font-size: 2rem;
 }
 
-.details-grid {
+.personal-info {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
 }
 
-.details-grid div {
+.personal-info div {
   flex: 1;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
   gap: 1rem;
+}
+
+.details-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 20px;
+}
+
+.details-grid div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.details-grid div h3,
+.details-grid div ul {
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 .user-actions {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .edit-button {

@@ -8,3 +8,8 @@ export enum GenreEnum {
   JAZZ = "Jazz",
   INDIE = "Indie"
 }
+
+export interface Genre {
+  id: number,
+  name: string
+}

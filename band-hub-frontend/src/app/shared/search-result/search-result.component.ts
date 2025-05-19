@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
-import {SearchDisplayItem} from '../../core/models/types';
+import {SearchDisplayItem} from '../../core/models/shared.model';
 
 @Component({
   selector: 'app-search-result',

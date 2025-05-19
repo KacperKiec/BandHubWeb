@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
-import {Band, Musician} from '../../core/models/types';
-import {GenreEnum} from '../../core/models/genre.model';
-import {InstrumentEnum} from '../../core/models/instrument.model';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {Band} from '../../core/models/band.model';
+import {Musician} from '../../core/models/musician.model';
 
 @Component({
   selector: 'app-band-details',
@@ -17,7 +16,7 @@ import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
   templateUrl: './band-details.component.html',
   styleUrl: './band-details.component.css'
 })
-export class BandDetailsComponent {
+export class BandDetailsComponent implements OnInit{
 
   band!: Band;
 
@@ -25,9 +24,10 @@ export class BandDetailsComponent {
     id: 1,
     name: 'AjronWejder',
     city: 'Krakow',
+    country: 'Poland',
     bio: 'biobiobiobiob',
     isLookingMembers: true,
-    genres: [GenreEnum.METAL, GenreEnum.ROCK],
+    genres: [],
     musicians: [
       <Musician>{
         id: 1,
@@ -36,10 +36,11 @@ export class BandDetailsComponent {
         birthday: new Date(),
         gender: 'male',
         city: 'Krakow',
+        country: 'Germany',
         bio: 'Davie Jones` bio',
         isLookingBand: true,
-        genres: [GenreEnum.METAL, GenreEnum.ROCK],
-        instruments: [InstrumentEnum.BASS, InstrumentEnum.KEYBOARD]
+        genres: [],
+        instruments: []
       },
       <Musician>{
         id: 2,
@@ -48,10 +49,11 @@ export class BandDetailsComponent {
         birthday: new Date(),
         gender: 'female',
         city: 'Berlin',
+        country: 'Germany',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
+        genres: [],
+        instruments: []
       },
       <Musician>{
         id: 2,
@@ -60,10 +62,11 @@ export class BandDetailsComponent {
         birthday: new Date(),
         gender: 'female',
         city: 'Berlin',
+        country: 'Germany',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
+        genres: [],
+        instruments: []
       },
       <Musician>{
         id: 2,
@@ -72,10 +75,11 @@ export class BandDetailsComponent {
         birthday: new Date(),
         gender: 'female',
         city: 'Berlin',
+        country: 'Germany',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
+        genres: [],
+        instruments: []
       },
       <Musician>{
         id: 2,
@@ -84,10 +88,11 @@ export class BandDetailsComponent {
         birthday: new Date(),
         gender: 'female',
         city: 'Berlin',
+        country: 'Germany',
         bio: 'Arnold Putler`s bio',
         isLookingBand: false,
-        genres: [GenreEnum.POP, GenreEnum.CLASSIC, GenreEnum.INDIE],
-        instruments: [InstrumentEnum.VOICE, InstrumentEnum.DRUMS]
+        genres: [],
+        instruments: []
       }
     ],
     founderId: 1,

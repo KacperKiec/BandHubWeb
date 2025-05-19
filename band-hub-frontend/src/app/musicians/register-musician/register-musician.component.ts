@@ -1,8 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Genre, Instrument, MusicianRequest} from '../../core/models/types';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {MusicAttributesApiService} from '../../services/music-attributes-service/music-attributes-api.service';
+import {Instrument} from '../../core/models/instrument.model';
+import {Genre} from '../../core/models/genre.model';
+import {MusicianRequest} from '../../core/models/musician.model';
 
 @Component({
   selector: 'app-register-musician',
@@ -22,7 +24,7 @@ export class RegisterMusicianComponent implements OnInit {
   showGenreDropdown = false;
   showInstrumentDropdown = false;
   @Input() userId!: number;
-  @Output() registered: EventEmitter<boolean> = new EventEmitter();
+  @Output() registered: EventEmitter<MusicianRequest> = new EventEmitter();
 
   musician!: MusicianRequest;
 
@@ -93,6 +95,6 @@ export class RegisterMusicianComponent implements OnInit {
   submit() {
 
     console.log('Muzyk zarejestrowany', this.musician);
-    this.registered.emit(true);
+    this.registered.emit(this.musician);
   }
 }
