@@ -1,4 +1,4 @@
-import {Component, Output} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {SearchBarComponent} from "../../shared/search-bar/search-bar.component";
 import {SearchResultComponent} from "../../shared/search-result/search-result.component";
 import {GenreEnum} from '../../core/models/genre.model';
@@ -17,7 +17,7 @@ import {Band} from '../../core/models/band.model';
   templateUrl: './bands.component.html',
   styleUrl: './bands.component.css'
 })
-export class BandsComponent {
+export class BandsComponent implements OnInit{
   @Output()filters: {label: string, type: string, options?: string[]}[] = [
     {label: "Miasto", type: "text"},
     {label: "Gatunek", type: "select", options: Object.values(GenreEnum)},

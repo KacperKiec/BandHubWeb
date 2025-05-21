@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @Entity
@@ -22,5 +25,19 @@ public class Genre {
     @NotNull
     @Column(name = "name", nullable = false, length = 40)
     private String name;
+
+    @PrePersist
+    @PreUpdate
+    private void formatName() {
+        if (name != null) {
+            name = capitalizeWords(name);
+        }
+    }
+
+    private String capitalizeWords(String input) {
+        return Arrays.stream(input.trim().split("\\s+"))
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
+    }
 
 }

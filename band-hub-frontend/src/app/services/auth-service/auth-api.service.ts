@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
 import {catchError, Observable} from 'rxjs';
-import {AccountRequest} from '../../core/models/account.model';
+import {AccountRegisterRequest} from '../../core/models/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class AuthApiService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
-  registerAccount(account: AccountRequest): Observable<void> {
+  registerAccount(account: AccountRegisterRequest): Observable<void> {
     const url = `${this.apiURL}/account`;
 
     return this.http.post<void>(url, account)

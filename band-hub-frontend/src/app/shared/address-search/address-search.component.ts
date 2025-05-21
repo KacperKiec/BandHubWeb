@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2, SimpleChanges
+} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
@@ -16,7 +26,7 @@ import {Address} from '../../core/models/location.model';
   templateUrl: './address-search.component.html',
   styleUrl: './address-search.component.css'
 })
-export class AddressSearchComponent implements OnInit, OnDestroy {
+export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
   searchTerm: string = '';
   suggestions: any[] = [];
   selectedAddress: Address = {
@@ -30,6 +40,7 @@ export class AddressSearchComponent implements OnInit, OnDestroy {
   };
 
   @Input() customClass = '';
+  @Input() defaultAddress?: Address;
   @Output() address: EventEmitter<Address> = new EventEmitter();
   private globalClickListener?: () => void;
 
@@ -46,6 +57,21 @@ export class AddressSearchComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['defaultAddress'] && this.defaultAddress) {
+      const city = this.defaultAddress.city?.trim();
+      const country = this.defaultAddress.country?.trim();
+
+      if (city || country) {
+        this.searchTerm = [city, country].filter(Boolean).join(', ');
+      } else {
+        this.searchTerm = '';
+      }
+    }
+  }
+
+
 
   ngOnDestroy() {
     if (this.globalClickListener) {

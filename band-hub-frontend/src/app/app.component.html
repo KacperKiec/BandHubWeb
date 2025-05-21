@@ -2,7 +2,7 @@
 <app-navbar [isMenuOpen]="isMenuOpen" (closeMenuEmitter)="setMenuStatus($event)"></app-navbar>
 <div class="container">
   <app-header (emitOpeningMenu)="setMenuStatus($event)"></app-header>
-
+  <app-loader></app-loader>
   <main>
     <router-outlet></router-outlet>
   </main>

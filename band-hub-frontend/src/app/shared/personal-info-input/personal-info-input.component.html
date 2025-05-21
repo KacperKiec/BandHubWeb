@@ -1,0 +1,43 @@
+<form class="form-container" #dataForm="ngForm">
+  <div class="personal-info">
+
+    <div class="names">
+      <input name="firstName" [(ngModel)]="formData.firstName" (ngModelChange)="onInputChange()" placeholder="Imie" required>
+      <input name="lastName" [(ngModel)]="formData.lastName" (ngModelChange)="onInputChange()" placeholder="Nazwisko" required>
+    </div>
+
+    <div class="date-of-birth">
+      <select name="day" [(ngModel)]="formData.day" (ngModelChange)="onInputChange()" required>
+        <option [ngValue]="null" disabled>Dzień</option>
+        <option *ngFor="let day of days" [ngValue]="day">{{ day }}</option>
+      </select>
+
+      <select name="month" [(ngModel)]="formData.month" (ngModelChange)="onInputChange()" required>
+        <option [ngValue]="null" disabled>Miesiąc</option>
+        <option *ngFor="let month of months" [ngValue]="month.value">{{ month.name }}</option>
+      </select>
+
+      <select name="year" [(ngModel)]="formData.year" (ngModelChange)="onInputChange()" required>
+        <option [ngValue]="null" disabled>Rok</option>
+        <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <div class="gender-select">
+      <select name="gender" [(ngModel)]="formData.gender" (ngModelChange)="onInputChange()" required>
+        <option [ngValue]="null" disabled>Płeć</option>
+        <option [ngValue]="true">Mężczyzna</option>
+        <option [ngValue]="false">Kobieta</option>
+      </select>
+    </div>
+
+    <div class="location-info">
+      <app-address-search
+        [customClass]="'location-input'"
+        [defaultAddress]="sendAddress()"
+        (address)="getAddress($event)">
+      </app-address-search>
+    </div>
+
+  </div>
+</form>
