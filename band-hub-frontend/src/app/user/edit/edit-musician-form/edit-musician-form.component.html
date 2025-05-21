@@ -1,1 +1,14 @@
-<p>edit-musician-form works!</p>
+<div class="container">
+
+  <app-musician-input
+    [userId]="userId"
+    [availableGenres]="availableGenres"
+    [availableInstruments]="availableInstruments"
+    [inputMusician]="musician"
+    (outputMusician)="getMusician($event)">
+
+  </app-musician-input>
+
+  <button type="submit" class="confirm-button" (click)="updateMusician()">Zapisz</button>
+
+</div>

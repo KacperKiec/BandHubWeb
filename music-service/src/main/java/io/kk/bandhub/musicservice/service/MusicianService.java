@@ -88,7 +88,7 @@ public class MusicianService {
     }
 
     @Transactional
-    public MusicianDTO updateMusician(MusicianDTO musicianDTO) {
+    public void updateMusician(MusicianRequestDTO musicianDTO) {
         var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
                 () ->new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
 
@@ -109,7 +109,7 @@ public class MusicianService {
             }
         }
 
-        for (MusicianGenre musicianGenre : musician.getMusicianGenres()) {
+        for (MusicianGenre musicianGenre : new HashSet<>(musician.getMusicianGenres())) {
             boolean genreExistsInDTO = musicianDTO.getGenres().stream()
                     .anyMatch(genre -> musicianGenre.getGenre().getId().equals(genre.getId()));
 
@@ -131,7 +131,7 @@ public class MusicianService {
             }
         }
 
-        for (MusicianInstrument musicianInstrument : musician.getMusicianInstruments()) {
+        for (MusicianInstrument musicianInstrument : new HashSet<>(musician.getMusicianInstruments())) {
             boolean instrumentExistsInDTO = musicianDTO.getInstruments().stream()
                     .anyMatch(instrument -> musicianInstrument.getInstrument().getId().equals(instrument.getId()));
 
@@ -140,7 +140,7 @@ public class MusicianService {
             }
         }
 
-        return mapper.toMusicianDTO(musicianRepository.save(musician));
+        musicianRepository.save(musician);
     }
 
     public Page<MusicianDTO> getAll(Pageable pageable) {

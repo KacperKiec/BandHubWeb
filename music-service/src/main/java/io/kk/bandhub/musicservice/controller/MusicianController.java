@@ -66,8 +66,9 @@ public class MusicianController {
     }
 
     @PutMapping()
-    ResponseEntity<MusicianDTO> updateMusician(@RequestBody @Valid MusicianDTO musicianDTO) {
-        return ResponseEntity.ok(service.updateMusician(musicianDTO));
+    ResponseEntity<Void> updateMusician(@RequestBody @Valid MusicianRequestDTO musicianRequestDTO) {
+        service.updateMusician(musicianRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")

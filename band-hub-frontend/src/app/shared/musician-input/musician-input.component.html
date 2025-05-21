@@ -1,0 +1,49 @@
+<form>
+  <div class="form-group">
+    <label for="bio">Bio</label>
+    <textarea id="bio" [(ngModel)]="musician.bio" (ngModelChange)="emit()" name="bio" maxlength="400" rows="4" required></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Gatunki muzyczne</label>
+    <div class="custom-multiselect" #genreSelect>
+      <div class="selected-options" (click)="toggleGenreDropdown()">
+        {{ getSelectedGenresText() }}
+      </div>
+      <div class="options" *ngIf="showGenreDropdown">
+        <label *ngFor="let genre of availableGenres">
+          {{ genre.name }}
+          <input type="checkbox"
+                 [checked]="isGenreSelected(genre)"
+                 (change)="onGenreChange($event, genre)"
+          />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Instrumenty</label>
+    <div class="custom-multiselect" #instrumentSelect>
+      <div class="selected-options" (click)="toggleInstrumentDropdown()">
+        {{ getSelectedInstrumentText() }}
+      </div>
+      <div class="options" *ngIf="showInstrumentDropdown">
+        <label *ngFor="let instrument of availableInstruments">
+          {{ instrument.name }}
+          <input type="checkbox"
+                 [checked]="isInstrumentSelected(instrument)"
+                 (change)="onInstrumentChange($event, instrument)"
+          />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="isLookingBand" [(ngModel)]="musician.isLookingBand" (ngModelChange)="emit()" name="isLookingBand" />
+      Szukam zespołu
+    </label>
+  </div>
+</form>

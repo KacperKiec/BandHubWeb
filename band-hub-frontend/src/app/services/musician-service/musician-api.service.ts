@@ -65,4 +65,11 @@ export class MusicianApiService {
         catchError(error => this.errorHandler.handleError(error))
       );
   }
+
+  updateMusician(musician: MusicianRequest): Observable<void> {
+    return this.http.put<void>(`${this.apiURL}`, musician, {withCredentials: true})
+      .pipe(
+        catchError(err => this.errorHandler.handleError(err))
+      );
+  }
 }

@@ -1,0 +1,80 @@
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.checkbox-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+
+label {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  font-family: 'Merriweather', serif;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.custom-multiselect {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.selected-options {
+  box-sizing: border-box;
+  min-height: 1.5rem;
+  color: #555;
+}
+
+.options {
+  box-sizing: border-box;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 10;
+  margin-top: 4px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.options label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.options label:hover {
+  background-color: #f3f3f3;
+  border-radius: 4px;
+  padding: 4px;
+}

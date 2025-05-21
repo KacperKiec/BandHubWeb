@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {SearchDisplayItem} from '../../core/models/shared.model';
+import {Genre} from '../../core/models/genre.model';
 
 @Component({
   selector: 'app-search-result',
@@ -29,5 +30,13 @@ export class SearchResultComponent {
 
   goToDetails(id: number) {
     this.showDetails.emit(id);
+  }
+
+  getGenreNames(genres: Genre[]): string {
+    if(genres.length <= 3) {
+      return '🎶' + genres.map(g => g.name).join(', ');
+    } else {
+      return '🎶' + genres.slice(0, 3).map(g => g.name).join(', ') + ', ...';
+    }
   }
 }

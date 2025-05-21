@@ -5,6 +5,7 @@ import {MusicAttributesApiService} from '../../services/music-attributes-service
 import {Instrument} from '../../core/models/instrument.model';
 import {Genre} from '../../core/models/genre.model';
 import {MusicianRequest} from '../../core/models/musician.model';
+import {MusicianInputComponent} from '../../shared/musician-input/musician-input.component';
 
 @Component({
   selector: 'app-register-musician',
@@ -12,7 +13,8 @@ import {MusicianRequest} from '../../core/models/musician.model';
   imports: [
     FormsModule,
     NgForOf,
-    NgIf
+    NgIf,
+    MusicianInputComponent
   ],
   templateUrl: './register-musician.component.html',
   styleUrl: './register-musician.component.css'
@@ -20,9 +22,6 @@ import {MusicianRequest} from '../../core/models/musician.model';
 export class RegisterMusicianComponent implements OnInit {
   availableGenres: Genre[] = [];
   availableInstruments: Instrument[] = [];
-
-  showGenreDropdown = false;
-  showInstrumentDropdown = false;
   @Input() userId!: number;
   @Output() registered: EventEmitter<MusicianRequest> = new EventEmitter();
 
@@ -49,51 +48,17 @@ export class RegisterMusicianComponent implements OnInit {
     };
   }
 
-  toggleGenreDropdown() {
-    this.showGenreDropdown = !this.showGenreDropdown;
-  }
-
-  toggleInstrumentDropdown() {
-    this.showInstrumentDropdown = !this.showInstrumentDropdown;
-  }
-
-  onGenreChange(event: Event, genre: Genre) {
-    const input = event.target as HTMLInputElement;
-    const checked = input.checked;
-
-    if (checked) {
-      this.musician.genres.push(genre);
-    } else {
-      this.musician.genres = this.musician.genres.filter(g => g.id !== genre.id);
-    }
-  }
-
-
-  onInstrumentChange(event: Event, instrument: Instrument) {
-    const input = event.target as HTMLInputElement;
-    const checked = input.checked;
-
-    if (checked) {
-      this.musician.instruments.push(instrument);
-    } else {
-      this.musician.instruments = this.musician.instruments.filter(i => i.id !== instrument.id);
-    }
-  }
-
-  getSelectedGenresText(): string {
-    return this.musician.genres.length
-      ? this.musician.genres.map(g => g.name).join(', ')
-      : 'Wybierz gatunki...';
-  }
-
-  getSelectedInstrumentText(): string {
-    return this.musician.instruments.length
-      ? this.musician.instruments.map(i => i.name).join(', ')
-      : 'Wybierz gatunki...';
+  getMusician(value: MusicianRequest) {
+    this.musician = {
+      id: this.userId,
+      bio: value.bio,
+      isLookingBand: value.isLookingBand,
+      genres: value.genres,
+      instruments: value.instruments,
+    };
   }
 
   submit() {
-
     console.log('Muzyk zarejestrowany', this.musician);
     this.registered.emit(this.musician);
   }

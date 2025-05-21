@@ -6,8 +6,10 @@
 
         <label [innerText]="result.name" class="name-label"></label>
 
-        <label *ngIf="result.genres.length <= 3" [innerText]="'🎶' + result.genres.join(', ')" class="genres-label"></label>
-        <label *ngIf="result.genres.length > 3" [innerText]="'🎶' + result.genres.slice(0, 3) + ', ...'" class="genres-label"></label>
+        <label
+               [innerText]="getGenreNames(result.genres)"
+               class="genres-label">
+        </label>
 
         <label [innerText]="'📍' + result.city" class="city-label"></label>
 
