@@ -24,6 +24,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccountException(final AccountException e) {
         if (AccountError.ACCOUNT_NOT_FOUND.equals(e.getStatus())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (AccountError.ACCESS_DENIED.equals(e.getStatus())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage(), "403"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }

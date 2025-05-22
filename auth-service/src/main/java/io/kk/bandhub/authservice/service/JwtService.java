@@ -24,7 +24,7 @@ public class JwtService {
         this.port = port;
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, Integer userId) {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
@@ -44,6 +44,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(expiration)
                 .claim("roles", roles)
+                .claim("userId", userId)
                 .setIssuer("http://localhost:8020")
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();

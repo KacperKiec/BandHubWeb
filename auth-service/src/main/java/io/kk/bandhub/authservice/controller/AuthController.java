@@ -1,5 +1,6 @@
 package io.kk.bandhub.authservice.controller;
 
+import io.kk.bandhub.authservice.dto.AccountDTO;
 import io.kk.bandhub.authservice.dto.AuthRequest;
 import io.kk.bandhub.authservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +28,8 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        UserDetails user = (UserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(user);
+        AccountDTO user = (AccountDTO) authentication.getPrincipal();
+        String token = jwtService.generateToken(user, user.getId());
 
         ResponseCookie cookie = ResponseCookie.from("jwt", token)
                 .httpOnly(true)

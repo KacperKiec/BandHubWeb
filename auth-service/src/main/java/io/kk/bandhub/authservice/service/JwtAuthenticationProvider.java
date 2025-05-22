@@ -33,7 +33,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throw new AuthException("Authentication with given credentials failure");
         }
 
-        var token = jwtService.generateToken(userDetails);
+        var token = jwtService.generateToken(userDetails, null);
 
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }

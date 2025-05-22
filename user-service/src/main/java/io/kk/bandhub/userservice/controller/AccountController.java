@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +39,16 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO) {
+    public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO, Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(accountUpdateDTO.getId().longValue())) {
+            throw new AccountException(AccountError.ACCESS_DENIED);
+        }
+
         var result = accountService.update(accountUpdateDTO);
         return ResponseEntity.ok(result);
     }

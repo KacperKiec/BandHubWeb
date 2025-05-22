@@ -3,6 +3,8 @@ package io.kk.bandhub.musicservice.controller;
 import io.kk.bandhub.musicservice.dto.BandDTO;
 import io.kk.bandhub.musicservice.dto.MusicianDTO;
 import io.kk.bandhub.musicservice.dto.MusicianRequestDTO;
+import io.kk.bandhub.musicservice.exception.musician.MusicianError;
+import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.MusicianService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +71,15 @@ public class MusicianController {
     }
 
     @PutMapping()
-    ResponseEntity<Void> updateMusician(@RequestBody @Valid MusicianRequestDTO musicianRequestDTO) {
+    ResponseEntity<Void> updateMusician(@RequestBody @Valid MusicianRequestDTO musicianRequestDTO, Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(musicianRequestDTO.getId().longValue())) {
+            throw new MusicianException(MusicianError.ACCESS_DENIED);
+        }
         service.updateMusician(musicianRequestDTO);
         return ResponseEntity.ok().build();
     }

@@ -19,6 +19,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> musicianNotFound(final MusicianException e) {
         if (MusicianError.MUSICIAN_NOT_FOUND.equals(e.getStatus())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("404", e.getStatus().getMessage()));
+        } else if (MusicianError.ACCESS_DENIED.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("403", e.getStatus().getMessage()));
         } else  {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("409", e.getStatus().getMessage()));
         }
