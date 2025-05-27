@@ -14,6 +14,7 @@ import io.kk.bandhub.musicservice.repository.instrument.InstrumentRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianSpecification;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * Service class for provide data and methods for MusicianController
  * */
 @Service
+@AllArgsConstructor
 public class MusicianService {
     private final MusicianRepository musicianRepository;
     private final GenreRepository genreRepository;
@@ -36,15 +38,6 @@ public class MusicianService {
     private final BandMusicianRepository bandMusicianRepository;
     private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
-
-    public MusicianService(MusicianRepository musicianRepository, GenreRepository genreRepository, InstrumentRepository instrumentRepository, BandMusicianRepository bandMusicianRepository, AccountServiceClient accountServiceClient, Mapper mapper) {
-        this.musicianRepository = musicianRepository;
-        this.genreRepository = genreRepository;
-        this.instrumentRepository = instrumentRepository;
-        this.bandMusicianRepository = bandMusicianRepository;
-        this.accountServiceClient = accountServiceClient;
-        this.mapper = mapper;
-    }
 
     @Transactional
     public MusicianDTO save(MusicianRequestDTO musicianRequestDTO) {

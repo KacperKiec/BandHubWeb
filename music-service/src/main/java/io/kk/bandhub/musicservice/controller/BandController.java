@@ -2,11 +2,10 @@ package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.BandDTO;
 import io.kk.bandhub.musicservice.dto.BandEvtDTO;
-import io.kk.bandhub.musicservice.model.Genre;
+import io.kk.bandhub.musicservice.dto.BandRequestDTO;
 import io.kk.bandhub.musicservice.service.BandService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -31,8 +30,8 @@ public class BandController {
     }
 
     @PostMapping
-    ResponseEntity<BandDTO> addBand(@RequestBody @Valid BandDTO bandDTO) {
-        var savedBand = service.save(bandDTO);
+    ResponseEntity<BandDTO> addBand(@RequestBody @Valid BandRequestDTO bandRequestDTO) {
+        var savedBand = service.save(bandRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBand);
     }
 

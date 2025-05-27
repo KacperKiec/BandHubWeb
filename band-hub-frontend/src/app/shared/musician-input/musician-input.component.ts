@@ -101,7 +101,6 @@ export class MusicianInputComponent implements OnInit, OnChanges {
     this.emit()
   }
 
-
   onInstrumentChange(event: Event, instrument: Instrument) {
     const input = event.target as HTMLInputElement;
     const checked = input.checked;
@@ -133,7 +132,6 @@ export class MusicianInputComponent implements OnInit, OnChanges {
   isInstrumentSelected(instrument: Instrument): boolean {
     return this.musician.instruments.some(i => i.id === instrument.id);
   }
-
 
   emit() {
     this.outputMusician.emit(this.musician);

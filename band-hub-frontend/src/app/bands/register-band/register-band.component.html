@@ -1,0 +1,12 @@
+<div class="register-container">
+  <h2>Zarejestruj swój zespół 🎵</h2>
+
+  <app-band-input
+    [userId]="userId"
+    [availableGenres]="availableGenres"
+    (outputBand)="getBand($event)">
+  </app-band-input>
+
+  <button type="submit" class="submit-btn" (click)="submit()">Zarejestruj zespół</button>
+
+</div>

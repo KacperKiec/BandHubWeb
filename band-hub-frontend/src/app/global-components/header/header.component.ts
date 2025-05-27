@@ -58,6 +58,10 @@ export class HeaderComponent implements OnInit{
     this.router.navigate(['/profile']);
   }
 
+  goToUserBands() {
+    this.router.navigate(['/user/bands']);
+  }
+
   logOut() {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);

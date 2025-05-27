@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {Page} from '../../core/models/pagination.model';
-import {Band} from '../../core/models/band.model';
+import {Band, BandRequest} from '../../core/models/band.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +44,14 @@ export class BandApiService {
     }
 
     return this.http.get<Page<Band>>(`${this.apiURL}/search?page=${page}&size=${size}`, {params})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  addBand(band: BandRequest): Observable<Band> {
+    return this.http.post<Band>(`${this.apiURL}`, band, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

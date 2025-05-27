@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <div class="user-details-container">
+
+    <div class="become-musician-card" *ngIf="!hasBands">
+      <button *ngIf="!showForm" class="btn" (click)="showRegistrationForm()">Załóż zespół</button>
+      <button *ngIf="!showForm" class="btn">Dołącz do zespołu</button>
+
+      <app-register-band
+        *ngIf="showForm"
+        (registered)="handleBandRegistration($event)"
+        [userId]="userId">
+
+      </app-register-band>
+    </div>
+
+  </div>
+</div>

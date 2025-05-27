@@ -39,7 +39,7 @@ public class BandService {
     }
 
     @Transactional
-    public BandDTO save(BandDTO bandDTO) {
+    public BandDTO save(BandRequestDTO bandDTO) {
 
         Musician founder = musicianRepository.findMusicianById(bandDTO.getFounderId())
                 .orElseThrow(() ->new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
@@ -59,14 +59,8 @@ public class BandService {
             band.addBandGenre(bandGenre);
         }
 
-        for(MusicianDTO musicianDTO : bandDTO.getMusicians()) {
-            var musician = musicianRepository.findMusicianById(musicianDTO.getId()).orElseThrow(
-                    () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
-            );
-            boolean isFounder = musicianDTO.getId().equals(bandDTO.getFounderId());
-            BandMusician bandMusician = new BandMusician(band, musician, LocalDate.now(), isFounder);
-            band.addBandMusician(bandMusician);
-        }
+        BandMusician bandMusician = new BandMusician(band, founder, LocalDate.now(), true);
+        band.addBandMusician(bandMusician);
 
         var savedBand = bandRepository.save(band);
 

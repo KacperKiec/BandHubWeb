@@ -13,3 +13,13 @@ export interface Band {
   founderId: number;
   image?: string;
 }
+
+export interface BandRequest {
+  name: string;
+  city: string;
+  country: string;
+  bio: string;
+  isLookingMembers: boolean;
+  genres: Genre[];
+  founderId: number;
+}
