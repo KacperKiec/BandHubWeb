@@ -20,6 +20,7 @@
   border-radius: 25px;
   font-size: 16px;
   padding: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .names input::placeholder {

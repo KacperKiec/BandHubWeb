@@ -52,6 +52,10 @@ export class UserBandsComponent implements OnInit {
     this.showForm = true;
   }
 
+  goToBands() {
+    this.router.navigate(['/bands'])
+  }
+
   handleBandRegistration(band: BandRequest) {
     this.bandApiService.addBand(band).subscribe(band => {
       if (band) {

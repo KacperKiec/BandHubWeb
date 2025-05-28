@@ -1,5 +1,10 @@
 <div class="wrapper">
-  <div class="user-details-container">
+
+  <div class="alert-info" *ngIf="!profile" (click)="goToLogin()">
+    <p>Zaloguj się, aby przejsc do zakładki profilu!</p>
+  </div>
+
+  <div class="user-details-container fade-in" *ngIf="profile">
     <div class="header">
       <img [src]="profile.image" alt="Profile pic" class="profile-pic">
       <div class="basic-info">

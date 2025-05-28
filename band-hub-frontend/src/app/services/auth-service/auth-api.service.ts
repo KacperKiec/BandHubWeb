@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
-import {catchError, Observable} from 'rxjs';
+import {catchError, Observable, of, retry} from 'rxjs';
 import {AccountRegisterRequest} from '../../core/models/account.model';
 
 @Injectable({
@@ -36,6 +36,18 @@ export class AuthApiService {
       .pipe(
         catchError((error) =>
           this.errorHandler.handleError(error))
+      );
+  }
+
+  checkLoginStatus(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiURL}/auth/check`, { withCredentials: true })
+      .pipe(
+        retry(2),
+        catchError((error) => {
+          alert("Sesja wygasła, zaloguj się ponownie!");
+
+          return of(false);
+        })
       );
   }
 }

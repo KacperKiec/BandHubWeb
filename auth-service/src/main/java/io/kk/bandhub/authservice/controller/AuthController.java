@@ -58,4 +58,14 @@ public class AuthController {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkAuthentication(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        return ResponseEntity.ok(true);
+    }
+
 }

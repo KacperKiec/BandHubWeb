@@ -1,5 +1,15 @@
 <form>
-  <div class="form-group">
+  <div class="form-group fade-in">
+
+    <label>Nazwa zespołu</label>
+    <input class="name-input" name="name" [(ngModel)]="band.name" (ngModelChange)="emit()" required>
+
+    <label>Lokalizcja</label>
+    <app-address-search
+      [customClass]="'location-input-2'"
+      (address)="getAddress($event)">
+    </app-address-search>
+
     <label for="bio">Bio</label>
     <textarea id="bio" [(ngModel)]="band.bio" (ngModelChange)="emit()" name="bio" maxlength="400" rows="4" required></textarea>
   </div>

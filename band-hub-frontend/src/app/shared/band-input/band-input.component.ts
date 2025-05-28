@@ -12,6 +12,8 @@ import {Genre} from '../../core/models/genre.model';
 import {BandRequest} from '../../core/models/band.model';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import {AddressSearchComponent} from '../address-search/address-search.component';
+import {Address} from '../../core/models/location.model';
 
 @Component({
   selector: 'app-band-input',
@@ -20,7 +22,8 @@ import {NgForOf, NgIf} from '@angular/common';
     FormsModule,
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AddressSearchComponent
   ],
   templateUrl: './band-input.component.html',
   styleUrl: './band-input.component.css'
@@ -98,6 +101,11 @@ export class BandInputComponent implements OnInit, OnChanges {
     return this.band.genres.some(g => g.id === genre.id);
   }
 
+  getAddress(address: Address) {
+    this.band.city = address.city;
+    this.band.country = address.country;
+    this.emit();
+  }
 
   emit() {
     this.outputBand.emit(this.band);

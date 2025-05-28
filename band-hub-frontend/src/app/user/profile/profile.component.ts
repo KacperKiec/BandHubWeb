@@ -48,20 +48,26 @@ export class ProfileComponent implements OnInit {
   }
 
   initData() {
-    this.userApiService.getCurrentUser().subscribe(acc => {
-      if(acc) {
-        this.profile = acc;
-        this.profile.image = 'assets/user.jpg'
+    console.log('initing data');
+    this.userApiService.getCurrentUser().subscribe({
+      next: user => {
+        this.profile = user;
+        this.musicianApiService.getMusicianById(this.profile.id).subscribe(musician => {
+          if (musician) {
+            this.isMusician = true;
+            this.musician = musician;
+            console.log(musician)
+          } else this.isMusician = false;
+        });
+      },
+      error: err => {
+        console.error('Nie można pobrać danych użytkownika', err);
       }
-      this.musicianApiService.getMusicianById(this.profile.id).subscribe(musician => {
-        if(musician) {
-          this.isMusician = true;
-          this.musician = musician;
-          console.log(musician)
-        }
-        else this.isMusician = false;
-      })
     });
+  }
+
+  goToLogin() {
+    this.router.navigate(['/auth/login']);
   }
 
   handleMusicianRegistration(event: MusicianRequest) {

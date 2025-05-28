@@ -108,3 +108,15 @@
   font-size: 1rem;
   cursor: pointer;
 }
+
+.alert-info {
+  border: 2px dashed #615D55;
+  border-radius: 10px;
+  color: #E4DCC6;
+  margin: 20px auto;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}

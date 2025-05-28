@@ -1,9 +1,24 @@
 <div class="wrapper">
-  <div class="user-details-container">
+  <div class="band-details-container fade-in">
 
-    <div class="become-musician-card" *ngIf="!hasBands">
-      <button *ngIf="!showForm" class="btn" (click)="showRegistrationForm()">Załóż zespół</button>
-      <button *ngIf="!showForm" class="btn">Dołącz do zespołu</button>
+    <div *ngIf="hasBands">
+      dziala
+    </div>
+
+    <div class="join-band-card" *ngIf="!hasBands">
+      <h2 *ngIf="!showForm">Nie jesteś jeszcze członkiem żadnego zespołu!</h2>
+
+      <div class="joining-options" *ngIf="!showForm">
+        <div class="option">
+          <button class="btn" (click)="showRegistrationForm()">Załóż zespół</button>
+          <p>Stwórz swój własny zespół i wyczekuj zgłoszeń nowych członków!</p>
+        </div>
+
+        <div class="option">
+          <button class="btn" (click)="goToBands()">Dołącz do zespołu</button>
+          <p>Nawiąż kontakt z innymi muzykami poprzez czat i dołącz do ich zespołów!</p>
+        </div>
+      </div>
 
       <app-register-band
         *ngIf="showForm"
