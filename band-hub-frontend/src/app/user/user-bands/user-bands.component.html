@@ -1,8 +1,42 @@
 <div class="wrapper">
   <div class="band-details-container fade-in">
 
-    <div *ngIf="hasBands">
-      dziala
+    <div *ngIf="hasBands && !editingMode">
+      <h2 class="panel-title">Twoje zespoły</h2>
+
+      <div>
+        <div class="band-grid">
+          <div class="band-card" *ngFor="let band of userBands">
+            <div class="band-header">
+              <h3 class="band-name">{{ band.name }}</h3>
+            </div>
+
+            <p class="band-description">
+              {{ band.bio || 'Brak opisu zespołu.' }}
+            </p>
+
+            <div class="band-actions">
+              <button class="btn2" (click)="viewBandDetails(band.id)">Szczegóły</button>
+              <button *ngIf="band.founderId === userId" class="btn2" (click)="removeBand()">Rozwiąż zespół</button>
+              <button *ngIf="band.founderId !== userId" class="btn2" (click)="leaveBand(band.id)">Opuść</button>
+              <button *ngIf="band.founderId === userId" class="btn2" (click)="turnEditingMode(band)">Edytuj</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="option create-option">
+          <label class="create-label">Ciągle ci mało?</label>
+          <button class="btn2" (click)="createAnotherBand()">Załóż zespół</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="editingMode">
+      <app-edit-band
+      [userId]="userId"
+      [bandTemplate]="bandToEdit"
+      (updated)="handleBandUpdating($event)">
+      </app-edit-band>
     </div>
 
     <div class="join-band-card" *ngIf="!hasBands">

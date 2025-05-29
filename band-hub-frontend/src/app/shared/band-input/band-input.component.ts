@@ -101,6 +101,18 @@ export class BandInputComponent implements OnInit, OnChanges {
     return this.band.genres.some(g => g.id === genre.id);
   }
 
+  sendAddress(): Address {
+    return {
+      street: '',
+      number: '',
+      city: this.band.city,
+      postalCode: '',
+      country: this.band.country,
+      latitude: 0,
+      longitude: 0
+    };
+  }
+
   getAddress(address: Address) {
     this.band.city = address.city;
     this.band.country = address.country;

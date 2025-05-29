@@ -44,7 +44,7 @@ export class AuthApiService {
       .pipe(
         retry(2),
         catchError((error) => {
-          alert("Sesja wygasła, zaloguj się ponownie!");
+          //alert("Sesja wygasła, zaloguj się ponownie!");
 
           return of(false);
         })

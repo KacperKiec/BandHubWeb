@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 import {BandApiService} from '../../services/band-service/band-api.service';
 import {Router} from '@angular/router';
-import {Band, BandRequest} from '../../core/models/band.model';
+import {Band, BandRequest, BandUpdateRequest} from '../../core/models/band.model';
 import {NgForOf, NgIf} from '@angular/common';
 import {RegisterMusicianComponent} from '../../musicians/register-musician/register-musician.component';
 import {RegisterBandComponent} from '../../bands/register-band/register-band.component';
+import {EditBandComponent} from '../edit/edit-band/edit-band.component';
 
 @Component({
   selector: 'app-user-bands',
@@ -14,7 +15,8 @@ import {RegisterBandComponent} from '../../bands/register-band/register-band.com
     NgForOf,
     NgIf,
     RegisterMusicianComponent,
-    RegisterBandComponent
+    RegisterBandComponent,
+    EditBandComponent
   ],
   templateUrl: './user-bands.component.html',
   styleUrl: './user-bands.component.css'
@@ -25,6 +27,9 @@ export class UserBandsComponent implements OnInit {
   userBands!: Band[];
   hasBands: boolean = false;
   showForm: boolean = false;
+  editingMode: boolean = false;
+
+  bandToEdit!: Band;
 
   constructor(private musicianApiService: MusicianApiService, private bandApiService: BandApiService, private router: Router) {
   }
@@ -43,7 +48,6 @@ export class UserBandsComponent implements OnInit {
       if (bands) {
         this.userBands = bands;
         this.hasBands = this.userBands.length > 0;
-        console.log(this.userBands, this.hasBands);
       }
     })
   }
@@ -56,6 +60,37 @@ export class UserBandsComponent implements OnInit {
     this.router.navigate(['/bands'])
   }
 
+  createAnotherBand() {
+    this.showForm = true;
+    this.hasBands = false;
+  }
+
+  viewBandDetails(bandId: number) {
+    this.router.navigate(['/bands', bandId]);
+  }
+
+  turnEditingMode(bandToEdit: Band) {
+    this.editingMode = true;
+    this.bandToEdit = bandToEdit;
+  }
+
+  leaveBand(bandId: number) {
+
+  }
+
+  removeBand() {
+
+  }
+
+  handleBandUpdating(band: BandUpdateRequest) {
+    this.bandApiService.updateBand(band).subscribe(band => {
+      if (band) {
+        this.editingMode = false;
+        this.initData();
+      }
+    })
+  }
+
   handleBandRegistration(band: BandRequest) {
     this.bandApiService.addBand(band).subscribe(band => {
       if (band) {
@@ -65,5 +100,4 @@ export class UserBandsComponent implements OnInit {
       this.initData();
     })
   }
-
 }

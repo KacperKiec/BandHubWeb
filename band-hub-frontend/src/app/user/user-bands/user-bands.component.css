@@ -81,6 +81,8 @@
 }
 
 .option {
+  display: flex;
+  flex-direction: column;
   width: 25%;
   height: fit-content;
   margin: 10px 10%;
@@ -104,6 +106,75 @@
   transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.btn:hover, .btn2:hover {
   background-color: #45403c;
+}
+
+.my-bands-panel {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.panel-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.band-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.band-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.band-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.band-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.band-description {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.band-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn2 {
+  background-color: #0E1418;
+  color: #E4DCC6;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.create-label {
+  margin-bottom: 5px;
+}
+
+.create-option {
+  background-color: rgba(255, 255, 255, 0.6);
+  align-items: center;
+  margin: 25px auto 0;
 }

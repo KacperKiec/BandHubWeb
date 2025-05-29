@@ -1,0 +1,10 @@
+<form class="container" #updateForm=ngForm (ngSubmit)="submitForm()">
+  <app-band-input
+    [userId]="userId"
+    [availableGenres]="availableGenres"
+    [inputBand]="bandTemplate"
+    (outputBand)="getBand($event)">
+  </app-band-input>
+
+  <button class="confirm-button">Zapisz</button>
+</form>

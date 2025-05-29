@@ -7,6 +7,7 @@ import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.MusicianService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,12 +27,9 @@ import java.util.List;
  * */
 @Controller
 @RequestMapping(value = "/musician")
+@AllArgsConstructor
 public class MusicianController {
     private final MusicianService service;
-
-    public MusicianController(final MusicianService service) {
-        this.service = service;
-    }
 
     @PostMapping
     ResponseEntity<MusicianDTO> addMusician(@RequestBody @Valid MusicianRequestDTO musicianRequestDTO) {

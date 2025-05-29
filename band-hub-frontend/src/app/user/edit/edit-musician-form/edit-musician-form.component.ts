@@ -58,7 +58,6 @@ export class EditMusicianFormComponent implements OnInit {
           instruments: []
         };
       }
-      console.log(this.musician)
     });
   }
 

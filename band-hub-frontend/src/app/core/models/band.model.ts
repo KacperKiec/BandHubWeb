@@ -23,3 +23,14 @@ export interface BandRequest {
   genres: Genre[];
   founderId: number;
 }
+
+export interface BandUpdateRequest {
+  id: number,
+  name: string;
+  city: string;
+  country: string;
+  bio: string;
+  isLookingMembers: boolean;
+  genres: Genre[];
+  founderId: number;
+}

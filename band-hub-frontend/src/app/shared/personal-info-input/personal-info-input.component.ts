@@ -94,7 +94,6 @@ export class PersonalInfoInputComponent implements OnInit {
     };
   }
 
-
   onInputChange() {
     if (this.formData.month && this.formData.year && this.formData.day) {
       if (!this.isValidDay(this.formData.month, this.formData.year, this.formData.day)) {

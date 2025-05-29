@@ -1,16 +1,20 @@
 package io.kk.bandhub.musicservice.controller;
 
-import io.kk.bandhub.musicservice.dto.BandDTO;
-import io.kk.bandhub.musicservice.dto.BandEvtDTO;
-import io.kk.bandhub.musicservice.dto.BandRequestDTO;
+import io.kk.bandhub.musicservice.dto.*;
+import io.kk.bandhub.musicservice.exception.musician.MusicianError;
+import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.BandService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +26,9 @@ import java.util.List;
  * */
 @Controller
 @RequestMapping(value = "/band")
+@AllArgsConstructor
 public class BandController {
     private final BandService service;
-
-    public BandController(BandService service) {
-        this.service = service;
-    }
 
     @PostMapping
     ResponseEntity<BandDTO> addBand(@RequestBody @Valid BandRequestDTO bandRequestDTO) {
@@ -74,13 +75,47 @@ public class BandController {
     }
 
     @PutMapping()
-    ResponseEntity<BandDTO> updateBand(@RequestBody @Valid BandDTO bandDTO) {
-        return ResponseEntity.ok(service.updateBand(bandDTO));
+    ResponseEntity<BandDTO> updateBand(@RequestBody @Valid BandUpdateRequestDTO bandUpdateRequestDTO, Authentication authentication) {
+        Integer founderId = bandUpdateRequestDTO.getFounderId();
+
+        verifyAuthorities(authentication, founderId);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateBand(bandUpdateRequestDTO));
+    }
+
+    @PatchMapping(value = "/add-member")
+    ResponseEntity<Void> addMember(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
+        Integer founderId = service.getById(bandMembershipRequestDTO.getBandId()).getFounderId();
+
+        verifyAuthorities(authentication, founderId);
+
+        service.addMusicianToBand(bandMembershipRequestDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @PatchMapping(value = "/remove-member")
+    ResponseEntity<Void> removeMember(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
+        Integer founderId = service.getById(bandMembershipRequestDTO.getBandId()).getFounderId();
+
+        verifyAuthorities(authentication, founderId);
+
+        service.removeMusicianFromBand(bandMembershipRequestDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping()
     ResponseEntity<?> deleteBand(@RequestBody BandDTO bandDTO) {
         service.deleteBand(bandDTO.getId());
         return ResponseEntity.noContent().build();
+    }
+
+    private void verifyAuthorities(Authentication authentication, Integer founderId) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(founderId.longValue())) {
+            throw new MusicianException(MusicianError.ACCESS_DENIED);
+        }
     }
 }
