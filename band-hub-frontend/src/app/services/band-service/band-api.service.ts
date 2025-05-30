@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {Page} from '../../core/models/pagination.model';
-import {Band, BandRequest, BandUpdateRequest} from '../../core/models/band.model';
+import {Band, BandMembershipRequest, BandRequest, BandUpdateRequest} from '../../core/models/band.model';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +60,22 @@ export class BandApiService {
 
   updateBand(band: BandUpdateRequest): Observable<Band> {
     return this.http.put<Band>(`${this.apiURL}`, band, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  leaveBand(request: BandMembershipRequest): Observable<void> {
+    return this.http.patch<void>(`${this.apiURL}/leave`, request, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  deleteBand(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiURL}/${id}`, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

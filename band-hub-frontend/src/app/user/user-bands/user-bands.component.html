@@ -17,7 +17,7 @@
 
             <div class="band-actions">
               <button class="btn2" (click)="viewBandDetails(band.id)">Szczegóły</button>
-              <button *ngIf="band.founderId === userId" class="btn2" (click)="removeBand()">Rozwiąż zespół</button>
+              <button *ngIf="band.founderId === userId" class="btn2" (click)="removeBand(band.id)">Rozwiąż zespół</button>
               <button *ngIf="band.founderId !== userId" class="btn2" (click)="leaveBand(band.id)">Opuść</button>
               <button *ngIf="band.founderId === userId" class="btn2" (click)="turnEditingMode(band)">Edytuj</button>
             </div>

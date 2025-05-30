@@ -75,11 +75,29 @@ export class UserBandsComponent implements OnInit {
   }
 
   leaveBand(bandId: number) {
-
+    this.bandApiService.leaveBand({ bandId: bandId, musicianId: this.userId }).subscribe({
+      next: () => {
+        this.initData();
+      },
+      error: (err) => {
+        console.error('Błąd przy opuszczaniu zespołu:', err);
+      }
+    });
   }
 
-  removeBand() {
+  removeBand(bandId: number) {
+    const confirmed = window.confirm('Czy na pewno chcesz rozwiązać ten zespół? Tej operacji nie można cofnąć.');
 
+    if (confirmed) {
+      this.bandApiService.deleteBand(bandId).subscribe({
+        next: () => {
+          this.initData();
+        },
+        error: (err) => {
+          console.error('Błąd podczas usuwania zespołu:', err);
+        }
+      });
+    }
   }
 
   handleBandUpdating(band: BandUpdateRequest) {

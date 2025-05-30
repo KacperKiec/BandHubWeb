@@ -25,7 +25,7 @@ export interface BandRequest {
 }
 
 export interface BandUpdateRequest {
-  id: number,
+  id: number;
   name: string;
   city: string;
   country: string;
@@ -33,4 +33,9 @@ export interface BandUpdateRequest {
   isLookingMembers: boolean;
   genres: Genre[];
   founderId: number;
+}
+
+export interface BandMembershipRequest {
+  bandId: number;
+  musicianId: number;
 }

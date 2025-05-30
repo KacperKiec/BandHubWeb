@@ -103,18 +103,26 @@ public class BandController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @DeleteMapping()
-    ResponseEntity<?> deleteBand(@RequestBody BandDTO bandDTO) {
-        service.deleteBand(bandDTO.getId());
+    @PatchMapping(value = "/leave")
+    ResponseEntity<Void> leaveBand(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
+        verifyAuthorities(authentication, bandMembershipRequestDTO.getMusicianId());
+        service.removeMusicianFromBand(bandMembershipRequestDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @DeleteMapping(value = "/{bandId}")
+    ResponseEntity<Void> deleteBand(@PathVariable Integer bandId, Authentication authentication) {
+        verifyAuthorities(authentication, service.getById(bandId).getFounderId());
+        service.deleteBand(bandId);
         return ResponseEntity.noContent().build();
     }
 
-    private void verifyAuthorities(Authentication authentication, Integer founderId) {
+    private void verifyAuthorities(Authentication authentication, Integer userId) {
         JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
         Jwt jwt = jwtAuth.getToken();
         Long userIdFromToken = jwt.getClaim("userId");
 
-        if (!userIdFromToken.equals(founderId.longValue())) {
+        if (!userIdFromToken.equals(userId.longValue())) {
             throw new MusicianException(MusicianError.ACCESS_DENIED);
         }
     }
