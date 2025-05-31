@@ -3,6 +3,7 @@ package io.kk.bandhub.musicservice.service;
 import io.kk.bandhub.musicservice.dto.BandInvitationDTO;
 import io.kk.bandhub.musicservice.dto.BandJoinRequestDTO;
 import io.kk.bandhub.musicservice.dto.BandMembershipRequestDTO;
+import io.kk.bandhub.musicservice.dto.Mapper;
 import io.kk.bandhub.musicservice.exception.band.BandError;
 import io.kk.bandhub.musicservice.exception.band.BandException;
 import io.kk.bandhub.musicservice.exception.band_joining.BandJoiningError;
@@ -21,6 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class BandJoiningService {
     private final MusicianRepository musicianRepository;
     private final BandInvitationRepository bandInvitationRepository;
     private final BandJoinRequestRepository bandJoinRequestRepository;
+    private final Mapper mapper;
 
     public void createInvitation(BandMembershipRequestDTO invitationDTO) {
         var band = bandRepository.findBandById(invitationDTO.getBandId()).orElseThrow(
@@ -110,5 +113,15 @@ public class BandJoiningService {
             }
         }
         bandJoinRequestRepository.save(request);
+    }
+
+    public List<BandInvitationDTO> getMusicianInvitations(Integer id) {
+        return bandInvitationRepository.findByMusician_IdAndStatus(id, RequestStatus.PENDING)
+                .stream().map(mapper::toBandInvitationDTO).toList();
+    }
+
+    public List<BandJoinRequestDTO> getBandJoinRequests(Integer id) {
+        return bandJoinRequestRepository.findByBand_IdAndStatus(id, RequestStatus.PENDING)
+                .stream().map(mapper::toBandRequestDTO).toList();
     }
 }

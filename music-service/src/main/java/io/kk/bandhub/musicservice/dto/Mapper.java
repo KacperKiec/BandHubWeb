@@ -73,6 +73,26 @@ public class Mapper {
         return setDTOFields(musician, account);
     }
 
+    public BandInvitationDTO toBandInvitationDTO(BandInvitation bandInvitation) {
+        BandInvitationDTO dto = new BandInvitationDTO();
+        dto.setId(bandInvitation.getId());
+        dto.setBandId(bandInvitation.getBand().getId());
+        dto.setStatus(bandInvitation.getStatus());
+        dto.setCreationDate(bandInvitation.getCreatedAt());
+        dto.setInvitedMusicianId(bandInvitation.getMusician().getId());
+        return dto;
+    }
+
+    public BandJoinRequestDTO toBandRequestDTO(BandJoinRequest bandJoinRequest) {
+        BandJoinRequestDTO dto = new BandJoinRequestDTO();
+        dto.setId(bandJoinRequest.getId());
+        dto.setBandId(bandJoinRequest.getBand().getId());
+        dto.setStatus(bandJoinRequest.getStatus());
+        dto.setCreationDate(bandJoinRequest.getCreatedAt());
+        dto.setApplicantId(bandJoinRequest.getMusician().getId());
+        return dto;
+    }
+
     private MusicianDTO setDTOFields(Musician musician, AccountDTO account) {
         MusicianDTO dto = new MusicianDTO();
         dto.setId(musician.getId());
