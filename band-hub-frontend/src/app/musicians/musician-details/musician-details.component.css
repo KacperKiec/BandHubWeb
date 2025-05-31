@@ -52,7 +52,13 @@
   cursor: pointer;
 }
 
-.chat-action {
+.action-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.action {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -66,12 +72,56 @@
   cursor: pointer;
 }
 
-.chat-action img {
+.action img {
   cursor: pointer;
   padding: 0 0 0 10px;
 }
 
-.chat-action p {
+.action p {
   padding: 0 10px 0 0;
   margin: 0 2px;
+}
+
+.action-with-dialog {
+  position: relative;
+}
+
+.invitation-dialog {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 5px;
+  min-width: 200px;
+  z-index: 1000;
+  cursor: default;
+}
+
+.invitation-dialog p {
+  border-bottom: 1px solid #ccc;
+  padding: 4px 0;
+}
+
+.invitation-dialog ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invitation-dialog li {
+  padding: 4px 0;
+  cursor: default;
+  border-bottom: 1px solid #ccc;
+}
+
+.invitation-dialog li:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.invitation-dialog li:last-child {
+  border-bottom: none;
 }

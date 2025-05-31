@@ -16,7 +16,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MusicianException.class)
-    public ResponseEntity<ErrorResponse> musicianNotFound(final MusicianException e) {
+    public ResponseEntity<ErrorResponse> handleMusicianException(MusicianException e) {
         if (MusicianError.MUSICIAN_NOT_FOUND.equals(e.getStatus())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("404", e.getStatus().getMessage()));
         } else if (MusicianError.ACCESS_DENIED.equals(e.getStatus())) {
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BandException.class)
-    public ResponseEntity<ErrorResponse> bandNotFound(BandException e) {
+    public ResponseEntity<ErrorResponse> handleBandException(BandException e) {
         if (BandError.BAND_NOT_FOUND.equals(e.getStatus())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("404", e.getStatus().getMessage()));
         } else  {

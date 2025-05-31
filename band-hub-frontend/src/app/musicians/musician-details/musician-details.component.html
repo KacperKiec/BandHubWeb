@@ -42,9 +42,25 @@
       </div>
     </div>
 
-    <div class="chat-action" (click)="startChat(musician.id)">
-      <img class="icon" ngSrc="/icons8-chat-message-black-48.png" height="19" width="19" alt="Friends Icon">
-      <p>Rozpocznij czat</p>
+    <div class="action-panel">
+      <div class="action" (click)="startChat(musician.id)">
+        <img class="icon" ngSrc="/icons8-chat-message-black-48.png" height="19" width="19" alt="Friends Icon">
+        <p>Rozpocznij czat</p>
+      </div>
+
+      <div class="action action-with-dialog" *ngIf="bandsToInvite.length > 0" (click)="openInvitationPanel()">
+        <img class="icon" ngSrc="/icons8-mail-30.png" height="19" width="19" alt="Friends Icon">
+        <p>Wyślij zaproszenie</p>
+
+        <div class="invitation-dialog" *ngIf="showInvitationDialog" #invitationPanel>
+          <p>Wybierz zespół</p>
+          <ul>
+            <li *ngFor="let band of bandsToInvite" (click)="sendInvitation(band.id)">
+              {{ band.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

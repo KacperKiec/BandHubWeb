@@ -1,41 +1,34 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {NgForOf, NgOptimizedImage} from '@angular/common';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Musician} from '../../core/models/musician.model';
 import {Band} from '../../core/models/band.model';
+import {BandApiService} from '../../services/band-service/band-api.service';
 
 @Component({
   selector: 'app-musician-details',
   standalone: true,
   imports: [
     NgForOf,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgIf
   ],
   templateUrl: './musician-details.component.html',
   styleUrl: './musician-details.component.css'
 })
 export class MusicianDetailsComponent implements OnInit{
 
+  userId!:number;
+  bandsToInvite: Band[] = new Array<Band>();
+  showInvitationDialog: boolean = false;
+
   musician!: Musician;
   musicianBands!: Band[];
 
-  sampleMusician: Musician = <Musician>{
-    id: 1,
-    firstName: 'Davie',
-    lastName: 'Jones',
-    birthday: new Date(),
-    gender: 'male',
-    city: 'Krakow',
-    country: 'Poland',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium, nisi non vestibulum faucibus, massa nisl molestie risus, id hendrerit eros urna molestie libero. Ut malesuada vestibulum ante id porttitor. Nunc gravida vitae risus nec cursus. Nam eros orci, commodo at odio in, rhoncus facilisis dui. Suspendisse malesuada sem vel vehicula mattis. Nulla vel urna et arcu vulputate elementum quis in felis. Etiam quis mi quis nibh elementum blandit. Nunc eu molestie justo, feugiat sodales metus. Fusce non arcu vulputate, molestie velit eu, feugiat mauris. Cras molestie lectus a diam interdum accumsan. Proin nibh risus, fringilla a lorem in, placerat volutpat massa. Donec nec rhoncus magna, a varius sapien.',
-    isLookingBand: true,
-    genres: [],
-    instruments: [],
-    image: '/assets/user.jpg'
-  };
+  @ViewChild('invitationPanel') panelRef!: ElementRef;
 
-  constructor(private router: Router, private route: ActivatedRoute, private musicianApiService: MusicianApiService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private musicianApiService: MusicianApiService, private eRef: ElementRef, private bandApiService: BandApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -51,7 +44,30 @@ export class MusicianDetailsComponent implements OnInit{
       this.musicianBands = bands;
     })
 
-    //this.musician = this.sampleMusician;
+    const rawId = localStorage.getItem('userId');
+    if (rawId) {
+      this.userId = JSON.parse(rawId);
+    }
+
+    this.musicianApiService.getMusicianBands(this.userId).subscribe(bands => {
+      if(bands) {
+        bands.forEach(band => {
+          if(band.founderId === this.userId && !this.musicianBands.find(musicianBand => musicianBand.id === band.id)) {
+            this.bandsToInvite.push(band);
+          }
+        })
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: MouseEvent) {
+    const clickedInsideDropdown = this.panelRef?.nativeElement.contains(event.target);
+    const clickedToggle = this.eRef.nativeElement.querySelector('.action-with-dialog')?.contains(event.target);
+
+    if (!clickedInsideDropdown && !clickedToggle) {
+      this.showInvitationDialog = false;
+    }
   }
 
   calculateAge(birthday: Date): number {
@@ -68,4 +84,14 @@ export class MusicianDetailsComponent implements OnInit{
 
   }
 
+  openInvitationPanel() {
+    this.showInvitationDialog = true;
+  }
+
+  sendInvitation(bandId: number) {
+    this.bandApiService.sendInvitation({bandId: bandId, musicianId: this.musician.id}).subscribe(() => {
+      this.showInvitationDialog = false;
+      alert("Wysłano zaproszenie.");
+    });
+  }
 }

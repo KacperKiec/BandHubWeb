@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/band-joining")
+@RequestMapping(value = "/band/joining")
 @RequiredArgsConstructor
 public class BandJoiningController {
     private final BandJoiningService bandJoiningService;
@@ -44,14 +44,14 @@ public class BandJoiningController {
     }
 
     @PatchMapping(value = "/invitation")
-    ResponseEntity<Void> updateInvitation(@RequestBody BandInvitationDTO dto, Authentication auth) {
+    ResponseEntity<Void> respondInvitation(@RequestBody @Valid BandInvitationDTO dto, Authentication auth) {
         verifyAuthorities(auth, dto.getInvitedMusicianId());
         bandJoiningService.updateInvitation(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PatchMapping(value = "/request")
-    ResponseEntity<Void> updateRequest(@RequestBody BandJoinRequestDTO dto, Authentication auth) {
+    ResponseEntity<Void> respondRequest(@RequestBody @Valid BandJoinRequestDTO dto, Authentication auth) {
         Integer founderId = bandService.getById(dto.getBandId()).getFounderId();
 
         verifyAuthorities(auth, founderId);
