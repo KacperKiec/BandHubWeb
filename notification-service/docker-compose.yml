@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=notif
+      - POSTGRES_PASSWORD=notif
+      - POSTGRES_DB=notification_db
+    ports:
+      - "5438:5432"
+    volumes:
+      - notification_db_vol:/var/lib/postgresql/data
+    networks:
+      - notification-network
+
+volumes:
+  notification_db_vol:
+
+networks:
+  notification-network:
+    driver: bridge
