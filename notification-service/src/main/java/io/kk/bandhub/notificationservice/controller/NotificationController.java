@@ -3,6 +3,7 @@ package io.kk.bandhub.notificationservice.controller;
 import io.kk.bandhub.notificationservice.dto.NotificationRequestDTO;
 import io.kk.bandhub.notificationservice.dto.NotificationResponseDTO;
 import io.kk.bandhub.notificationservice.service.NotificationService;
+import io.kk.bandhub.notificationservice.service.WebSocketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationService notificationService;
+    private final WebSocketService webSocketService;
 
     @GetMapping(value = "/{id}")
     ResponseEntity<List<NotificationResponseDTO>> getUserNotifications(@PathVariable Integer id) {
@@ -33,5 +35,6 @@ public class NotificationController {
     @RabbitListener(queues = "#{getQueue}")
     public void createEvent(@Valid NotificationRequestDTO notificationRequestDTO) {
         notificationService.createNotification(notificationRequestDTO);
+        webSocketService.sendNotification(notificationRequestDTO.getRecipientId());
     }
 }

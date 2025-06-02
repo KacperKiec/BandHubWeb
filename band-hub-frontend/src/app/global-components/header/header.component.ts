@@ -3,6 +3,8 @@ import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../core/auth/service/auth.service';
 import {AuthApiService} from '../../services/auth-service/auth-api.service';
+import {NotificationService} from '../../services/notification-service/notification.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,21 +17,35 @@ import {AuthApiService} from '../../services/auth-service/auth-api.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
   isUserLoggedIn = false;
   showDropdown = false;
+
+  private subscription: Subscription = new Subscription();
+  notifications: any[] = [];
 
   @ViewChild('dropdownMenu') dropdownRef!: ElementRef;
 
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef) {
+  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService) {
   }
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe(status => {
       this.isUserLoggedIn = status;
+
+      if(status) {
+        this.notificationService.connect();
+      }
     });
+
+    this.subscription = this.notificationService.notifications$.subscribe(
+      (notification) => {
+        this.notifications.push(notification);
+        console.log(notification);
+      }
+    );
   }
 
   @HostListener('document:click', ['$event'])
@@ -65,6 +81,7 @@ export class HeaderComponent implements OnInit{
   logOut() {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);
+      this.notificationService.disconnect();
       this.showDropdown = false;
       this.router.navigate(['/']);
     });

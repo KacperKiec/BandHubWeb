@@ -66,8 +66,8 @@
   justify-content: center;
 }
 
-.user-tiles label {
-  text-align: center;
+.bell {
+  cursor: pointer;
 }
 
 .dropdown-menu {
