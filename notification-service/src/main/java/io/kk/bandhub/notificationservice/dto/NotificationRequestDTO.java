@@ -6,16 +6,16 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @Getter
 @Setter
-public class NotificationRequestDTO {
+public class NotificationRequestDTO implements Serializable {
 
     @NotNull
     private Integer recipientId;
 
-    @Size(max = 100)
     @NotNull
     private NotificationType type;
 

@@ -12,4 +12,5 @@ public interface NotificationRepository {
     List<Notification> findAll();
     List<Notification> findByRecipientIdAndRead(Integer recipientId, Boolean read);
     List<Notification> findByCreatedAtBefore(LocalDateTime createdAt);
+    void deleteById(Integer id);
 }

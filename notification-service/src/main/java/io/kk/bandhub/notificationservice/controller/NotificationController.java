@@ -1,0 +1,37 @@
+package io.kk.bandhub.notificationservice.controller;
+
+import io.kk.bandhub.notificationservice.dto.NotificationRequestDTO;
+import io.kk.bandhub.notificationservice.dto.NotificationResponseDTO;
+import io.kk.bandhub.notificationservice.service.NotificationService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(value = "/notification")
+@RequiredArgsConstructor
+public class NotificationController {
+    private final NotificationService notificationService;
+
+    @GetMapping(value = "/{id}")
+    ResponseEntity<List<NotificationResponseDTO>> getUserNotifications(@PathVariable Integer id) {
+        var result = notificationService.getUnreadUserNotifications(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping(value = "/{id}")
+    ResponseEntity<Void> markNotificationAsRead(@PathVariable Integer id) {
+        notificationService.markNotificationAsRead(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
+    @RabbitListener(queues = "#{getQueue}")
+    public void createEvent(@Valid NotificationRequestDTO notificationRequestDTO) {
+        notificationService.createNotification(notificationRequestDTO);
+    }
+}

@@ -1,50 +1,34 @@
 package io.kk.bandhub.musicservice.service;
 
-import io.kk.bandhub.musicservice.dto.BandInvitationDTO;
-import io.kk.bandhub.musicservice.dto.BandJoinRequestDTO;
-import io.kk.bandhub.musicservice.dto.BandMembershipRequestDTO;
-import io.kk.bandhub.musicservice.dto.Mapper;
+import io.kk.bandhub.musicservice.dto.*;
 import io.kk.bandhub.musicservice.exception.band.BandError;
 import io.kk.bandhub.musicservice.exception.band.BandException;
 import io.kk.bandhub.musicservice.exception.band_joining.BandJoiningError;
 import io.kk.bandhub.musicservice.exception.band_joining.BandJoiningException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
-import io.kk.bandhub.musicservice.model.BandInvitation;
 import io.kk.bandhub.musicservice.model.BandJoinRequest;
 import io.kk.bandhub.musicservice.model.BandMusician;
 import io.kk.bandhub.musicservice.model.RequestStatus;
 import io.kk.bandhub.musicservice.repository.band.BandRepository;
-import io.kk.bandhub.musicservice.repository.band_invitation.BandInvitationRepository;
 import io.kk.bandhub.musicservice.repository.band_join_request.BandJoinRequestRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-@AllArgsConstructor
-public class BandJoiningService {
+@RequiredArgsConstructor
+public class RequestService {
     private final BandRepository bandRepository;
     private final MusicianRepository musicianRepository;
-    private final BandInvitationRepository bandInvitationRepository;
     private final BandJoinRequestRepository bandJoinRequestRepository;
+    private final RabbitService rabbitService;
     private final Mapper mapper;
-
-    public void createInvitation(BandMembershipRequestDTO invitationDTO) {
-        var band = bandRepository.findBandById(invitationDTO.getBandId()).orElseThrow(
-                () -> new BandException(BandError.BAND_NOT_FOUND)
-        );
-
-        var musician = musicianRepository.findMusicianById(invitationDTO.getMusicianId()).orElseThrow(
-                () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
-        );
-
-        BandInvitation bandInvitation = new BandInvitation(band, musician, RequestStatus.PENDING, LocalDate.now());
-        bandInvitationRepository.save(bandInvitation);
-    }
 
     public void createJoinRequest(BandMembershipRequestDTO joinRequestDTO) {
         var band = bandRepository.findBandById(joinRequestDTO.getBandId()).orElseThrow(
@@ -57,34 +41,20 @@ public class BandJoiningService {
 
         BandJoinRequest bandJoinRequest = new BandJoinRequest(band, musician, RequestStatus.PENDING, LocalDate.now());
         bandJoinRequestRepository.save(bandJoinRequest);
-    }
 
-    public void updateInvitation(BandInvitationDTO invitationDTO) {
-        var invitation = bandInvitationRepository.findById(invitationDTO.getId()).orElseThrow(
-                () -> new BandJoiningException(BandJoiningError.INVITATION_NOT_FOUND)
-        );
+        NotificationRequestDTO dto = new NotificationRequestDTO();
+        dto.setType(NotificationType.BAND_REQUEST);
+        dto.setRecipientId(bandRepository.getFounderId(band.getId()));
+        dto.setTitle("Zgłoszenie do zespołu");
+        dto.setContent("Otrzymałeś/aś nowe zgłoszenie do zespołu %s. Odpowiedz na nie zainteresowanemu muzykowi.".formatted(band.getName()));
 
-        invitation.setStatus(invitationDTO.getStatus());
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("bandId", band.getId());
+        metadata.put("bandName", band.getName());
+        metadata.put("userId", musician.getId());
+        dto.setMetadata(metadata);
 
-        if(invitation.getStatus().equals(RequestStatus.ACCEPTED)) {
-            var band = bandRepository.findBandById(invitationDTO.getBandId()).orElseThrow(
-                    () -> new BandException(BandError.BAND_NOT_FOUND)
-            );
-            var musician = musicianRepository.findMusicianById(invitationDTO.getInvitedMusicianId()).orElseThrow(
-                    () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
-            );
-            BandMusician bandMusician = new BandMusician(band, musician, LocalDate.now(), false);
-            band.addBandMusician(bandMusician);
-            bandRepository.save(band);
-        }
-
-        var invitations = bandInvitationRepository.findByBand_IdAndMusician_Id(invitationDTO.getBandId(), invitationDTO.getInvitedMusicianId());
-        for (BandInvitation inv : invitations) {
-            if(!inv.getStatus().equals(RequestStatus.PENDING)) {
-                inv.setStatus(RequestStatus.CANCELED);
-            }
-        }
-        bandInvitationRepository.save(invitation);
+        rabbitService.sendNotification(dto);
     }
 
     public void updateRequest(BandJoinRequestDTO requestDTO) {
@@ -94,10 +64,11 @@ public class BandJoiningService {
 
         request.setStatus(requestDTO.getStatus());
 
+        var band = bandRepository.findBandById(requestDTO.getBandId()).orElseThrow(
+                () -> new BandException(BandError.BAND_NOT_FOUND)
+        );
+
         if(requestDTO.getStatus().equals(RequestStatus.ACCEPTED)) {
-            var band = bandRepository.findBandById(requestDTO.getBandId()).orElseThrow(
-                    () -> new BandException(BandError.BAND_NOT_FOUND)
-            );
             var musician = musicianRepository.findMusicianById(requestDTO.getApplicantId()).orElseThrow(
                     () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
             );
@@ -113,11 +84,34 @@ public class BandJoiningService {
             }
         }
         bandJoinRequestRepository.save(request);
-    }
 
-    public List<BandInvitationDTO> getMusicianInvitations(Integer id) {
-        return bandInvitationRepository.findByMusician_IdAndStatus(id, RequestStatus.PENDING)
-                .stream().map(mapper::toBandInvitationDTO).toList();
+        if(requestDTO.getStatus().equals(RequestStatus.ACCEPTED)) {
+            NotificationRequestDTO dto = new NotificationRequestDTO();
+            dto.setType(NotificationType.JOINED_BAND);
+            dto.setRecipientId(requestDTO.getApplicantId());
+            dto.setTitle("Zaakceptowano zgłoszenie");
+            dto.setContent("Właściciel zespołu %s zaakceptował twoje zgłoszenie, teraz jesteś jego częścią!"
+                    .formatted(band.getName()));
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("bandId", band.getId());
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+        } else if (requestDTO.getStatus().equals(RequestStatus.REJECTED)) {
+            NotificationRequestDTO dto = new NotificationRequestDTO();
+            dto.setType(NotificationType.BAND_REQUEST_REJECTED);
+            dto.setRecipientId(requestDTO.getApplicantId());
+            dto.setTitle("Odrzucono zgłoszenie");
+            dto.setContent("Właściciel zespołu %s odrzucił twoje zgłoszenie, spróbuj swoich sił gdzie indziej."
+                    .formatted(band.getName()));
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("bandId", band.getId());
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+        }
     }
 
     public List<BandJoinRequestDTO> getBandJoinRequests(Integer id) {

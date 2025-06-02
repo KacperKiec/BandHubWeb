@@ -15,6 +15,12 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dev
+    password: dev
+    virtual-host: /
   security:
     oauth2:
       resourceserver:
@@ -35,6 +41,10 @@ app:
     client-id: oidc-client
     client-secret: secret
     scope: read
+  rabbit:
+    queue: "notification-queue"
+    exchange: "notification-exchange"
+    routing-key: "add.notification"
 resilience4j:
   circuitbreaker:
     instances:

@@ -28,7 +28,6 @@ public class Notification {
     @Column(name = "recipient_id", nullable = false)
     private Integer recipientId;
 
-    @Size(max = 100)
     @NotNull
     @Column(name = "type", nullable = false, length = 100)
     @Enumerated(EnumType.STRING)
