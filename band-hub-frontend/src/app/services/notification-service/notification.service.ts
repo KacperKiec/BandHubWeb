@@ -17,7 +17,7 @@ export class NotificationService {
   public connect(): void {
     if (this.isConnected) return;
 
-    const socket = new SockJS('http://localhost:8030/ws');
+    const socket = new SockJS('http://localhost:9000/ws/notifications');
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, () => {
@@ -26,8 +26,8 @@ export class NotificationService {
 
       const userId = localStorage.getItem('userId');
       if (userId) {
-        console.log('Subscribing to /topic/notifications/' + userId);
-        this.stompClient.subscribe(`/topic/notifications/${userId}`, (message: any) => {
+        console.log('Subscribing to /topic/notification/' + userId);
+        this.stompClient.subscribe(`/topic/notification/${userId}`, (message: any) => {
           this.notificationSubject.next(JSON.parse(message.body));
         });
       }

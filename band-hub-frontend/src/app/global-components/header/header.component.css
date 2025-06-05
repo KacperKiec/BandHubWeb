@@ -60,14 +60,23 @@
   cursor: pointer;
 }
 
-.user-tiles {
-  align-items: center;
-  display: flex;
-  justify-content: center;
+.bell-container {
+  position: relative;
+  display: inline-block;
 }
 
 .bell {
   cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 10;
 }
 
 .dropdown-menu {

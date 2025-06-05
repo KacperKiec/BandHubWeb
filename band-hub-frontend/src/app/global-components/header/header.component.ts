@@ -20,11 +20,13 @@ import {Subscription} from 'rxjs';
 export class HeaderComponent implements OnInit {
   isUserLoggedIn = false;
   showDropdown = false;
+  showNotificationPanel = false;
 
   private subscription: Subscription = new Subscription();
-  notifications: any[] = [];
+  notifications: boolean[] = [];
 
   @ViewChild('dropdownMenu') dropdownRef!: ElementRef;
+  @ViewChild('notificationPanel') panelRef!: ElementRef;
 
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
@@ -46,20 +48,31 @@ export class HeaderComponent implements OnInit {
         console.log(notification);
       }
     );
+    console.log("Powiadomienia: ");
+    console.log(this.notifications);
   }
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: MouseEvent) {
     const clickedInsideDropdown = this.dropdownRef?.nativeElement.contains(event.target);
     const clickedToggle = this.eRef.nativeElement.querySelector('.log-button')?.contains(event.target);
+    const clickedInsidePanel = this.panelRef?.nativeElement.contains(event.target);
 
     if (!clickedInsideDropdown && !clickedToggle) {
       this.showDropdown = false;
+    }
+
+    if (!clickedInsidePanel) {
+      this.showNotificationPanel = false;
     }
   }
 
   openMenu() {
     this.emitOpeningMenu.emit(true);
+  }
+
+  openNotificationPanel() {
+    this.showNotificationPanel = true;
   }
 
   action() {

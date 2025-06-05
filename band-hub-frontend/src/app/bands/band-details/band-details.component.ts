@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BandApiService} from '../../services/band-service/band-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Band} from '../../core/models/band.model';
-import {Musician} from '../../core/models/musician.model';
+import {MusicianApiService} from '../../services/musician-service/musician-api.service';
 
 @Component({
   selector: 'app-band-details',
@@ -20,8 +20,9 @@ export class BandDetailsComponent implements OnInit{
 
   band!: Band;
   userId!: number;
+  isUserMusician: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private bandApiService: BandApiService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private bandApiService: BandApiService, private musicianApiService: MusicianApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -37,6 +38,12 @@ export class BandDetailsComponent implements OnInit{
     if (rawId) {
       this.userId = JSON.parse(rawId);
     }
+
+    this.musicianApiService.getMusicianById(this.userId).subscribe(musician => {
+      this.isUserMusician = !!musician;
+      console.log(musician);
+      console.log("is musician: " + this.isUserMusician);
+    })
   }
 
   getMusicianDetails(id: number) {
@@ -48,7 +55,9 @@ export class BandDetailsComponent implements OnInit{
   }
 
   isUserInBand(): boolean {
-    return this.band?.musicians?.some(m => m.id === this.userId) ?? false;
+    if(this.isUserMusician) {
+      return this.band?.musicians?.some(m => m.id === this.userId) ?? false;
+    } return true;
   }
 
   sendRequest() {

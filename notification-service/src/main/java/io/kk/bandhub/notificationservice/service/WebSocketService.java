@@ -10,6 +10,6 @@ public class WebSocketService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public void sendNotification(Integer recipientId) {
-        messagingTemplate.convertAndSend("/topic/notifications/" + recipientId, true);
+        messagingTemplate.convertAndSend("/topic/notification/" + recipientId, true);
     }
 }
