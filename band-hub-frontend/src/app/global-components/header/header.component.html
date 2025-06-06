@@ -4,10 +4,16 @@
   </div>
   <div class="title" routerLink="/home">TYTUL</div>
   <div class="right-section">
-    <div class="bell-container">
-      <img class="bell" ngSrc="/icons8-bell-48.png" height="30" width="30" alt="Notification Icon" (click)="openNotificationPanel()">
+    <div class="bell-container" *ngIf="isUserLoggedIn">
+      <img class="bell" ngSrc="/icons8-bell-48.png" height="30" width="30" alt="Notification Icon" (click)="toggleNotificationPanel($event)">
       <span class="notification-badge" *ngIf="notifications.length > 1"></span>
     </div>
+
+    <app-notification-panel
+      #notificationPanel
+      *ngIf="showNotificationPanel">
+    </app-notification-panel>
+
     <div class="log-button" (click)="action()">
       <img *ngIf="isUserLoggedIn" ngSrc="/icons8-male-user-48.png" height="32" width="32">
 

@@ -50,7 +50,6 @@ public class RequestService {
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("bandId", band.getId());
-        metadata.put("bandName", band.getName());
         metadata.put("userId", musician.getId());
         dto.setMetadata(metadata);
 

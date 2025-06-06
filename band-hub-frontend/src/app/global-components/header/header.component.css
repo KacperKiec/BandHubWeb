@@ -102,3 +102,9 @@
 .dropdown-menu div:hover {
   background-color: #333;
 }
+
+app-notification-panel {
+  position: absolute;
+  top: 60px;
+  right: 80px;
+}

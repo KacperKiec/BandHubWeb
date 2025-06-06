@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
@@ -11,8 +11,6 @@ export class NotificationService {
   private notificationSubject = new BehaviorSubject<any>(null);
   public notifications$ = this.notificationSubject.asObservable();
   private isConnected = false;
-
-  constructor() {}
 
   public connect(): void {
     if (this.isConnected) return;
@@ -44,4 +42,6 @@ export class NotificationService {
       console.log('Disconnected from WebSocket');
     }
   }
+
+
 }

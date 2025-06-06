@@ -1,1 +1,11 @@
-<p>notification-panel works!</p>
+<div class="container">
+  <div class="notification-list" *ngIf="notifications.length !== 0">
+    <p class="notification-tile" *ngFor="let notification of notifications">
+      {{notification.title}}
+    </p>
+  </div>
+
+  <label class="info-label" *ngIf="notifications.length === 0">
+    Brak nowych powiadomień.
+  </label>
+</div>
