@@ -14,6 +14,7 @@ public class Mapper {
         notificationResponseDTO.setType(notification.getType());
         notificationResponseDTO.setMetadata(notification.getMetadata());
         notificationResponseDTO.setCreatedAt(notification.getCreatedAt());
+        notificationResponseDTO.setRead(notification.getRead());
         return notificationResponseDTO;
     }
 }

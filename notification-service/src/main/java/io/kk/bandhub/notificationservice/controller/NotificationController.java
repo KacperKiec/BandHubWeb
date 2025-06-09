@@ -7,6 +7,10 @@ import io.kk.bandhub.notificationservice.service.WebSocketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +25,15 @@ public class NotificationController {
     private final WebSocketService webSocketService;
 
     @GetMapping(value = "/{id}")
-    ResponseEntity<List<NotificationResponseDTO>> getUserNotifications(@PathVariable Integer id) {
+    ResponseEntity<Page<NotificationResponseDTO>> getUserNotifications(
+            @PathVariable Integer id,
+            @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        var result = notificationService.getUserNotifications(id, pageable);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(value = "/unread/{id}")
+    ResponseEntity<List<NotificationResponseDTO>> getUnreadUserNotifications(@PathVariable Integer id) {
         var result = notificationService.getUnreadUserNotifications(id);
         return ResponseEntity.ok(result);
     }

@@ -1,14 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NotificationApiService} from '../../services/notification-service/notification-api.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {NotificationDTO} from '../../core/models/notification.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-notification-panel',
   standalone: true,
   imports: [
     NgIf,
-    NgForOf
+    NgForOf,
+    DatePipe
   ],
   templateUrl: './notification-panel.component.html',
   styleUrl: './notification-panel.component.css'
@@ -16,9 +18,27 @@ import {NotificationDTO} from '../../core/models/notification.model';
 export class NotificationPanelComponent implements OnInit {
 
   userId!: number;
-  notifications!: NotificationDTO[];
+  notifications: NotificationDTO[] = [];
+  expandedNotificationId: number | null = null;
 
-  constructor(private notificationApiService: NotificationApiService) {
+  emojiMap: Record<string, string> = {
+    BAND_INVITATION: '🎸',
+    BAND_REQUEST: '📝',
+    JOINED_BAND: '✅',
+    BAND_REJECTED_REQUEST: '❌',
+    NEW_MESSAGE: '💬',
+    NEW_EVENT: '📅',
+    NEW_BOOKING: '📌'
+  };
+
+  currentPage = 0;
+  pageSize = 4;
+  totalPages = 0;
+
+  @Output() markNotification: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+
+  constructor(private notificationApiService: NotificationApiService, private router: Router) {
   }
 
   ngOnInit() {
@@ -27,10 +47,83 @@ export class NotificationPanelComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    this.notificationApiService.getUserNotifications(this.userId).subscribe(notifications => {
-      if (notifications) {
-        this.notifications = notifications;
+    this.loadNotifications(0);
+  }
+
+  loadNotifications(page: number) {
+    this.notificationApiService.getUserNotifications(this.userId, page, this.pageSize).subscribe({
+      next: (response) => {
+        this.totalPages = response.page.totalPages;
+        this.currentPage = response.page.number;
+        this.notifications.push(...response.content);
+      },
+      error: (err) => console.error('Error occurred:', err)
+    });
+  }
+
+  loadMore() {
+    const nextPage = this.currentPage + 1;
+    this.loadNotifications(nextPage);
+  }
+
+
+  getEmoji(type: string): string {
+    return this.emojiMap[type] || '';
+  }
+
+  onSummaryClick(id: number) {
+    this.toggleExpanded(id);
+    this.markAsRead(id);
+  }
+
+  toggleExpanded(id: number) {
+    this.expandedNotificationId = this.expandedNotificationId === id ? null : id;
+  }
+
+  markAsRead(id: number) {
+    const toMark = this.notifications.find(notification => notification.id === id);
+
+    if(toMark && !toMark.read) {
+      toMark.read = true;
+      this.notificationApiService.markNotificationAsRead(id).subscribe();
+      this.markNotification.emit(true);
+    }
+  }
+
+  action(notification: NotificationDTO) {
+    switch (notification.type.toString()) {
+      case "BAND_INVITATION": {
+
+        break;
       }
-    })
+      case "BAND_REQUEST": {
+        const applicantId = notification.metadata['userId'];
+        console.log("applicantId", applicantId);
+        break;
+      }
+      case "JOINED_BAND": {
+        const bandId = notification.metadata['bandId'];
+        this.router.navigate(['/bands', bandId]);
+        break;
+      }
+      case "BAND_REJECTED_REQUEST": {
+        const bandId = notification.metadata['bandId'];
+        this.router.navigate(['/bands', bandId]);
+        break;
+      }
+      case "NEW_MESSAGE": {
+
+        break;
+      }
+      case "NEW_EVENT": {
+
+        break;
+      }
+      case "NEW_BOOKING": {
+
+        break;
+      }
+      default:
+    }
   }
 }

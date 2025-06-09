@@ -6,6 +6,7 @@ import {AuthApiService} from '../../services/auth-service/auth-api.service';
 import {NotificationService} from '../../services/notification-socket-service/notification.service';
 import {Subscription} from 'rxjs';
 import {NotificationPanelComponent} from '../notification-panel/notification-panel.component';
+import {NotificationApiService} from '../../services/notification-service/notification-api.service';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ import {NotificationPanelComponent} from '../notification-panel/notification-pan
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
+  userId!: number;
   isUserLoggedIn = false;
   showDropdown = false;
   showNotificationPanel = false;
@@ -32,10 +34,15 @@ export class HeaderComponent implements OnInit {
 
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService) {
+  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService, private notificationApiService: NotificationApiService) {
   }
 
   ngOnInit() {
+    const rawId = localStorage.getItem('userId');
+    if (rawId) {
+      this.userId = JSON.parse(rawId);
+    }
+
     this.authService.isLoggedIn$.subscribe(status => {
       this.isUserLoggedIn = status;
 
@@ -47,11 +54,10 @@ export class HeaderComponent implements OnInit {
     this.subscription = this.notificationService.notifications$.subscribe(
       (notification) => {
         this.notifications.push(notification);
-        console.log(notification);
       }
     );
-    console.log("Powiadomienia: ");
-    console.log(this.notifications);
+
+    this.initNotifications();
   }
 
   @HostListener('document:click', ['$event'])
@@ -77,6 +83,21 @@ export class HeaderComponent implements OnInit {
     event.stopPropagation();
     this.showNotificationPanel = !this.showNotificationPanel;
     this.showDropdown = false;
+  }
+
+  initNotifications() {
+    this.notifications = [];
+    this.notificationApiService.getUnreadUserNotifications(this.userId).subscribe(notifications => {
+      if (notifications) {
+        for (let notification of notifications) {
+          this.notifications.push(true);
+        }
+      }
+    });
+  }
+
+  updateNotifications() {
+    this.notifications.pop();
   }
 
   action() {

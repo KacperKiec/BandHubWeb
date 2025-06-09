@@ -8,6 +8,8 @@ import io.kk.bandhub.notificationservice.exception.NotificationException;
 import io.kk.bandhub.notificationservice.model.Notification;
 import io.kk.bandhub.notificationservice.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,5 +46,9 @@ public class NotificationService {
     public List<NotificationResponseDTO> getUnreadUserNotifications(Integer userId) {
         return notificationRepository.findByRecipientIdAndRead(userId, false)
                 .stream().map(mapper::toNotificationResponseDTO).toList();
+    }
+
+    public Page<NotificationResponseDTO> getUserNotifications(Integer userId, Pageable pageable) {
+        return notificationRepository.findByRecipientId(userId, pageable).map(mapper::toNotificationResponseDTO);
     }
 }

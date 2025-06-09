@@ -6,12 +6,13 @@
   <div class="right-section">
     <div class="bell-container" *ngIf="isUserLoggedIn">
       <img class="bell" ngSrc="/icons8-bell-48.png" height="30" width="30" alt="Notification Icon" (click)="toggleNotificationPanel($event)">
-      <span class="notification-badge" *ngIf="notifications.length > 1"></span>
+      <span class="notification-badge" *ngIf="notifications.length > 0"></span>
     </div>
 
     <app-notification-panel
       #notificationPanel
-      *ngIf="showNotificationPanel">
+      *ngIf="showNotificationPanel"
+    (markNotification)="updateNotifications()">
     </app-notification-panel>
 
     <div class="log-button" (click)="action()">

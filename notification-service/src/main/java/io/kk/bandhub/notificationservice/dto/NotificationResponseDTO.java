@@ -16,4 +16,5 @@ public class NotificationResponseDTO {
     private String content;
     private Map<String, Object> metadata;
     private LocalDateTime createdAt;
+    private Boolean read;
 }

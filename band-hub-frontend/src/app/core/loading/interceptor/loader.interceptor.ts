@@ -5,7 +5,13 @@ import {LoaderService} from '../service/loader.service';
 
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoaderService);
-  loadingService.show();
+  const excludePattern = /^http:\/\/localhost:9000\/notification\/.*$/;
+
+  const shouldShowLoader = !excludePattern.test(req.url);
+
+  if (shouldShowLoader) {
+    loadingService.show();
+  }
 
   return next(req).pipe(
     finalize(() => {

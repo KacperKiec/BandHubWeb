@@ -5,6 +5,7 @@ export interface NotificationDTO {
   content: string;
   metadata: Record<string, any>;
   createdAt: string;
+  read: boolean;
 }
 
 export enum NotificationType {

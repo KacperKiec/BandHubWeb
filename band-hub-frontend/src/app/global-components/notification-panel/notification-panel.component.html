@@ -1,11 +1,35 @@
 <div class="container">
   <div class="notification-list" *ngIf="notifications.length !== 0">
-    <p class="notification-tile" *ngFor="let notification of notifications">
-      {{notification.title}}
-    </p>
+    <div class="notification-tile" *ngFor="let notification of notifications">
+      <div (click)="onSummaryClick(notification.id)" class="summary" [class.unread]="!notification.read">
+        <p>
+          <span class="unread-dot" *ngIf="!notification.read"></span>
+          {{ getEmoji(notification.type) }} {{ notification.title }}
+        </p>
+        <p class="date">
+          {{notification.createdAt | date:'HH:mm dd-MM-yyyy'}}
+        </p>
+      </div>
+
+      <div class="details" [class.expanded]="expandedNotificationId === notification.id" (click)="action(notification)">
+        <p>{{ notification.content }}</p>
+      </div>
+    </div>
+
+    <div class="load-more-container" *ngIf="currentPage < totalPages - 1">
+      <p (click)="loadMore()">
+        Załaduj więcej
+      </p>
+    </div>
+
+    <div *ngIf="currentPage >= totalPages - 1 && notifications.length > 0" class="end-message">
+      Wszystkie powiadomienia zostały załadowane.
+    </div>
+
   </div>
 
+
   <label class="info-label" *ngIf="notifications.length === 0">
-    Brak nowych powiadomień.
+    <p>Brak nowych powiadomień.</p>
   </label>
 </div>
