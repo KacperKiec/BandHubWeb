@@ -51,4 +51,8 @@ public class NotificationService {
     public Page<NotificationResponseDTO> getUserNotifications(Integer userId, Pageable pageable) {
         return notificationRepository.findByRecipientId(userId, pageable).map(mapper::toNotificationResponseDTO);
     }
+
+    public Page<NotificationResponseDTO> getPagedUnreadUserNotifications(Integer userId, Pageable pageable) {
+        return notificationRepository.findByRecipientIdAndRead(userId, false, pageable).map(mapper::toNotificationResponseDTO);
+    }
 }

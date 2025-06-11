@@ -72,6 +72,7 @@ public class AuthorizationServerConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/auth/check").authenticated()
+                        .requestMatchers("/auth/me").authenticated()
                         .anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtCookieAuthenticationFilter(jwtDecoder), BasicAuthenticationFilter.class)

@@ -1,8 +1,6 @@
 package io.kk.bandhub.musicservice.controller;
 
-import io.kk.bandhub.musicservice.dto.BandInvitationDTO;
-import io.kk.bandhub.musicservice.dto.BandJoinRequestDTO;
-import io.kk.bandhub.musicservice.dto.BandMembershipRequestDTO;
+import io.kk.bandhub.musicservice.dto.*;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.InvitationService;
@@ -46,14 +44,14 @@ public class BandJoiningController {
     }
 
     @PatchMapping(value = "/invitation")
-    ResponseEntity<Void> respondInvitation(@RequestBody @Valid BandInvitationDTO dto, Authentication auth) {
+    ResponseEntity<Void> respondInvitation(@RequestBody @Valid BandInvitationUpdateRequestDTO dto, Authentication auth) {
         verifyAuthorities(auth, dto.getInvitedMusicianId());
         invitationService.updateInvitation(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PatchMapping(value = "/request")
-    ResponseEntity<Void> respondRequest(@RequestBody @Valid BandJoinRequestDTO dto, Authentication auth) {
+    ResponseEntity<Void> respondRequest(@RequestBody @Valid BandJoinUpdateRequestDTO dto, Authentication auth) {
         Integer founderId = bandService.getById(dto.getBandId()).getFounderId();
 
         verifyAuthorities(auth, founderId);
@@ -66,10 +64,11 @@ public class BandJoiningController {
         JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) auth;
         Jwt jwt = jwtAuth.getToken();
         Long userIdFromToken = jwt.getClaim("userId");
+        System.out.println("token uzytkownika:" + userIdFromToken);
         return ResponseEntity.ok(invitationService.getMusicianInvitations(userIdFromToken.intValue()));
     }
 
-    @GetMapping(value = "/band/{id}/requests")
+    @GetMapping(value = "/{id}/requests")
     ResponseEntity<List<BandJoinRequestDTO>> getBandRequests(@PathVariable Integer id) {
         return ResponseEntity.ok(requestService.getBandJoinRequests(id));
     }

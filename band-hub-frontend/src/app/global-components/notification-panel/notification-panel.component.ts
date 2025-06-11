@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NotificationApiService} from '../../services/notification-service/notification-api.service';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {NotificationDTO} from '../../core/models/notification.model';
 import {Router} from '@angular/router';
 
@@ -10,7 +10,8 @@ import {Router} from '@angular/router';
   imports: [
     NgIf,
     NgForOf,
-    DatePipe
+    DatePipe,
+    NgClass
   ],
   templateUrl: './notification-panel.component.html',
   styleUrl: './notification-panel.component.css'
@@ -20,9 +21,10 @@ export class NotificationPanelComponent implements OnInit {
   userId!: number;
   notifications: NotificationDTO[] = [];
   expandedNotificationId: number | null = null;
+  showUnread: boolean = false;
 
   emojiMap: Record<string, string> = {
-    BAND_INVITATION: '🎸',
+    BAND_INVITATION: '✉️',
     BAND_REQUEST: '📝',
     JOINED_BAND: '✅',
     BAND_REJECTED_REQUEST: '❌',
@@ -47,11 +49,22 @@ export class NotificationPanelComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    this.loadNotifications(0);
+    this.loadAllNotifications(0);
   }
 
-  loadNotifications(page: number) {
+  loadAllNotifications(page: number) {
     this.notificationApiService.getUserNotifications(this.userId, page, this.pageSize).subscribe({
+      next: (response) => {
+        this.totalPages = response.page.totalPages;
+        this.currentPage = response.page.number;
+        this.notifications.push(...response.content);
+      },
+      error: (err) => console.error('Error occurred:', err)
+    });
+  }
+
+  loadUnreadNotifications(page: number) {
+    this.notificationApiService.getPagedUnreadUserNotifications(this.userId, page, this.pageSize).subscribe({
       next: (response) => {
         this.totalPages = response.page.totalPages;
         this.currentPage = response.page.number;
@@ -63,9 +76,23 @@ export class NotificationPanelComponent implements OnInit {
 
   loadMore() {
     const nextPage = this.currentPage + 1;
-    this.loadNotifications(nextPage);
+    if(this.showUnread) {
+      this.loadUnreadNotifications(nextPage);
+    }
+    else this.loadAllNotifications(nextPage);
   }
 
+  changeToAllNotifications() {
+    this.notifications = [];
+    this.showUnread = false;
+    this.loadAllNotifications(0);
+  }
+
+  changeToUnreadNotifications() {
+    this.notifications = [];
+    this.showUnread = true;
+    this.loadUnreadNotifications(0);
+  }
 
   getEmoji(type: string): string {
     return this.emojiMap[type] || '';
@@ -93,12 +120,11 @@ export class NotificationPanelComponent implements OnInit {
   action(notification: NotificationDTO) {
     switch (notification.type.toString()) {
       case "BAND_INVITATION": {
-
+        this.router.navigate(['invitations'], { queryParams: { mode: 'invitations' } });
         break;
       }
       case "BAND_REQUEST": {
-        const applicantId = notification.metadata['userId'];
-        console.log("applicantId", applicantId);
+        this.router.navigate(['invitations'], { queryParams: { mode: 'requests' } });
         break;
       }
       case "JOINED_BAND": {

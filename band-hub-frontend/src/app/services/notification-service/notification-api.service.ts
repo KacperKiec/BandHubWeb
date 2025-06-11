@@ -17,7 +17,13 @@ export class NotificationApiService {
     return this.http.get<Page<NotificationDTO>>(`${this.apiURL}/${userId}?page=${page}&size=${size}`, {withCredentials: true})
       .pipe(
         catchError(error => this.errorHandler.handleError(error))
+      );
+  }
 
+  getPagedUnreadUserNotifications(userId: number, page: number = 0, size: number = 6): Observable<Page<NotificationDTO>> {
+    return this.http.get<Page<NotificationDTO>>(`${this.apiURL}/unread/paged/${userId}?page=${page}&size=${size}`, {withCredentials: true})
+      .pipe(
+        catchError(error => this.errorHandler.handleError(error))
       );
   }
 
@@ -25,7 +31,6 @@ export class NotificationApiService {
     return this.http.get<NotificationDTO[]>(`${this.apiURL}/unread/${userId}`, {withCredentials: true})
       .pipe(
         catchError(error => this.errorHandler.handleError(error))
-
       );
   }
 

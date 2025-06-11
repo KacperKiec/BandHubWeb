@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Musician} from '../../core/models/musician.model';
 import {Band} from '../../core/models/band.model';
-import {BandApiService} from '../../services/band-service/band-api.service';
+import {InvitationApiService} from '../../services/invitation-service/invitation-api.service';
 
 @Component({
   selector: 'app-musician-details',
@@ -28,7 +28,7 @@ export class MusicianDetailsComponent implements OnInit{
 
   @ViewChild('invitationPanel') panelRef!: ElementRef;
 
-  constructor(private router: Router, private route: ActivatedRoute, private musicianApiService: MusicianApiService, private eRef: ElementRef, private bandApiService: BandApiService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private musicianApiService: MusicianApiService, private eRef: ElementRef, private invitationApiService: InvitationApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -89,7 +89,7 @@ export class MusicianDetailsComponent implements OnInit{
   }
 
   sendInvitation(bandId: number) {
-    this.bandApiService.sendInvitation({bandId: bandId, musicianId: this.musician.id}).subscribe(() => {
+    this.invitationApiService.sendInvitation({bandId: bandId, musicianId: this.musician.id}).subscribe(() => {
       this.showInvitationDialog = false;
       alert("Wysłano zaproszenie.");
     });

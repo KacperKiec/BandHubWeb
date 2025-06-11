@@ -12,6 +12,7 @@ public interface NotificationRepository {
     Notification save(Notification notification);
     Optional<Notification> findById(Integer id);
     Page<Notification> findByRecipientId(Integer recipientId, Pageable pageable);
+    Page<Notification> findByRecipientIdAndRead(Integer recipientId, Boolean read, Pageable pageable);
     List<Notification> findByRecipientIdAndRead(Integer recipientId, Boolean read);
     List<Notification> findByCreatedAtBefore(LocalDateTime createdAt);
     void deleteById(Integer id);

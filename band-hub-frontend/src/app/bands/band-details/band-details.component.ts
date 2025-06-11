@@ -4,6 +4,7 @@ import {BandApiService} from '../../services/band-service/band-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Band} from '../../core/models/band.model';
 import {MusicianApiService} from '../../services/musician-service/musician-api.service';
+import {InvitationApiService} from '../../services/invitation-service/invitation-api.service';
 
 @Component({
   selector: 'app-band-details',
@@ -22,7 +23,7 @@ export class BandDetailsComponent implements OnInit{
   userId!: number;
   isUserMusician: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private bandApiService: BandApiService, private musicianApiService: MusicianApiService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private bandApiService: BandApiService, private musicianApiService: MusicianApiService, private invitationApiService: InvitationApiService) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -61,7 +62,7 @@ export class BandDetailsComponent implements OnInit{
   }
 
   sendRequest() {
-    this.bandApiService.sendRequest({bandId: this.band.id, musicianId: this.userId}).subscribe({
+    this.invitationApiService.sendRequest({bandId: this.band.id, musicianId: this.userId}).subscribe({
       next: data => {
         alert("Wysłano zgłoszenie.");
       }

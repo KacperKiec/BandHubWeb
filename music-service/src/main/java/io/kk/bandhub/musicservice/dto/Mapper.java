@@ -80,6 +80,7 @@ public class Mapper {
         dto.setStatus(bandInvitation.getStatus());
         dto.setCreationDate(bandInvitation.getCreatedAt());
         dto.setInvitedMusicianId(bandInvitation.getMusician().getId());
+        dto.setBandName(bandInvitation.getBand().getName());
         return dto;
     }
 
@@ -90,6 +91,12 @@ public class Mapper {
         dto.setStatus(bandJoinRequest.getStatus());
         dto.setCreationDate(bandJoinRequest.getCreatedAt());
         dto.setApplicantId(bandJoinRequest.getMusician().getId());
+        dto.setBandName(bandJoinRequest.getBand().getName());
+
+        AccountDTO account = accountServiceClient.getAccount(bandJoinRequest.getMusician().getId());
+        dto.setApplicantFirstName(account.getFirstName());
+        dto.setApplicantLastName(account.getLastName());
+
         return dto;
     }
 

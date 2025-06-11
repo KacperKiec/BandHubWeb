@@ -18,11 +18,8 @@ export class UserApiService {
       .pipe(
         catchError((error) =>
           this.errorHandler.handleError(error)),
-        tap(
-          user => {
-            localStorage.setItem('userId', JSON.stringify(user.id));
-          })
-      )
+        tap()
+      );
   }
 
   updateUserData(user: AccountUpdateRequest): Observable<AccountResponse> {

@@ -32,6 +32,14 @@ public class NotificationController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "/unread/paged/{id}")
+    ResponseEntity<Page<NotificationResponseDTO>> getPagedUnreadUserNotifications(
+            @PathVariable Integer id,
+            @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        var result = notificationService.getPagedUnreadUserNotifications(id, pageable);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/unread/{id}")
     ResponseEntity<List<NotificationResponseDTO>> getUnreadUserNotifications(@PathVariable Integer id) {
         var result = notificationService.getUnreadUserNotifications(id);

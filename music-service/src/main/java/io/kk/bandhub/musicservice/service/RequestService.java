@@ -56,7 +56,7 @@ public class RequestService {
         rabbitService.sendNotification(dto);
     }
 
-    public void updateRequest(BandJoinRequestDTO requestDTO) {
+    public void updateRequest(BandJoinUpdateRequestDTO requestDTO) {
         var request = bandJoinRequestRepository.findById(requestDTO.getId()).orElseThrow(
                 () -> new BandJoiningException(BandJoiningError.JOINING_REQUEST_NOT_FOUND)
         );
@@ -75,14 +75,15 @@ public class RequestService {
             band.addBandMusician(bandMusician);
             bandRepository.save(band);
         }
+        bandJoinRequestRepository.save(request);
 
         var requests = bandJoinRequestRepository.findByBand_IdAndMusician_Id(requestDTO.getBandId(), requestDTO.getApplicantId());
         for (BandJoinRequest req : requests) {
-            if(!req.getStatus().equals(RequestStatus.PENDING)) {
+            if(req.getStatus().equals(RequestStatus.PENDING)) {
                 req.setStatus(RequestStatus.CANCELED);
             }
+            bandJoinRequestRepository.save(req);
         }
-        bandJoinRequestRepository.save(request);
 
         if(requestDTO.getStatus().equals(RequestStatus.ACCEPTED)) {
             NotificationRequestDTO dto = new NotificationRequestDTO();

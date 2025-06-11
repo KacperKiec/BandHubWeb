@@ -1,4 +1,10 @@
 <div class="container">
+
+  <div class="buttons">
+    <button class="btn" [ngClass]="{'active': !showUnread}" (click)="changeToAllNotifications()">Wszystkie</button>
+    <button class="btn" [ngClass]="{'active': showUnread}" (click)="changeToUnreadNotifications()">Nieprzeczytane</button>
+  </div>
+
   <div class="notification-list" *ngIf="notifications.length !== 0">
     <div class="notification-tile" *ngFor="let notification of notifications">
       <div (click)="onSummaryClick(notification.id)" class="summary" [class.unread]="!notification.read">

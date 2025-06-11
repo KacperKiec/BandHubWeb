@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +42,6 @@ public class AuthController {
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
-        //System.out.println(cookie);
         return ResponseEntity.ok().build();
     }
 
@@ -57,6 +58,13 @@ public class AuthController {
         response.addHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Integer> getCurrentUser(Authentication authentication) {
+        Jwt jwt = ((JwtAuthenticationToken) authentication).getToken();
+        Long userId = jwt.getClaim("userId");
+        return ResponseEntity.ok(userId.intValue());
     }
 
     @GetMapping("/check")

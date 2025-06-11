@@ -81,20 +81,4 @@ export class BandApiService {
         catchError(error => this.errorHandler.handleError(error))
       );
   }
-
-  sendRequest(request: BandMembershipRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiURL}/joining/request`, request, {withCredentials: true})
-      .pipe(
-        tap(() => this.errorHandler.errorSubject.next('')),
-        catchError(error => this.errorHandler.handleError(error))
-      );
-  }
-
-  sendInvitation(invitation: BandMembershipRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiURL}/joining/invite`, invitation, {withCredentials: true})
-      .pipe(
-        tap(() => this.errorHandler.errorSubject.next('')),
-        catchError(error => this.errorHandler.handleError(error))
-      );
-  }
 }

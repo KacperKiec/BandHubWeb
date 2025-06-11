@@ -1,4 +1,4 @@
-import {Component, input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import { FormsModule} from '@angular/forms';
 import {AddressSearchComponent} from '../../../shared/address-search/address-search.component';
@@ -108,6 +108,4 @@ export class RegisterComponent implements OnInit{
       }
     });
   }
-
-  protected readonly input = input;
 }

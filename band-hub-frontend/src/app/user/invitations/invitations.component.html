@@ -1,0 +1,74 @@
+<div class="container fade-in">
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'invitations'"
+      (click)="activeTab = 'invitations'">
+      ✉️ Zaproszenia
+    </button>
+
+    <button
+      *ngIf="hasUserBands"
+      class="tab-button"
+      [class.active]="activeTab === 'requests'"
+      (click)="activeTab = 'requests'">
+      📝 Zgłoszenia
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <table *ngIf="invitations.length > 0 && activeTab === 'invitations'">
+      <thead>
+        <tr>
+          <th>Zespół</th>
+          <th>Status</th>
+          <th>Data zaproszenia</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invitation of invitations">
+          <td>{{ invitation.bandName }}</td>
+          <td>{{ getStatusLabel(invitation.status) }}</td>
+          <td>{{ invitation.creationDate | date:'medium' }}</td>
+          <td>
+            <div class="buttons">
+              <button class="btn accept" (click)="respondInvitation(invitation, true)" title="Akceptuj">✅</button>
+              <button class="btn reject" (click)="respondInvitation(invitation, false)" title="Odrzuć">❌</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <label *ngIf="invitations.length === 0 && activeTab ==='invitations'">Brak zaproszeń do wyświetlenia</label>
+
+    <table *ngIf="bandRequests.length > 0 && activeTab === 'requests'">
+      <thead>
+      <tr>
+        <th>Zespół</th>
+        <th>Status</th>
+        <th>Muzyk</th>
+        <th>Data zgłoszenia</th>
+        <th>Akcje</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let request of bandRequests">
+        <td>{{ request.bandName }}</td>
+        <td>{{ getStatusLabel(request.status) }}</td>
+        <td>{{ request.applicantFirstName }} {{ request.applicantLastName }}</td>
+        <td>{{ request.creationDate | date:'medium' }}</td>
+        <td>
+          <div class="buttons">
+            <button class="btn accept" (click)="respondRequest(request, true)" title="Akceptuj">✅</button>
+            <button class="btn reject" (click)="respondRequest(request, false)" title="Odrzuć">❌</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <label *ngIf="bandRequests.length === 0 && activeTab ==='requests'">Brak zgłoszeń do wyświetlenia</label>
+  </div>
+</div>
