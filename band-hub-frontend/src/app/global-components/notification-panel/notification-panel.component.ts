@@ -21,7 +21,7 @@ export class NotificationPanelComponent implements OnInit {
   userId!: number;
   notifications: NotificationDTO[] = [];
   expandedNotificationId: number | null = null;
-  showUnread: boolean = false;
+  showUnread: boolean = true;
 
   emojiMap: Record<string, string> = {
     BAND_INVITATION: '✉️',
@@ -49,7 +49,7 @@ export class NotificationPanelComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    this.loadAllNotifications(0);
+    this.loadUnreadNotifications(0);
   }
 
   loadAllNotifications(page: number) {

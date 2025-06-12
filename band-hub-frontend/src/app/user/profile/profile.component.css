@@ -120,3 +120,7 @@
   text-align: center;
   cursor: pointer;
 }
+
+.band-tile {
+  cursor: pointer;
+}

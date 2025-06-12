@@ -1,4 +1,4 @@
-<form class="container" #updateForm=ngForm (ngSubmit)="submitForm()" *ngIf="account">
+<form class="container fade-in" #updateForm=ngForm (ngSubmit)="submitForm()" *ngIf="account">
   <app-personal-info-input (accountChange)="getData($event)" [existingAccount]="sendPersonalData()"></app-personal-info-input>
 
   <button class="confirm-button">Zapisz</button>

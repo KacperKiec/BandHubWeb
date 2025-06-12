@@ -95,6 +95,23 @@ public class AccountService{
                         .build();
     }
 
+    public Boolean validatePassword(Integer userId, String password) {
+        var account = accountRepository.findAccountById(userId).orElseThrow(
+                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
+        );
+
+        return passwordEncoder.matches(password, account.getPassword());
+    }
+
+    public void changePassword(Integer userId, String password) {
+        var account = accountRepository.findAccountById(userId).orElseThrow(
+                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
+        );
+
+        account.setPassword(passwordEncoder.encode(password));
+        accountRepository.save(account);
+    }
+
     public AccountResponseDTO findById(Integer id) {
         var existingAccount = accountRepository.findAccountById(id).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)

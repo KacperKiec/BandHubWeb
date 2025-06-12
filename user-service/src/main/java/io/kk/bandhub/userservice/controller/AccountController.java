@@ -5,11 +5,12 @@ import io.kk.bandhub.userservice.exception.AccountError;
 import io.kk.bandhub.userservice.exception.AccountException;
 import io.kk.bandhub.userservice.service.AccountService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/account")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
@@ -30,6 +31,26 @@ public class AccountController {
     public ResponseEntity<Void> addAccount(@RequestBody @Valid AccountRequestDTO accountRequestDTO) {
         accountService.save(accountRequestDTO);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/password")
+    public ResponseEntity<Boolean> validatePassword(@RequestBody String password, Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        return ResponseEntity.ok(accountService.validatePassword(userIdFromToken.intValue(), password));
+    }
+
+    @PatchMapping(value = "/password")
+    public ResponseEntity<Void> changePassword(@RequestBody String password, Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+
+        Long userIdFromToken = jwt.getClaim("userId");
+        accountService.changePassword(userIdFromToken.intValue(), password);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(value = "/{id}")

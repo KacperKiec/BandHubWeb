@@ -1,8 +1,8 @@
 <div class="container">
 
   <div class="buttons">
-    <button class="btn" [ngClass]="{'active': !showUnread}" (click)="changeToAllNotifications()">Wszystkie</button>
     <button class="btn" [ngClass]="{'active': showUnread}" (click)="changeToUnreadNotifications()">Nieprzeczytane</button>
+    <button class="btn" [ngClass]="{'active': !showUnread}" (click)="changeToAllNotifications()">Wszystkie</button>
   </div>
 
   <div class="notification-list" *ngIf="notifications.length !== 0">

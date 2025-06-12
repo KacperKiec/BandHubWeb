@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {RegisterMusicianComponent} from '../../musicians/register-musician/register-musician.component';
 import {AccountResponse} from '../../core/models/account.model';
 import {Musician, MusicianRequest} from '../../core/models/musician.model';
+import {Band} from '../../core/models/band.model';
 
 @Component({
   selector: 'app-profile',
@@ -23,6 +24,7 @@ export class ProfileComponent implements OnInit {
 
   profile!: AccountResponse;
   musician!: Musician;
+  bands!: Band[];
   isMusician: boolean = false;
   showForm: boolean = false;
 
@@ -56,7 +58,11 @@ export class ProfileComponent implements OnInit {
           if (musician) {
             this.isMusician = true;
             this.musician = musician;
-            console.log(musician)
+            this.musicianApiService.getMusicianBands(this.profile.id).subscribe(bands => {
+              if (bands) {
+                this.bands = bands;
+              }
+            });
           } else this.isMusician = false;
         });
       },
@@ -78,5 +84,9 @@ export class ProfileComponent implements OnInit {
       }
     });
     this.initData();
+  }
+
+  getBandDetails(id: number) {
+    this.router.navigate(['/bands', id]);
   }
 }
