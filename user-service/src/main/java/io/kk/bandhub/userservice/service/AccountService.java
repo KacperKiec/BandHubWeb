@@ -144,13 +144,18 @@ public class AccountService{
             List<String> cities,
             List<String> roles ) {
 
+        Specification<Account> nameSpec = Specification
+                .where(AccountSpecification.hasName(firstName))
+                .or(AccountSpecification.hasName(lastName))
+                .or(AccountSpecification.hasFullName(firstName, lastName));
+
         Specification<Account> spec = Specification.where(AccountSpecification.hasEmail(email))
-                .and(AccountSpecification.hasFirstName(firstName))
-                .and(AccountSpecification.hasLastName(lastName))
+                .and(nameSpec)
                 .and(AccountSpecification.hasAgeBetween(minAge, maxAge))
                 .and(AccountSpecification.hasGender(gender))
                 .and(AccountSpecification.hasCities(cities))
                 .and(AccountSpecification.hasRoles(roles));
+
 
         return accountRepository.findAll(spec).stream().map(mapper::toAccountDTO).toList();
     }
@@ -166,13 +171,18 @@ public class AccountService{
             List<String> roles,
             Pageable pageable ) {
 
+        Specification<Account> nameSpec = Specification
+                .where(AccountSpecification.hasName(firstName))
+                .or(AccountSpecification.hasName(lastName))
+                .or(AccountSpecification.hasFullName(firstName, lastName));
+
         Specification<Account> spec = Specification.where(AccountSpecification.hasEmail(email))
-                .and(AccountSpecification.hasFirstName(firstName))
-                .and(AccountSpecification.hasLastName(lastName))
+                .and(nameSpec)
                 .and(AccountSpecification.hasAgeBetween(minAge, maxAge))
                 .and(AccountSpecification.hasGender(gender))
                 .and(AccountSpecification.hasCities(cities))
                 .and(AccountSpecification.hasRoles(roles));
+
 
         return accountRepository.findAll(spec, pageable).map(mapper::toAccountDTO);
     }

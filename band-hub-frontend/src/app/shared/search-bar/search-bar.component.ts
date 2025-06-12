@@ -144,6 +144,8 @@ export class SearchBarComponent implements OnInit, OnChanges {
       if(existingName){
         existingName.value = this.searchFieldContent;
       } else this.currentFilters.push({name: `${this.placeholderText}`,value: this.searchFieldContent });
+    } else {
+      this.currentFilters = this.currentFilters.filter(filter => filter.name !== `${this.placeholderText}`);
     }
 
     for (let index in this.currentFilters) {
@@ -157,7 +159,6 @@ export class SearchBarComponent implements OnInit, OnChanges {
       filtersToEmit.push(this.currentFilters[index]);
     }
 
-    console.log(filtersToEmit)
     this.emitParams.emit(filtersToEmit);
   }
 }

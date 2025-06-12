@@ -76,7 +76,6 @@ export class MusiciansComponent implements OnInit {
   loadPage(page: number) {
     this.musicianApiService.getMusiciansWithParams(this.preparedParams, page, this.pageSize).subscribe({
       next: (response) => {
-        console.log(response);
         this.totalPages = response.page.totalPages;
         this.currentPage = response.page.number;
         this.musiciansToDisplay = response.content.map(this.mapMusicianToDisplayItem);
@@ -89,10 +88,9 @@ export class MusiciansComponent implements OnInit {
     this.router.navigate(['/musicians', id]);
   }
 
-  getParams(data: filterElement[]): void{
+  getParams(data: filterElement[]): void {
     this.searchingParams = data;
     this.preparedParams = this.prepareData();
-    console.log(this.preparedParams);
     this.loadPage(0);
   }
 
@@ -107,7 +105,7 @@ export class MusiciansComponent implements OnInit {
         "Instrument": "instruments",
         "Szuka zespołu": "isLookingForBand",
         "Wiek": "age",
-        "Dane osobowe": "name"
+        "Imie i Nazwisko": "name"
       };
 
       const mappedName = nameMapping[param.name];
@@ -117,12 +115,13 @@ export class MusiciansComponent implements OnInit {
         temp.value.push(param.value);
       } else {
         if (mappedName === 'name') {
-          if (param.value.length > 1) {
-            finalData.push({name: 'firstName', value: [param.value[0]]});
-            finalData.push({name: 'lastName', value: [param.value[1]]});
+          let temp = param.value.split(' ');
+          if (temp.length > 1) {
+            finalData.push({name: 'firstName', value: [temp[0]]});
+            finalData.push({name: 'lastName', value: [temp[1]]});
           } else {
-            finalData.push({name: 'lastName', value: [param.value[0]]});
-            finalData.push({name: 'firstName', value: [param.value[0]]});
+            finalData.push({name: 'firstName', value: [temp[0]]});
+            finalData.push({name: 'lastName', value: [temp[0]]});
           }
         }
         else finalData.push({ name: mappedName, value: [param.value] });

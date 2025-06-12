@@ -58,7 +58,6 @@ export class BandsComponent implements OnInit{
   loadPage(page: number) {
     this.bandApiService.getBandsWithParams(this.preparedParams, page, this.pageSize).subscribe({
       next: (response) => {
-        console.log(response);
         this.totalPages = response.page.totalPages;
         this.currentPage = response.page.number;
         this.bandsToDisplay = response.content.map(this.mapBandToDisplayItem);
@@ -71,10 +70,9 @@ export class BandsComponent implements OnInit{
     this.router.navigate(['/bands', id]);
   }
 
-  getParams(data: filterElement[]): void{
+  getParams(data: filterElement[]): void {
     this.searchingParams = data;
     this.preparedParams = this.prepareData();
-    console.log(this.preparedParams);
     this.loadPage(0);
   }
 

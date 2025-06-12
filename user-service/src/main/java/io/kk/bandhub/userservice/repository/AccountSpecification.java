@@ -1,6 +1,5 @@
 package io.kk.bandhub.userservice.repository;
 
-import io.kk.bandhub.userservice.dto.RoleDTO;
 import io.kk.bandhub.userservice.model.Account;
 import io.kk.bandhub.userservice.model.AccountRole;
 import io.kk.bandhub.userservice.model.Role;
@@ -21,21 +20,30 @@ public class AccountSpecification {
         };
     }
 
-    public static Specification<Account> hasFirstName(String firstName) {
+    public static Specification<Account> hasName(String name) {
         return (root, query, builder) -> {
-            if (firstName == null || firstName.isEmpty()){
+            if (name == null || name.isEmpty()) {
                 return builder.conjunction();
             }
-            return builder.equal(root.get("firstName"), firstName);
+
+            return builder.or(
+                    builder.equal(root.get("firstName"), name),
+                    builder.equal(root.get("lastName"), name)
+            );
         };
     }
 
-    public static Specification<Account> hasLastName(String lastName) {
+    public static Specification<Account> hasFullName(String firstName, String lastName) {
         return (root, query, builder) -> {
-            if (lastName == null || lastName.isEmpty()){
+            if ((firstName == null || firstName.isEmpty()) &&
+                    (lastName == null || lastName.isEmpty())) {
                 return builder.conjunction();
             }
-            return builder.equal(root.get("lastName"), lastName);
+
+            return builder.and(
+                    firstName == null ? builder.conjunction() : builder.equal(root.get("firstName"), firstName),
+                    lastName == null ? builder.conjunction() : builder.equal(root.get("lastName"), lastName)
+            );
         };
     }
 
