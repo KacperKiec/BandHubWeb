@@ -54,10 +54,6 @@ public class BookingService {
         offerRepository.save(offer);
         var mappedBooking = mapper.toBookingDTO(bookingRepository.save(booking));
 
-        if(offer.getPurpose().equals(OfferPurpose.concert)) {
-            rabbitTemplate.convertAndSend(queueName, bookingDTO.getEvent());
-        }
-
         return mappedBooking;
     }
 

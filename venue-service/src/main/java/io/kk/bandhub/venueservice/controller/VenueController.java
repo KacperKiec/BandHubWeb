@@ -1,45 +1,50 @@
 package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.VenueDTO;
+import io.kk.bandhub.venueservice.dto.VenueRequestDTO;
+import io.kk.bandhub.venueservice.dto.VenueUpdateRequestDTO;
+import io.kk.bandhub.venueservice.exception.venue.VenueError;
+import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.service.VenueService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/venue")
+@RequiredArgsConstructor
 public class VenueController {
 
     private final VenueService venueService;
 
-    public VenueController(VenueService venueService) {
-        this.venueService = venueService;
-    }
-
     @PostMapping
-    ResponseEntity<VenueDTO> createVenue(@RequestBody @Valid VenueDTO venueDTO) {
-        var result = venueService.save(venueDTO);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(result.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(result);
+    ResponseEntity<VenueDTO> createVenue(@RequestBody @Valid VenueRequestDTO venueRequestDTO, Authentication authentication) {
+        verifyAuthorities(authentication, venueRequestDTO.getOwnerId());
+        var result = venueService.createVenue(venueRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping
-    ResponseEntity<VenueDTO> updateVenue(@RequestBody @Valid VenueDTO venueDTO) {
-        var result = venueService.update(venueDTO);
+    ResponseEntity<VenueDTO> updateVenue(@RequestBody @Valid VenueUpdateRequestDTO venueUpdateRequestDTO, Authentication authentication) {
+        verifyAuthorities(authentication, venueUpdateRequestDTO.getOwnerId());
+        var result = venueService.update(venueUpdateRequestDTO);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
+    }
+
+    @GetMapping(value = "/owner/{id}")
+    ResponseEntity<List<VenueDTO>> getUserVenues(@PathVariable Integer id) {
+        var result = venueService.getUserVenues(id);
         return ResponseEntity.ok(result);
     }
 
@@ -70,5 +75,15 @@ public class VenueController {
 
         var result = venueService.findAll(pageable, name, maxCapacity, minCapacity, ownerId, cities);
         return ResponseEntity.ok(result);
+    }
+
+    private void verifyAuthorities(Authentication authentication, Integer userId) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(userId.longValue())) {
+            throw new VenueException(VenueError.ACCESS_DENIED);
+        }
     }
 }

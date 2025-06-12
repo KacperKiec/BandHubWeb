@@ -13,6 +13,7 @@ public interface VenueRepository {
     void deleteById(int id);
     Optional<Venue> findById(int id);
     Optional<Venue> findByNameAndOwnerId(String name, Integer ownerId);
+    List<Venue> findByOwnerId(Integer ownerId);
     List<Venue> findAll();
     Page<Venue> findAll(Pageable pageable);
     Page<Venue> findAll(Specification<Venue> spec, Pageable pageable);

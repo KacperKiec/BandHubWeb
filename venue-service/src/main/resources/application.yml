@@ -42,9 +42,9 @@ app:
     client-secret: secret
     scope: read
   rabbit:
-    queue: "event-queue"
-    exchange: "event-exchange"
-    routing-key: "add.event"
+    queue: "notification-queue"
+    exchange: "notification-exchange"
+    routing-key: "add.notification"
 resilience4j:
   circuitbreaker:
     instances:

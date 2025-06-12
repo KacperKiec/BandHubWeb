@@ -2,10 +2,13 @@ CREATE TABLE venue (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER NOT NULL,
     name varchar(40) NOT NULL,
-    city varchar(30) NOT NULL,
-    address varchar(50) NOT NULL,
     capacity INTEGER NOT NULL,
-    description varchar(150)
+    description varchar(150),
+    street VARCHAR(50) NOT NULL,
+    number VARCHAR(10) NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(15) NOT NULL,
+    country VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE offer (

@@ -43,7 +43,13 @@ public interface AccountServiceClient {
     }
 
     default AccountDTO fallbackGetAccountInRegistration(Throwable throwable) {
-        throw new RegistrationException("Registration failed because of service unavailability");
+        if (throwable instanceof feign.FeignException.ServiceUnavailable) {
+            throw new RegistrationException("Registration failed because of service unavailability");
+        } else if (throwable instanceof feign.FeignException.NotFound) {
+            throw new RegistrationException("Registration failed because of bad data (user does not exist)");
+        } else {
+            throw new RegistrationException("Registration failed, something went wrong");
+        }
     }
 
     default Page<AccountDTO> fallbackGetAccountsWithParams(Throwable throwable) {

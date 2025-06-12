@@ -1,0 +1,69 @@
+.register-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: sans-serif;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+}
+
+.submit-btn {
+  background-color: #615D55;
+  color: #E4DCC6;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #45403c;
+}
+
+.form-group {
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.name-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 7px;
+  margin-bottom: 20px;
+}
+
+label {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  font-family: 'Merriweather', serif;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+app-address-search {
+  margin-bottom: 20px;
+}

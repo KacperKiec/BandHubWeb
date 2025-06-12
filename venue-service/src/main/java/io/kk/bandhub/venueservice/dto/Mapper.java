@@ -4,23 +4,20 @@ import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.Offer;
 import io.kk.bandhub.venueservice.model.Venue;
 import io.kk.bandhub.venueservice.service.AccountServiceClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class Mapper {
 
     private final AccountServiceClient accountServiceClient;
-
-    public Mapper(AccountServiceClient accountServiceClient) {
-        this.accountServiceClient = accountServiceClient;
-    }
 
     public VenueDTO toVenueDTOReg(Venue venue) {
         AccountDTO accountDTO = accountServiceClient.getAccountInRegistration(venue.getOwnerId());
 
         return setVenueDTOFields(venue, accountDTO);
     }
-
 
     public VenueDTO toVenueDTO(Venue venue) {
         AccountDTO accountDTO = accountServiceClient.getAccount(venue.getOwnerId());
@@ -33,10 +30,8 @@ public class Mapper {
         venueDTO.setId(venue.getId());
         venueDTO.setName(venue.getName());
         venueDTO.setDescription(venue.getDescription());
-        venueDTO.setAddress(venue.getAddress());
         venueDTO.setCity(venue.getCity());
         venueDTO.setCapacity(venue.getCapacity());
-        venueDTO.setOwnerDTO(accountDTO);
         venueDTO.setOwnerId(accountDTO.getId());
         return venueDTO;
     }
@@ -51,7 +46,6 @@ public class Mapper {
         offerDTO.setVenueName(offer.getVenue().getName());
         offerDTO.setPricePerHour(offer.getPricePerHour().doubleValue());
         offerDTO.setStatus(offer.getStatus());
-        offerDTO.setPurpose(offer.getPurpose());
         return offerDTO;
     }
 

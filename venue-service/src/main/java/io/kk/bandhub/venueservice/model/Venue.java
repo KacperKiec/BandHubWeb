@@ -30,16 +30,6 @@ public class Venue {
     @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @Size(max = 30)
-    @NotNull
-    @Column(name = "city", nullable = false, length = 30)
-    private String city;
-
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "address", nullable = false, length = 50)
-    private String address;
-
     @NotNull
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
@@ -48,4 +38,28 @@ public class Venue {
     @Column(name = "description", length = 150)
     private String description;
 
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "street", nullable = false, length = 50)
+    private String street;
+
+    @Size(max = 10)
+    @NotNull
+    @Column(name = "number", nullable = false, length = 10)
+    private String number;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "city", nullable = false, length = 50)
+    private String city;
+
+    @Size(max = 15)
+    @NotNull
+    @Column(name = "postal_code", nullable = false, length = 15)
+    private String postalCode;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "country", nullable = false, length = 50)
+    private String country;
 }

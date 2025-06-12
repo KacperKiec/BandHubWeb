@@ -1,0 +1,24 @@
+<div class="wrapper fade-in">
+  <div class="create-venue-card" *ngIf="!hasVenues">
+    <h2 *ngIf="!showForm">Nie posiadasz zarejestrowanych lokali.</h2>
+
+    <div class="venue-options" *ngIf="!showForm">
+      <div class="option">
+        <button class="btn" (click)="showRegistrationForm()">Dodaj lokal</button>
+        <p>Zarejestruj swój lokal, wystaw ogłoszenie i wynajmuj go innym muzykom.</p>
+      </div>
+
+      <div class="option">
+        <button class="btn" (click)="goToVenues()">Przeglądaj</button>
+        <p>Przeglądaj oferty innych użytkowników i korzystaj z ich obiektów muzycznych!</p>
+      </div>
+    </div>
+  </div>
+
+  <app-register-venue
+    *ngIf="showForm"
+    (registered)="handleVenueRegistration($event)"
+    [userId]="userId">
+
+  </app-register-venue>
+</div>

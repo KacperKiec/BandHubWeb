@@ -49,9 +49,4 @@ public class Offer {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
-
-    @NotNull
-    @Column(name = "purpose", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OfferPurpose purpose;
 }

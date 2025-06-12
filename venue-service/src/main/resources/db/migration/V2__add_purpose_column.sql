@@ -1,1 +1,0 @@
-ALTER TABLE offer ADD COLUMN purpose varchar(20) CHECK (status IN ('CONCERT', 'REHEARSAL')) NOT NULL;

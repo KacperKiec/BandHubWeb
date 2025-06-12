@@ -117,6 +117,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/user/bands']);
   }
 
+  goToUserVenues() {
+    this.router.navigate(['/user/venues']);
+  }
+
   logOut() {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);

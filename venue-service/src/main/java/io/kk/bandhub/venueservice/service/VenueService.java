@@ -2,12 +2,15 @@ package io.kk.bandhub.venueservice.service;
 
 import io.kk.bandhub.venueservice.dto.Mapper;
 import io.kk.bandhub.venueservice.dto.VenueDTO;
+import io.kk.bandhub.venueservice.dto.VenueRequestDTO;
+import io.kk.bandhub.venueservice.dto.VenueUpdateRequestDTO;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
 import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Venue;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
 import io.kk.bandhub.venueservice.repository.venue.VenueSpecification;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,25 +19,29 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VenueService {
 
     private final VenueRepository venueRepository;
     private final Mapper mapper;
 
-    public VenueService(VenueRepository venueRepository, Mapper mapper) {
-        this.venueRepository = venueRepository;
-        this.mapper = mapper;
-    }
-
     @Transactional
-    public VenueDTO save(VenueDTO dto) {
+    public VenueDTO createVenue(VenueRequestDTO dto) {
         var existingVenue = venueRepository.findByNameAndOwnerId(dto.getName(), dto.getOwnerId());
         if (existingVenue.isPresent()) {
             throw new VenueException(VenueError.VENUE_ALREADY_EXISTS);
         }
 
         Venue venue = new Venue();
-        setVenueFields(dto, venue);
+        venue.setName(dto.getName());
+        venue.setDescription(dto.getDescription());
+        venue.setCapacity(dto.getCapacity());
+        venue.setOwnerId(dto.getOwnerId());
+        venue.setCity(dto.getCity());
+        venue.setCountry(dto.getCountry());
+        venue.setStreet(dto.getStreet());
+        venue.setNumber(dto.getNumber());
+        venue.setPostalCode(dto.getPostalCode());
 
         var mappedVenue = mapper.toVenueDTOReg(venue);
         venueRepository.save(venue);
@@ -44,22 +51,29 @@ public class VenueService {
     }
 
     @Transactional
-    public VenueDTO update(VenueDTO venueDTO) {
-        var existingVenue = venueRepository.findById(venueDTO.getId()).orElseThrow(
+    public VenueDTO update(VenueUpdateRequestDTO dto) {
+        var existingVenue = venueRepository.findById(dto.getId()).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
         );
 
-        return mapper.toVenueDTO(setVenueFields(venueDTO, existingVenue));
+        existingVenue.setName(dto.getName());
+        existingVenue.setDescription(dto.getDescription());
+        existingVenue.setCapacity(dto.getCapacity());
+        existingVenue.setOwnerId(dto.getOwnerId());
+        existingVenue.setCity(dto.getCity());
+        existingVenue.setCountry(dto.getCountry());
+        existingVenue.setStreet(dto.getStreet());
+        existingVenue.setNumber(dto.getNumber());
+        existingVenue.setPostalCode(dto.getPostalCode());
+
+        venueRepository.save(existingVenue);
+
+        return mapper.toVenueDTO(existingVenue);
     }
 
-    private Venue setVenueFields(VenueDTO venueDTO, Venue venue) {
-        venue.setName(venueDTO.getName());
-        venue.setDescription(venueDTO.getDescription());
-        venue.setCapacity(venueDTO.getCapacity());
-        venue.setAddress(venueDTO.getAddress());
-        venue.setCity(venueDTO.getCity());
-        venue.setOwnerId(venueDTO.getOwnerId());
-        return venue;
+    public List<VenueDTO> getUserVenues(Integer ownerId) {
+        return venueRepository.findByOwnerId(ownerId)
+                .stream().map(mapper::toVenueDTO).toList();
     }
 
     public VenueDTO findById(Integer id) {

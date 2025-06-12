@@ -56,7 +56,6 @@ public class OfferService {
         offer.setEndTime(offerDTO.getEndTime());
         offer.setStartTime(offerDTO.getStartTime());
         offer.setPricePerHour(BigDecimal.valueOf(offerDTO.getPricePerHour()));
-        offer.setPurpose(offerDTO.getPurpose());
 
         var venue = venueRepository.findById(offerDTO.getVenueId()).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
