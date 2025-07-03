@@ -38,8 +38,10 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
     latitude: 0,
     longitude: 0
   };
+  placeholderValue = 'Miasto';
 
   @Input() customClass = '';
+  @Input() placeholderInput = '';
   @Input() defaultAddress?: Address;
   @Output() address: EventEmitter<Address> = new EventEmitter();
   private globalClickListener?: () => void;
@@ -56,10 +58,13 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
         this.suggestions = [];
       }
     });
+    if (this.placeholderInput) {
+      this.placeholderValue = this.placeholderInput;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['defaultAddress'] && this.defaultAddress) {
+    if (changes['defaultAddress'] && this.defaultAddress && !this.searchTerm) {
       const city = this.defaultAddress.city?.trim();
       const country = this.defaultAddress.country?.trim();
 
@@ -71,8 +76,6 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-
-
   ngOnDestroy() {
     if (this.globalClickListener) {
       this.globalClickListener();
@@ -83,7 +86,7 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
     if (this.searchTerm.length < 3) return;
 
     const apiKey = '51f135d1ff8946c19460f696588a73e6';
-    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(this.searchTerm)}&limit=10&lang=pl&apiKey=${apiKey}&layers=locality,street&filter=countrycode:pl`;
+    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(this.searchTerm)}&limit=10&lang=pl&apiKey=${apiKey}&layers=address,locality,street&filter=countrycode:pl`;
 
     this.http.get<any>(url).subscribe(res => {
       this.suggestions = res.features
@@ -119,8 +122,26 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
       longitude: comp.lon
     };
 
-    this.searchTerm = suggestion.formatted;
+    const parts = [];
+
+    if (comp.street) {
+      const streetLine = comp.housenumber ? `${comp.street} ${comp.housenumber}` : comp.street;
+      parts.push(streetLine);
+    }
+
+    if (comp.postcode) {
+      parts.push(comp.postcode);
+    }
+
+    const city = comp.city || comp.town || comp.village;
+    if (city) parts.push(city);
+
+    if (comp.country) parts.push(comp.country);
+
+
+    this.searchTerm = parts.join(', ');
     this.suggestions = [];
     this.address.emit(this.selectedAddress);
   }
+
 }

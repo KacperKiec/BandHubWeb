@@ -1,6 +1,7 @@
 package io.kk.bandhub.userservice.config;
 
 import io.kk.bandhub.userservice.config.custom.AuthenticationFailureHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -18,15 +19,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final JwtDecoder jwtDecoder;
-
-    public SecurityConfig(AuthenticationFailureHandler authenticationFailureHandler, JwtDecoder jwtDecoder) {
-        this.authenticationFailureHandler = authenticationFailureHandler;
-        this.jwtDecoder = jwtDecoder;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

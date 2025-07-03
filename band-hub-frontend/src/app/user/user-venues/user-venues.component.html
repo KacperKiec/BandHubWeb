@@ -1,24 +1,57 @@
-<div class="wrapper fade-in">
-  <div class="create-venue-card" *ngIf="!hasVenues">
-    <h2 *ngIf="!showForm">Nie posiadasz zarejestrowanych lokali.</h2>
+<div class="wrapper">
 
-    <div class="venue-options" *ngIf="!showForm">
-      <div class="option">
-        <button class="btn" (click)="showRegistrationForm()">Dodaj lokal</button>
-        <p>Zarejestruj swój lokal, wystaw ogłoszenie i wynajmuj go innym muzykom.</p>
-      </div>
+  <div class="venue-details-container fade-in">
+    <div *ngIf="hasVenues">
+      <h2 class="panel-title">Twoje lokale</h2>
 
-      <div class="option">
-        <button class="btn" (click)="goToVenues()">Przeglądaj</button>
-        <p>Przeglądaj oferty innych użytkowników i korzystaj z ich obiektów muzycznych!</p>
+      <div>
+        <div class="venue-grid">
+          <div class="venue-card" *ngFor="let venue of venues">
+            <div class="venue-header">
+              <h3 class="venue-name">{{ venue.name }}</h3>
+            </div>
+
+            <p class="venue-description">
+              {{ venue.description || 'Brak opisu zespołu.' }}
+            </p>
+
+            <div class="venue-actions">
+              <button class="btn2" (click)="viewVenueDetails(venue.id)">Szczegóły</button>
+  <!--            <button *ngIf="band.founderId === userId" class="btn2" (click)="removeBand(band.id)">Rozwiąż zespół</button>-->
+  <!--            <button *ngIf="band.founderId !== userId" class="btn2" (click)="leaveBand(band.id)">Opuść</button>-->
+  <!--            <button *ngIf="band.founderId === userId" class="btn2" (click)="turnEditingMode(band)">Edytuj</button>-->
+            </div>
+          </div>
+        </div>
+
+        <div class="option create-option">
+          <label class="create-label">Masz tego więcej?</label>
+          <button class="btn2">Dodaj lokal</button>
+        </div>
       </div>
     </div>
+
+    <div class="create-venue-card" *ngIf="!hasVenues && !showForm">
+      <h2 *ngIf="!showForm">Nie posiadasz zarejestrowanych lokali.</h2>
+
+      <div class="venue-options" *ngIf="!showForm">
+        <div class="option">
+          <button class="btn" (click)="showRegistrationForm()">Dodaj lokal</button>
+          <p>Zarejestruj swój lokal, wystaw ogłoszenie i wynajmuj go innym muzykom.</p>
+        </div>
+
+        <div class="option">
+          <button class="btn" (click)="goToVenues()">Przeglądaj</button>
+          <p>Przeglądaj oferty innych użytkowników i korzystaj z ich obiektów muzycznych!</p>
+        </div>
+      </div>
+    </div>
+
+    <app-register-venue
+      *ngIf="showForm"
+      (registered)="handleVenueRegistration($event)"
+      [userId]="userId">
+
+    </app-register-venue>
   </div>
-
-  <app-register-venue
-    *ngIf="showForm"
-    (registered)="handleVenueRegistration($event)"
-    [userId]="userId">
-
-  </app-register-venue>
 </div>

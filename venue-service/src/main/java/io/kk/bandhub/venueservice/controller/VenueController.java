@@ -42,14 +42,15 @@ public class VenueController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
     }
 
-    @GetMapping(value = "/owner/{id}")
+    @GetMapping(value = "/user/{id}")
     ResponseEntity<List<VenueDTO>> getUserVenues(@PathVariable Integer id) {
         var result = venueService.getUserVenues(id);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> deleteVenue(@PathVariable int id) {
+    ResponseEntity<Void> deleteVenue(@PathVariable int id, Authentication authentication) {
+        verifyAuthorities(authentication, venueService.findById(id).getOwnerId());
         venueService.delete(id);
         return ResponseEntity.noContent().build();
     }

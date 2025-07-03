@@ -3,7 +3,7 @@
   [(ngModel)]="searchTerm"
   [ngClass]="customClass"
   (input)="onSearch()"
-  placeholder="Miasto"
+  [placeholder]=placeholderValue
   name="location"
   autocomplete="off"
 >

@@ -1,0 +1,22 @@
+<form>
+  <div class="form-group fade-in">
+
+    <label>Nazwa lokalu</label>
+    <input class="input" name="name" [(ngModel)]="venue.name" (ngModelChange)="emit()" required>
+
+    <label>Pojemność</label>
+    <input class="input" type="number" [(ngModel)]="venue.capacity" (ngModelChange)="emit()" required>
+
+    <label>Lokalizcja</label>
+    <app-address-search
+      [customClass]="'location-input-2'"
+      [defaultAddress]="sendAddress()"
+      [placeholderInput]="'Adres'"
+      (address)="getAddress($event)">
+    </app-address-search>
+
+    <label for="bio">Opis</label>
+    <textarea id="bio" name="bio" maxlength="400" rows="4" [(ngModel)]="venue.description" (ngModelChange)="emit()" required></textarea>
+  </div>
+
+</form>

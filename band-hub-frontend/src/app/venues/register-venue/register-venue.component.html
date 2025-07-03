@@ -1,24 +1,10 @@
 <div class="register-container fade-in">
-  <h2>Zarejestruj swój zespół 🎵</h2>
+  <h2>Zarejestruj swój lokal📍</h2>
 
-  <form>
-    <div class="form-group fade-in">
-
-      <label>Nazwa zespołu</label>
-      <input class="name-input" name="name" required>
-
-      <label>Lokalizcja</label>
-      <app-address-search
-        [customClass]="'location-input-2'"
-        [defaultAddress]="sendAddress()"
-        (address)="getAddress($event)">
-      </app-address-search>
-
-      <label for="bio">Bio</label>
-      <textarea id="bio" name="bio" maxlength="400" rows="4" required></textarea>
-    </div>
-
-  </form>
+  <app-venue-input
+    [userId]="userId"
+    (outputVenue)="getVenue($event)">
+  </app-venue-input>
 
 
   <button type="submit" class="submit-btn" (click)="submit()">Zarejestruj zespół</button>

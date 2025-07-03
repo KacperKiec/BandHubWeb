@@ -1,7 +1,15 @@
 .wrapper {
   padding: 20px;
+}
+
+.venue-details-container {
   width: 70%;
-  margin: 0 auto;
+  margin: 5px auto 15px;
+  padding: 3rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  justify-content: center;
 }
 
 .create-venue-card {
@@ -55,4 +63,62 @@
 
 .btn:hover, .btn2:hover {
   background-color: #45403c;
+}
+
+.venue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.venue-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.venue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.venue-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.venue-description {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 16px;
+}
+
+.venue-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn2 {
+  background-color: #0E1418;
+  color: #E4DCC6;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.create-label {
+  margin-bottom: 5px;
+}
+
+.create-option {
+  background-color: rgba(255, 255, 255, 0.6);
+  align-items: center;
+  margin: 25px auto 0;
 }
