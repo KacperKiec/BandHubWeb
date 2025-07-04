@@ -1,7 +1,7 @@
 <div class="wrapper">
 
   <div class="venue-details-container fade-in">
-    <div *ngIf="hasVenues">
+    <div *ngIf="hasVenues && !editingMode">
       <h2 class="panel-title">Twoje lokale</h2>
 
       <div>
@@ -12,23 +12,30 @@
             </div>
 
             <p class="venue-description">
-              {{ venue.description || 'Brak opisu zespołu.' }}
+              {{ venue.city + ', ' + venue.country }}
             </p>
 
             <div class="venue-actions">
               <button class="btn2" (click)="viewVenueDetails(venue.id)">Szczegóły</button>
-  <!--            <button *ngIf="band.founderId === userId" class="btn2" (click)="removeBand(band.id)">Rozwiąż zespół</button>-->
-  <!--            <button *ngIf="band.founderId !== userId" class="btn2" (click)="leaveBand(band.id)">Opuść</button>-->
-  <!--            <button *ngIf="band.founderId === userId" class="btn2" (click)="turnEditingMode(band)">Edytuj</button>-->
+              <button class="btn2" (click)="deleteVenue(venue.id)">Usuń</button>
+              <button class="btn2" (click)="turnEditingMode(venue)">Edytuj</button>
             </div>
           </div>
         </div>
 
         <div class="option create-option">
           <label class="create-label">Masz tego więcej?</label>
-          <button class="btn2">Dodaj lokal</button>
+          <button class="btn2" (click)="addAnotherVenue()">Dodaj lokal</button>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="editingMode">
+      <app-edit-venue-form
+        [userId]="userId"
+        [venueTemplate]="venueToEdit"
+        (updated)="handleVenueUpdating($event)">
+      </app-edit-venue-form>
     </div>
 
     <div class="create-venue-card" *ngIf="!hasVenues && !showForm">

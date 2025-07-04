@@ -1,0 +1,13 @@
+.confirm-button {
+  font-family: 'Merriweather', serif;
+  display: block;
+  color: #E4DCC6;
+  height: 10%;
+  margin: 1.5rem auto 0;
+  border: 1px solid #615D55;
+  border-radius: 25px;
+  background-color: #0E1418;
+  width: 20%;
+  padding: 5px 10px;
+  cursor: pointer;
+}

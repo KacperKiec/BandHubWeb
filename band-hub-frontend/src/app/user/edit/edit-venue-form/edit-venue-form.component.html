@@ -1,0 +1,9 @@
+<form class="container" #updateForm=ngForm (ngSubmit)="submitForm()">
+  <app-venue-input
+    [userId]="userId"
+    [inputVenue]="venueTemplate"
+    (outputVenue)="getVenue($event)">
+  </app-venue-input>
+
+  <button class="confirm-button">Zapisz</button>
+</form>

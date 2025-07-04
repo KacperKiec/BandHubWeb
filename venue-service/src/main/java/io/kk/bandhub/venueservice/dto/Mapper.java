@@ -31,6 +31,10 @@ public class Mapper {
         venueDTO.setName(venue.getName());
         venueDTO.setDescription(venue.getDescription());
         venueDTO.setCity(venue.getCity());
+        venueDTO.setCountry(venue.getCountry());
+        venueDTO.setNumber(venue.getNumber());
+        venueDTO.setStreet(venue.getStreet());
+        venueDTO.setPostalCode(venue.getPostalCode());
         venueDTO.setCapacity(venue.getCapacity());
         venueDTO.setOwnerId(accountDTO.getId());
         return venueDTO;

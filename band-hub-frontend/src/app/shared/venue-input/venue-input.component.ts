@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {AddressSearchComponent} from "../address-search/address-search.component";
 import {FormsModule} from "@angular/forms";
 import {Address} from '../../core/models/location.model';
@@ -14,7 +14,7 @@ import {VenueRequest} from '../../core/models/venue.model';
   templateUrl: './venue-input.component.html',
   styleUrl: './venue-input.component.css'
 })
-export class VenueInputComponent implements OnInit {
+export class VenueInputComponent implements OnInit, OnChanges {
 
   @Input() userId!: number;
   @Input() inputVenue!: VenueRequest;
@@ -43,7 +43,7 @@ export class VenueInputComponent implements OnInit {
       city: '',
       postalCode: '',
       country: ''
-    }
+    };
   }
 
   sendAddress(): Address {

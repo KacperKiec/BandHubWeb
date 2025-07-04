@@ -5,7 +5,7 @@
     <input class="input" name="name" [(ngModel)]="venue.name" (ngModelChange)="emit()" required>
 
     <label>Pojemność</label>
-    <input class="input" type="number" [(ngModel)]="venue.capacity" (ngModelChange)="emit()" required>
+    <input class="input" name="capacity" type="number" [(ngModel)]="venue.capacity" (ngModelChange)="emit()" required>
 
     <label>Lokalizcja</label>
     <app-address-search
