@@ -1,0 +1,22 @@
+<div class="tab-container fade-in">
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'venues'"
+      (click)="activeTab = 'venues'">
+      📍 Lokale
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'offers'"
+      (click)="activeTab = 'offers'">
+      📢 Oferty
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <app-user-venues *ngIf="activeTab === 'venues'"></app-user-venues>
+    <app-user-offers *ngIf="activeTab === 'offers'"></app-user-offers>
+  </div>
+</div>

@@ -118,7 +118,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goToUserVenues() {
-    this.router.navigate(['/user/venues']);
+    this.router.navigate(['/user/renting']);
   }
 
   logOut() {
