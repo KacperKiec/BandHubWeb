@@ -67,11 +67,22 @@ export class AddressSearchComponent implements OnInit, OnDestroy, OnChanges {
     if (changes['defaultAddress'] && this.defaultAddress && !this.searchTerm) {
       const city = this.defaultAddress.city?.trim();
       const country = this.defaultAddress.country?.trim();
+      const street = this.defaultAddress?.street.trim();
+      const number = this.defaultAddress?.number.trim();
+      const postalCode = this.defaultAddress?.postalCode.trim();
+
+      if(street && number) {
+        this.searchTerm += [street, number].filter(Boolean).join(' ');
+        this.searchTerm += ', '
+      }
+
+      if (postalCode) {
+        this.searchTerm += postalCode;
+        this.searchTerm += ', ';
+      }
 
       if (city || country) {
-        this.searchTerm = [city, country].filter(Boolean).join(', ');
-      } else {
-        this.searchTerm = '';
+        this.searchTerm += [city, country].filter(Boolean).join(', ');
       }
     }
   }

@@ -29,7 +29,6 @@ export class AuthApiService {
         tap(() => {
           this.getCurrentUser().subscribe(id => {
             localStorage.setItem('userId', JSON.stringify(id));
-            console.log("setting id", id);
           });
         }),
         catchError((error) =>

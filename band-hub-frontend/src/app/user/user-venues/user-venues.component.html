@@ -11,12 +11,18 @@
               <h3 class="venue-name">{{ venue.name }}</h3>
             </div>
 
-            <p class="venue-description">
-              {{ venue.city + ', ' + venue.country }}
+            <p class="venue-address">
+              {{ venue.street + ' ' + venue.number + ', ' + venue.postalCode + ' ' + venue.city + ', ' + venue.country }}
             </p>
 
+            <div
+              class="venue-description"
+              [@expandCollapse]="expandedVenueId === venue.id ? 'expanded' : 'collapsed'">
+              {{ venue.description }}
+            </div>
+
             <div class="venue-actions">
-              <button class="btn2" (click)="viewVenueDetails(venue.id)">Szczegóły</button>
+              <button class="btn2" (click)="viewVenueDescription(venue.id)">Opis</button>
               <button class="btn2" (click)="deleteVenue(venue.id)">Usuń</button>
               <button class="btn2" (click)="turnEditingMode(venue)">Edytuj</button>
             </div>
@@ -24,7 +30,7 @@
         </div>
 
         <div class="option create-option">
-          <label class="create-label">Masz tego więcej?</label>
+          <label class="create-label">Masz więcej w zanadrzu?</label>
           <button class="btn2" (click)="addAnotherVenue()">Dodaj lokal</button>
         </div>
       </div>

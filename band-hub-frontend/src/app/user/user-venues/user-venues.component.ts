@@ -6,6 +6,7 @@ import {Venue, VenueRequest, VenueUpdateRequest} from '../../core/models/venue.m
 import {VenueApiService} from '../../services/venue-service/venue-api.service';
 import {EditBandComponent} from '../edit/edit-band/edit-band.component';
 import {EditVenueFormComponent} from '../edit/edit-venue-form/edit-venue-form.component';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-user-venues',
@@ -19,7 +20,24 @@ import {EditVenueFormComponent} from '../edit/edit-venue-form/edit-venue-form.co
     EditVenueFormComponent
   ],
   templateUrl: './user-venues.component.html',
-  styleUrl: './user-venues.component.css'
+  styleUrl: './user-venues.component.css',
+  animations: [
+    trigger('expandCollapse', [
+      state('collapsed', style({
+        height: '0px',
+        overflow: 'hidden',
+        opacity: 0
+      })),
+      state('expanded', style({
+        height: '*',
+        overflow: 'hidden',
+        opacity: 1
+      })),
+      transition('collapsed <=> expanded', [
+        animate('300ms ease-in-out')
+      ]),
+    ])
+  ]
 })
 export class UserVenuesComponent implements OnInit {
 
@@ -30,6 +48,7 @@ export class UserVenuesComponent implements OnInit {
 
   venues!:Venue[];
   venueToEdit!: Venue;
+  expandedVenueId: number | null = null;
 
   constructor(private venueApiService: VenueApiService) {
   }
@@ -62,7 +81,9 @@ export class UserVenuesComponent implements OnInit {
     this.hasVenues = false;
   }
 
-  viewVenueDetails(venueId: number) {}
+  viewVenueDescription(venueId: number) {
+    this.expandedVenueId = this.expandedVenueId === venueId ? null : venueId;
+  }
 
   goToVenues() {
 

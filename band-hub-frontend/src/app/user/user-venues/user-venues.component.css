@@ -90,10 +90,17 @@
   font-weight: 600;
 }
 
-.venue-description {
+.venue-address {
   font-size: 14px;
   color: #444;
   margin-bottom: 16px;
+}
+
+.venue-description {
+  margin: 25px 0 15px 0;
+  font-size: 14px;
+  color: #444;
+  transition: all 0.3s ease-in-out;
 }
 
 .venue-actions {
