@@ -1,6 +1,7 @@
 package io.kk.bandhub.notificationservice.dto;
 
 import io.kk.bandhub.notificationservice.model.NotificationType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,10 +22,12 @@ public class NotificationRequestDTO implements Serializable {
 
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String title;
 
     @Size(max = 255)
     @NotNull
+    @NotBlank
     private String content;
 
     @NotNull

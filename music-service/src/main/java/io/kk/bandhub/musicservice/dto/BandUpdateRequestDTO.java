@@ -1,5 +1,6 @@
 package io.kk.bandhub.musicservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class BandUpdateRequestDTO {
 
     @Size(max = 30, message = "Band name cannot exceed 30 characters")
     @NotNull(message = "Band name cannot be null")
+    @NotBlank
     private String name;
 
     @Size(max = 20, message = "City name cannot exceed 20 characters")
@@ -30,5 +32,7 @@ public class BandUpdateRequestDTO {
     private boolean isLookingMembers;
 
     private Set<GenreDTO> genres = new HashSet<>();
+
+    @NotNull
     private Integer founderId;
 }

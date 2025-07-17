@@ -1,5 +1,6 @@
 package io.kk.bandhub.userservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,18 +15,22 @@ import java.util.Set;
 public class AccountRequestDTO {
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String email;
 
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String password;
 
     @Size(max = 30)
     @NotNull
+    @NotBlank
     private String firstName;
 
     @Size(max = 30)
     @NotNull
+    @NotBlank
     private String lastName;
 
     @NotNull
@@ -35,9 +40,11 @@ public class AccountRequestDTO {
     private Boolean gender;
 
     @Size(max = 50)
+    @NotBlank
     private String city;
 
     @Size(max = 50)
+    @NotBlank
     private String country;
 
     private Set<RoleDTO> roles = new HashSet<>();

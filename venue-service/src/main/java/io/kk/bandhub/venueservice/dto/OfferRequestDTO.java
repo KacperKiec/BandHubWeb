@@ -1,6 +1,7 @@
 package io.kk.bandhub.venueservice.dto;
 
 import io.kk.bandhub.venueservice.utils.OfferStatus;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,5 +29,6 @@ public class OfferRequestDTO {
     private LocalTime endTime;
 
     @NotNull
+    @NotBlank
     private OfferStatus status;
 }

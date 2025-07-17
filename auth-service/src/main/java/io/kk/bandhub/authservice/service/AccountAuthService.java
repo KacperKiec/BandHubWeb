@@ -45,7 +45,7 @@ public class AccountAuthService implements UserDetailsService {
             return response.getBody();
         } catch (Exception e) {
             //System.out.println(e);
-            throw new AuthException("User with given credentials could not be found");
+            throw new AuthException("User with given credentials could not be found or service is unavailable.");
         }
     }
 }

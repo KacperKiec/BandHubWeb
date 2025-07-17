@@ -1,6 +1,6 @@
 package io.kk.bandhub.venueservice.dto;
 
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,6 +14,7 @@ public class VenueRequestDTO {
 
     @Size(max = 40)
     @NotNull
+    @NotBlank
     private String name;
 
     @NotNull
@@ -24,21 +25,26 @@ public class VenueRequestDTO {
 
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String street;
 
     @Size(max = 10)
     @NotNull
+    @NotBlank
     private String number;
 
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String city;
 
     @Size(max = 15)
     @NotNull
+    @NotBlank
     private String postalCode;
 
     @Size(max = 50)
     @NotNull
+    @NotBlank
     private String country;
 }
