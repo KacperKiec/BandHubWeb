@@ -1,20 +1,29 @@
 <div class="container fade-in">
-  <div class="create-offer-card" *ngIf="!hasVenues && !showForm">
-    <h2 *ngIf="!hasVenues">Nie posiadasz zarejestrowanych lokali.</h2>
+  <div class="offer-details-container">
+    <div class="create-offer-card" *ngIf="(!hasOffers || !hasVenues) && !showForm">
+      <h2 *ngIf="!hasVenues">Nie posiadasz zarejestrowanych lokali.</h2>
 
-    <div class="offer-options" *ngIf="!hasVenues && !showForm">
-      <div class="option">
-        <p>Zarejestruj lokal aby móc dodać ogłoszenie.</p>
+      <div class="offer-options" *ngIf="!hasVenues && !showForm">
+        <div class="option">
+          <p>Zarejestruj lokal aby móc dodać ogłoszenie.</p>
+        </div>
+      </div>
+
+      <h2 *ngIf="!hasOffers && hasVenues && !showForm">Nie dodałeś jeszcze żadnego ogłoszenia.</h2>
+
+      <div class="offer-options" *ngIf="!hasOffers && hasVenues && !showForm">
+        <div class="option">
+          <button class="btn" (click)="showRegistrationForm()">Dodaj ofertę</button>
+          <p>Ogłaszaj swoje obiekty, aby wynajmować je innym użytkownikom.</p>
+        </div>
       </div>
     </div>
 
-    <h2 *ngIf="!hasOffers && hasVenues && !showForm">Nie dodałeś jeszcze żadnego ogłoszenia.</h2>
-
-    <div class="offer-options" *ngIf="!hasOffers && hasVenues && !showForm">
-      <div class="option">
-        <button class="btn" (click)="showRegistrationForm()">Dodaj ofertę</button>
-        <p>Ogłaszaj swoje obiekty, aby wynajmować je innym użytkownikom.</p>
-      </div>
-    </div>
+    <app-register-offer
+      *ngIf="showForm"
+      (registered)="handleOfferRegistration($event)"
+      [userId]="userId"
+      [venues]="venues">
+    </app-register-offer>
   </div>
 </div>

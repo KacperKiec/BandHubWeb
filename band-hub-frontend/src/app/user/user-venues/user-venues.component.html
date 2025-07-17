@@ -1,5 +1,5 @@
-<div class="wrapper fade-in">
-  <div class="venue-details-container">
+<div class="wrapper">
+  <div class="venue-details-container fade-in">
     <div *ngIf="hasVenues && !editingMode">
       <h2 class="panel-title">Twoje lokale</h2>
 
@@ -17,11 +17,13 @@
             <div
               class="venue-description"
               [@expandCollapse]="expandedVenueId === venue.id ? 'expanded' : 'collapsed'">
-              {{ venue.description }}
+              <span>Liczba miejsc: {{ venue.capacity }}</span>
+              <br>
+              <span>Opis: {{ venue.description }}</span>
             </div>
 
             <div class="venue-actions">
-              <button class="btn2" (click)="viewVenueDescription(venue.id)">Opis</button>
+              <button class="btn2" (click)="viewVenueDescription(venue.id)">Szczegóły</button>
               <button class="btn2" (click)="deleteVenue(venue.id)">Usuń</button>
               <button class="btn2" (click)="turnEditingMode(venue)">Edytuj</button>
             </div>

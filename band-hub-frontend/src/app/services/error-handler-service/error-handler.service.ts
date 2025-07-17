@@ -12,15 +12,22 @@ export class ErrorHandlerService {
 
   handleError(error: HttpErrorResponse): Observable<never> {
     const statusCode = error.status;
-    const backendMessage = error.error?.message || error.message;
-    const errorCode = error.error?.errorCode || statusCode;
+    let errorMessage = '';
 
-    const fullErrorMessage = `Błąd: ${backendMessage} (kod: ${errorCode})`;
-    //alert(fullErrorMessage);
+    if (statusCode === 400 || Array.isArray(error.error)) {
+      const errors = error.error as string[];
+      errorMessage = `Błędy walidacji:\n${errors.join('\n')}`;
+      alert(errorMessage);
+    } else if (error.error?.message) {
+      const backendMessage = error.error.message;
+      const errorCode = error.error.errorCode || statusCode;
+      errorMessage = `Błąd: ${backendMessage} (kod: ${errorCode})`;
+    } else {
+      errorMessage = `Błąd: ${error.message || 'Nieznany błąd'} (kod: ${statusCode})`;
+    }
 
-    this.errorSubject.next(fullErrorMessage);
-
-    return throwError(() => fullErrorMessage);
+    this.errorSubject.next(errorMessage);
+    return throwError(() => error);
   }
 
 

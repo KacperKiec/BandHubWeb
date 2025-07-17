@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NotificationApiService} from '../../services/notification-service/notification-api.service';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
-import {NotificationDTO} from '../../core/models/notification.model';
+import {Notification} from '../../core/models/notification.model';
 import {Router} from '@angular/router';
 
 @Component({
@@ -19,7 +19,7 @@ import {Router} from '@angular/router';
 export class NotificationPanelComponent implements OnInit {
 
   userId!: number;
-  notifications: NotificationDTO[] = [];
+  notifications: Notification[] = [];
   expandedNotificationId: number | null = null;
   showUnread: boolean = true;
 
@@ -117,7 +117,7 @@ export class NotificationPanelComponent implements OnInit {
     }
   }
 
-  action(notification: NotificationDTO) {
+  action(notification: Notification) {
     switch (notification.type.toString()) {
       case "BAND_INVITATION": {
         this.router.navigate(['invitations'], { queryParams: { mode: 'invitations' } });

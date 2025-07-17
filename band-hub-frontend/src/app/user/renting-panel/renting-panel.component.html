@@ -16,7 +16,18 @@
   </div>
 
   <div class="tab-content">
-    <app-user-venues *ngIf="activeTab === 'venues'"></app-user-venues>
-    <app-user-offers *ngIf="activeTab === 'offers'"></app-user-offers>
+    <app-user-venues
+      *ngIf="activeTab === 'venues' && venues && userId"
+      [venues]="venues"
+      [userId]="userId"
+      (updateData)="updateData($event)">
+    </app-user-venues>
+
+    <app-user-offers
+      *ngIf="activeTab === 'offers' && venues && userId"
+      [venues]="venues"
+      [userId]="userId"
+      (updateData)="updateData($event)">
+    </app-user-offers>
   </div>
 </div>

@@ -1,0 +1,13 @@
+<div class="register-container fade-in">
+  <h2>Dodaj ogłoszenie najmu🏠</h2>
+
+  <app-offer-input
+    [userId]="userId"
+    [venues]="venues"
+    (outputOffer)="getOffer($event)">
+  </app-offer-input>
+
+
+  <button type="submit" class="submit-btn" (click)="submit()">Dodaj ofertę</button>
+
+</div>

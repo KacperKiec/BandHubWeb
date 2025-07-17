@@ -43,9 +43,12 @@ export class RentingPanelComponent implements OnInit {
   initData() {
     this.venueApiService.getUserVenues(this.userId).subscribe(venues => {
       if (venues) {
-        this.venues = venues;
-        console.log(this.venues);
+        this.venues = [...venues];
       }
     });
+  }
+
+  updateData($event: boolean) {
+    if ($event) this.initData();
   }
 }

@@ -1,4 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {RegisterBandComponent} from '../../bands/register-band/register-band.component';
 import {RegisterVenueComponent} from '../../venues/register-venue/register-venue.component';
@@ -37,39 +46,32 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         animate('300ms ease-in-out')
       ]),
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserVenuesComponent implements OnInit {
+export class UserVenuesComponent implements OnChanges {
 
-  userId!: number;
+  @Input() userId!: number;
+  @Input() venues!:Venue[];
+  @Output() updateData = new EventEmitter<boolean>();
+
   hasVenues: boolean = false;
   showForm: boolean = false;
   editingMode: boolean = false;
 
-  venues!:Venue[];
   venueToEdit!: Venue;
   expandedVenueId: number | null = null;
 
-  constructor(private venueApiService: VenueApiService) {
+  constructor(private venueApiService: VenueApiService, private cdr: ChangeDetectorRef) {
   }
 
-  ngOnInit() {
-    const rawId = localStorage.getItem('userId');
-    if (rawId) {
-      this.userId = JSON.parse(rawId);
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['venues']) {
+      this.hasVenues = this.venues && this.venues.length > 0;
     }
 
-    this.initData()
-  }
-
-  initData() {
-    this.venueApiService.getUserVenues(this.userId).subscribe(venues => {
-      if (venues) {
-        this.venues = venues;
-        this.hasVenues = this.venues.length > 0;
-        console.log(this.venues);
-      }
-    });
+    this.cdr.markForCheck();
   }
 
   showRegistrationForm() {
@@ -92,7 +94,7 @@ export class UserVenuesComponent implements OnInit {
   deleteVenue(id: number) {
     this.venueApiService.deleteVenue(id).subscribe({
       next: () => {
-        this.initData();
+        this.updateData.emit(true);
       },
       error: (err) => {
         console.error('Błąd podczas usuwania lokalu:', err);
@@ -110,8 +112,7 @@ export class UserVenuesComponent implements OnInit {
     this.venueApiService.addVenue(venue).subscribe(venue => {
       if (venue) {
         this.showForm = false;
-        this.venues.push(venue);
-        this.hasVenues = true;
+        this.updateData.emit(true);
       }
     });
   }
@@ -120,7 +121,7 @@ export class UserVenuesComponent implements OnInit {
     this.venueApiService.updateVenue(venue).subscribe(venue => {
       if (venue) {
         this.editingMode = false;
-        this.initData();
+        this.updateData.emit(true);
       }
     });
   }

@@ -3,8 +3,7 @@ import {BandInputComponent} from '../../shared/band-input/band-input.component';
 import {AddressSearchComponent} from '../../shared/address-search/address-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
-import {Address} from '../../core/models/location.model';
-import {Venue, VenueRequest} from '../../core/models/venue.model';
+import {VenueRequest} from '../../core/models/venue.model';
 import {VenueInputComponent} from '../../shared/venue-input/venue-input.component';
 
 @Component({
@@ -27,9 +26,6 @@ export class RegisterVenueComponent implements OnInit {
   @Output() registered: EventEmitter<VenueRequest> = new EventEmitter();
 
   venue!: VenueRequest;
-
-  constructor() {
-  }
 
   ngOnInit() {
     this.venue = {

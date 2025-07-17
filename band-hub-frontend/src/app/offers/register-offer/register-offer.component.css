@@ -1,0 +1,31 @@
+.register-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: sans-serif;
+}
+
+h2 {
+  margin: 0 auto 0.5rem auto;
+  font-size: 1.75rem;
+  width: fit-content;
+}
+
+.submit-btn {
+  background-color: #615D55;
+  color: #E4DCC6;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #45403c;
+}
