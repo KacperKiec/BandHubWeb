@@ -1,7 +1,7 @@
 package io.kk.bandhub.venueservice.repository.booking;
 
 import io.kk.bandhub.venueservice.model.Booking;
-import io.kk.bandhub.venueservice.model.OfferStatus;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookingSpecification {

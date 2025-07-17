@@ -1,5 +1,7 @@
 package io.kk.bandhub.venueservice.exception;
 
+import io.kk.bandhub.venueservice.exception.booking.BookingError;
+import io.kk.bandhub.venueservice.exception.booking.BookingException;
 import io.kk.bandhub.venueservice.exception.offer.OfferError;
 import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
@@ -16,7 +18,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(VenueException.class)
-    public ResponseEntity<ErrorResponse> handleRoleException(final VenueException e) {
+    public ResponseEntity<ErrorResponse> handleVenueException(final VenueException e) {
         if (VenueError.VENUE_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
         } else {
@@ -25,8 +27,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(OfferException.class)
-    public ResponseEntity<ErrorResponse> handleRoleException(final OfferException e) {
+    public ResponseEntity<ErrorResponse> handleOfferException(final OfferException e) {
         if (OfferError.OFFER_NOT_FOUND.equals(e.getStatus())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
+        }
+    }
+
+    @ExceptionHandler(BookingException.class)
+    public ResponseEntity<ErrorResponse> handleBookingException(final BookingException e) {
+        if (BookingError.BOOKING_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));

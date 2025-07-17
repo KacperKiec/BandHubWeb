@@ -1,8 +1,7 @@
 package io.kk.bandhub.venueservice.repository.offer;
 
 import io.kk.bandhub.venueservice.model.Offer;
-import io.kk.bandhub.venueservice.model.OfferPurpose;
-import io.kk.bandhub.venueservice.model.OfferStatus;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -34,15 +33,6 @@ public class OfferSpecification {
                 return builder.conjunction();
             }
             return builder.equal(root.get("date"), date);
-        };
-    }
-
-    public static Specification<Offer> hasPurpose(OfferPurpose purpose) {
-        return (root, query, builder) -> {
-            if (purpose == null) {
-                return builder.conjunction();
-            }
-            return builder.equal(root.get("purpose"), purpose);
         };
     }
 }

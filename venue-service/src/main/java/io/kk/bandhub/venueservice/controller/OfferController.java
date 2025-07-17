@@ -1,8 +1,9 @@
 package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.OfferDTO;
-import io.kk.bandhub.venueservice.model.OfferPurpose;
-import io.kk.bandhub.venueservice.model.OfferStatus;
+import io.kk.bandhub.venueservice.dto.OfferRequestDTO;
+import io.kk.bandhub.venueservice.dto.OfferUpdateRequestDTO;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.service.OfferService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public class OfferController {
     }
 
     @PostMapping
-    ResponseEntity<OfferDTO> createOffer(@RequestBody @Valid OfferDTO offerDTO) {
-        var result = offerService.save(offerDTO);
+    ResponseEntity<OfferDTO> createOffer(@RequestBody @Valid OfferRequestDTO offerDTO) {
+        var result = offerService.createOffer(offerDTO);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -41,8 +42,8 @@ public class OfferController {
     }
 
     @PutMapping
-    ResponseEntity<OfferDTO> updateOffer(@RequestBody @Valid OfferDTO offerDTO) {
-        var result = offerService.update(offerDTO);
+    ResponseEntity<OfferDTO> updateOffer(@RequestBody @Valid OfferUpdateRequestDTO offerDTO) {
+        var result = offerService.updateOffer(offerDTO);
         return ResponseEntity.ok(result);
     }
 
@@ -69,10 +70,9 @@ public class OfferController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) OfferStatus status,
-            @RequestParam(required = false) OfferPurpose purpose,
             @RequestParam(required = false)LocalDate date) {
 
-        var result = offerService.searchOffers(cities, status, purpose, date, pageable);
+        var result = offerService.searchOffers(cities, status, date, pageable);
         return ResponseEntity.ok(result);
     }
 }

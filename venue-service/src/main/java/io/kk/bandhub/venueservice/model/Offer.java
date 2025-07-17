@@ -1,7 +1,8 @@
 package io.kk.bandhub.venueservice.model;
 
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import org.hibernate.annotations.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Getter
 @Setter
@@ -49,4 +52,8 @@ public class Offer {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
+
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OfferAvailability> availabilityRanges = new TreeSet<>();
+
 }

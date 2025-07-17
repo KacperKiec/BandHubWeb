@@ -26,6 +26,8 @@ CREATE TABLE booking (
     id SERIAL PRIMARY KEY,
     tenant_id INTEGER NOT NULL,
     offer_id INTEGER NOT NULL,
+    start_time time NOT NULL,
+    end_time time NOT NULL,
     booking_date date NOT NULL,
     FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
 );

@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -30,6 +31,14 @@ public class Booking {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "offer_id", nullable = false)
     private Offer offer;
+
+    @NotNull
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
+
+    @NotNull
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
 
     @NotNull
     @Column(name = "booking_date", nullable = false)

@@ -13,6 +13,7 @@ public interface BookingRepository {
     void deleteById(int id);
     Optional<Booking> findById(int id);
     List<Booking> findAll();
+    List<Booking> findAllByOfferId(Integer offerId);
     Page<Booking> findAll(Pageable pageable);
     Page<Booking> findAll(Specification<Booking> spec, Pageable pageable);
 }

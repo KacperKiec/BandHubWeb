@@ -1,19 +1,19 @@
 package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.BookingDTO;
-import io.kk.bandhub.venueservice.model.OfferStatus;
+import io.kk.bandhub.venueservice.dto.BookingRequestDTO;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -27,19 +27,13 @@ public class BookingController {
     }
 
     @PostMapping
-    ResponseEntity<BookingDTO> createBooking(@RequestBody @Valid BookingDTO bookingDTO) {
+    ResponseEntity<BookingDTO> createBooking(@RequestBody @Valid BookingRequestDTO bookingDTO) {
         var result = bookingService.createBooking(bookingDTO);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(result.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<BookingDTO> deleteBooking(@PathVariable Integer id) {
+    ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
