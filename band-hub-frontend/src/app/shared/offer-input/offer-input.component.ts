@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -32,7 +33,6 @@ export class OfferInputComponent implements OnInit, OnChanges {
   @Output() outputOffer = new EventEmitter<OfferRequest>();
 
   offer!: OfferRequest;
-  statuses: OfferStatus[] = Object.values(OfferStatus) as OfferStatus[];
 
   venues2 = [
     { id: 1, name: 'Studio A' },
@@ -44,19 +44,29 @@ export class OfferInputComponent implements OnInit, OnChanges {
     { id: 4, name: 'Jazz Room D' },
   ];
 
+  statuses: OfferStatus[] = [];
   statusLabels: Record<OfferStatus, string> = {
     [OfferStatus.ACTIVE]: 'Aktywna',
     [OfferStatus.CLAIMED]: 'Zajęta',
     [OfferStatus.CANCELED]: 'Anulowana'
   };
 
+  constructor(private cdr: ChangeDetectorRef) {
+    this.statuses = Object.values(OfferStatus) as OfferStatus[];
+    this.initOffer();
+  }
+
   ngOnInit() {
-    this.initVenue();
+    this.initOffer();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['inputOffer'] && changes['inputOffer'].currentValue) {
-      this.initVenue();
+      this.initOffer();
+    }
+
+    if (changes['venues']) {
+      this.cdr.detectChanges();
     }
   }
 
@@ -69,7 +79,7 @@ export class OfferInputComponent implements OnInit, OnChanges {
     this.emit();
   }
 
-  private initVenue() {
+  private initOffer() {
     this.offer = this.inputOffer ?? {
       venueId: 0,
       pricePerHour: 0,

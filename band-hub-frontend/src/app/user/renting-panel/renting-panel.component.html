@@ -26,6 +26,7 @@
     <app-user-offers
       *ngSwitchCase="'offers'"
       [venues]="venues"
+      [offers]="offers"
       [userId]="userId"
       (updateData)="updateData($event)">
     </app-user-offers>

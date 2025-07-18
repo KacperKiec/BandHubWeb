@@ -42,7 +42,6 @@ export class RegisterOfferComponent implements OnInit {
   }
 
   submit() {
-    console.log('Oferta dodana' + this.offer);
     this.registered.emit(this.offer);
   }
 }

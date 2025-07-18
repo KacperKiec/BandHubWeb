@@ -87,7 +87,7 @@ export class UserVenuesComponent implements OnChanges {
     this.expandedVenueId = this.expandedVenueId === venueId ? null : venueId;
   }
 
-  goToVenues() {
+  goToOffers() {
 
   }
 

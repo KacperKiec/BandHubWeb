@@ -75,6 +75,11 @@ public class OfferService {
         offerRepository.deleteById(offerId);
     }
 
+    public List<OfferDTO> getUserOffers(Integer id) {
+        return offerRepository.findByVenueOwnerId(id).stream()
+                .map(mapper::toOfferDTO).toList();
+    }
+
     public OfferDTO getOfferById(Integer offerId) {
         var offer = offerRepository.findById(offerId).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)

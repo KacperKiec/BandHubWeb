@@ -1,6 +1,8 @@
 package io.kk.bandhub.venueservice.dto;
 
 import io.kk.bandhub.venueservice.utils.OfferStatus;
+import io.kk.bandhub.venueservice.utils.OfferTimeValidatable;
+import io.kk.bandhub.venueservice.utils.ValidOfferTimes;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +13,8 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class OfferRequestDTO {
+@ValidOfferTimes
+public class OfferRequestDTO implements OfferTimeValidatable {
 
     @NotNull
     private Integer venueId;
@@ -29,6 +32,5 @@ public class OfferRequestDTO {
     private LocalTime endTime;
 
     @NotNull
-    @NotBlank
     private OfferStatus status;
 }

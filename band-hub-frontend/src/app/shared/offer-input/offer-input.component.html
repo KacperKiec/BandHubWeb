@@ -9,20 +9,20 @@
     </div>
 
     <label>Cena za godzinę</label>
-    <input class="input" type="number" step="0.01" [(ngModel)]="offer.pricePerHour" (ngModelChange)="emit()" min="0" required>
+    <input class="input" type="number" step="0.01" [(ngModel)]="offer.pricePerHour" name="pricePerHour" (ngModelChange)="emit()" min="0" required>
 
     <label>Data</label>
-    <input class="input" type="date" [(ngModel)]="offer.date" (ngModelChange)="emit()" required>
+    <input class="input" type="date" [(ngModel)]="offer.date" name="date" (ngModelChange)="emit()" required>
 
     <label>Czas dostępności</label>
     <div class="time-input-container">
       <div class="time-input">
         <p>Początek</p>
-        <input class="input" type="time" [(ngModel)]="offer.startTime" (ngModelChange)="emit()">
+        <input class="input" type="time" [(ngModel)]="offer.startTime" name="startTime" (ngModelChange)="emit()">
       </div>
       <div class="time-input">
         <p>Koniec</p>
-        <input class="input" type="time" [(ngModel)]="offer.endTime" (ngModelChange)="emit()">
+        <input class="input" type="time" [(ngModel)]="offer.endTime" name="endTime" (ngModelChange)="emit()">
       </div>
     </div>
 

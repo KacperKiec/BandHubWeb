@@ -1,5 +1,6 @@
 package io.kk.bandhub.venueservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.kk.bandhub.venueservice.utils.TimeRange;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class OfferAvailability implements Comparable<OfferAvailability>{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offer_id", nullable = false)
+    @JsonBackReference
     private Offer offer;
 
     @Column(name = "start_time", nullable = false)

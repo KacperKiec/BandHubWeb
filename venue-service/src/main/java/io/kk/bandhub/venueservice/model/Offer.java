@@ -1,5 +1,6 @@
 package io.kk.bandhub.venueservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.kk.bandhub.venueservice.utils.OfferStatus;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
@@ -54,6 +55,7 @@ public class Offer {
     private OfferStatus status;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<OfferAvailability> availabilityRanges = new TreeSet<>();
 
 }

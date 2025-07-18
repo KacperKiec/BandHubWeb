@@ -1,6 +1,5 @@
 package io.kk.bandhub.venueservice.dto;
 
-import io.kk.bandhub.venueservice.model.OfferAvailability;
 import io.kk.bandhub.venueservice.utils.OfferStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +19,5 @@ public class OfferDTO {
     private LocalTime startTime;
     private LocalTime endTime;
     private OfferStatus status;
-    private Set<OfferAvailability> availableRanges;
+    private Set<OfferAvailabilityDTO> availableRanges;
 }

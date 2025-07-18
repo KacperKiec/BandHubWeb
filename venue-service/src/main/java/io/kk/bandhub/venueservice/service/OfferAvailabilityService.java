@@ -37,7 +37,7 @@ public class OfferAvailabilityService {
         }
 
         offer.setAvailabilityRanges(getAvailabilities(offer, availabilities));
-        if (offer.getAvailabilityRanges().isEmpty()) offer.setStatus(OfferStatus.claimed);
+        if (offer.getAvailabilityRanges().isEmpty()) offer.setStatus(OfferStatus.CLAIMED);
         return offer;
     }
 

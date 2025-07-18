@@ -2,10 +2,13 @@ package io.kk.bandhub.venueservice.dto;
 
 import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.Offer;
+import io.kk.bandhub.venueservice.model.OfferAvailability;
 import io.kk.bandhub.venueservice.model.Venue;
 import io.kk.bandhub.venueservice.service.AccountServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -50,8 +53,15 @@ public class Mapper {
         offerDTO.setVenueName(offer.getVenue().getName());
         offerDTO.setPricePerHour(offer.getPricePerHour().doubleValue());
         offerDTO.setStatus(offer.getStatus());
-        offerDTO.setAvailableRanges(offer.getAvailabilityRanges());
+        offerDTO.setAvailableRanges(offer.getAvailabilityRanges().stream().map(this::toOfferAvailabilityDTO).collect(Collectors.toSet()));
         return offerDTO;
+    }
+
+    private OfferAvailabilityDTO toOfferAvailabilityDTO(OfferAvailability offerAvailability) {
+        OfferAvailabilityDTO dto = new OfferAvailabilityDTO();
+        dto.setStartTime(offerAvailability.getStartTime());
+        dto.setEndTime(offerAvailability.getEndTime());
+        return dto;
     }
 
     public BookingDTO toBookingDTO(Booking booking) {

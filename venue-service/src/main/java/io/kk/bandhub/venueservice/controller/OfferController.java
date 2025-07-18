@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,7 +18,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/offer")
 public class OfferController {
 
@@ -51,6 +50,13 @@ public class OfferController {
     ResponseEntity<OfferDTO> deleteOffer(@PathVariable Integer id) {
         offerService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/user/{id}")
+    ResponseEntity<List<OfferDTO>> getUserOffers(@PathVariable Integer id) {
+        var result = offerService.getUserOffers(id);
+        result.forEach(offerDTO -> System.out.println(offerDTO.getId()));
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/{id}")

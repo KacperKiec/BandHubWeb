@@ -7,6 +7,8 @@ import {UserVenuesComponent} from '../user-venues/user-venues.component';
 import {UserOffersComponent} from '../user-offers/user-offers.component';
 import {VenueApiService} from '../../services/venue-service/venue-api.service';
 import {Venue} from '../../core/models/venue.model';
+import {Offer} from '../../core/models/offer.model';
+import {OfferApiService} from '../../services/offer-service/offer-api.service';
 
 @Component({
   selector: 'app-renting-panel',
@@ -29,8 +31,9 @@ export class RentingPanelComponent implements OnInit {
   activeTab: string = 'venues';
   userId!: number;
   venues: Venue[] = [];
+  offers: Offer[] = [];
 
-  constructor(private venueApiService: VenueApiService) {
+  constructor(private venueApiService: VenueApiService, private offerApiService: OfferApiService) {
   }
 
   ngOnInit() {
@@ -46,6 +49,13 @@ export class RentingPanelComponent implements OnInit {
     this.venueApiService.getUserVenues(this.userId).subscribe(venues => {
       if (venues) {
         this.venues = [...venues];
+      }
+    });
+
+    this.offerApiService.getUserOffers(this.userId).subscribe(offers => {
+      if (offers) {
+        this.offers = [...offers];
+        console.log(this.offers);
       }
     });
   }

@@ -13,6 +13,7 @@ public interface OfferRepository {
     void deleteById(int id);
     Optional<Offer> findById(int id);
     List<Offer> findAll();
+    List<Offer> findByVenueOwnerId(Integer venueOwnerId);
     Page<Offer> findAll(Pageable pageable);
     Page<Offer> findAll(Specification<Offer> spec, Pageable pageable);
 }

@@ -44,7 +44,7 @@ public class BookingService {
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
         );
 
-        if(offer.getStatus() != OfferStatus.active) {
+        if(offer.getStatus() != OfferStatus.ACTIVE) {
             throw new OfferException(OfferError.OFFER_NOT_FOUND);
         }
 

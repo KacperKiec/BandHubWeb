@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {CarouselElement} from '../../core/models/shared.model';
 import {NgClass, NgForOf, NgStyle} from '@angular/common';
 
@@ -13,7 +22,7 @@ import {NgClass, NgForOf, NgStyle} from '@angular/common';
   templateUrl: './carousel-selector.component.html',
   styleUrl: './carousel-selector.component.css'
 })
-export class CarouselSelectorComponent implements OnInit {
+export class CarouselSelectorComponent implements OnInit, OnChanges {
   @Input() elements: CarouselElement[] = [];
   @Input() visibleCount: number = 3;
   @Output() emitElement = new EventEmitter<number>();
@@ -30,7 +39,21 @@ export class CarouselSelectorComponent implements OnInit {
     {id: 6, name: 'FAQ'}
   ];
 
+  constructor(private cdr: ChangeDetectorRef) {
+  }
+
   ngOnInit() {
+    this.initializeElements();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['elements']) {
+      this.initializeElements();
+      this.cdr.detectChanges();
+    }
+  }
+
+  private initializeElements() {
     if (!this.elements || this.elements.length === 0) {
       this.elements = this.mockedElements;
     }
