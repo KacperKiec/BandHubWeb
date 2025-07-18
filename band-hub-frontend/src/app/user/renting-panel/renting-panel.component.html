@@ -15,16 +15,16 @@
     </button>
   </div>
 
-  <div class="tab-content">
+  <div class="tab-content" [ngSwitch]="activeTab">
     <app-user-venues
-      *ngIf="activeTab === 'venues' && venues && userId"
+      *ngSwitchCase="'venues'"
       [venues]="venues"
       [userId]="userId"
       (updateData)="updateData($event)">
     </app-user-venues>
 
     <app-user-offers
-      *ngIf="activeTab === 'offers' && venues && userId"
+      *ngSwitchCase="'offers'"
       [venues]="venues"
       [userId]="userId"
       (updateData)="updateData($event)">

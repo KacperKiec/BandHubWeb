@@ -1,0 +1,20 @@
+<div class="carousel-wrapper">
+  <button class="nav-button nav-left" (click)="goToPrevious()">&#8592;</button>
+
+  <div class="carousel">
+    <div class="option-container">
+      <div class="option-inner" [ngStyle]="{'transform': 'translateX(-' + (currentIndex * (100 / visibleCount)) + '%)'}">
+        <div
+          *ngFor="let option of elements"
+          (click)="selectElement(option.id)"
+          [ngClass]="['option', selectedOptionId === option.id ? 'selected' : '']"
+          [ngStyle]="{'width': (100 / (elements.length < visibleCount ? elements.length : visibleCount) - 5) + '%'}"
+        >
+          <div class="label">{{ option.name }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="nav-button nav-right" (click)="goToNext()">&#8594;</button>
+</div>

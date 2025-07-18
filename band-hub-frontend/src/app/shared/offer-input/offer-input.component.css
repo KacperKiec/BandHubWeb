@@ -40,9 +40,14 @@ label {
 
 input.input,
 select.input {
-  font-family: 'Merriweather', serif;
   padding: 0.6rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
+}
+
+.carousel-container {
+  height: 100px;
+  width: 100%;
+  margin: 0 auto;
 }

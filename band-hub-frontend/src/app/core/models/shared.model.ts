@@ -18,3 +18,8 @@ export type ErrorResponse = {
   errorCode: string;
   message: string;
 }
+
+export interface CarouselElement {
+  id: number;
+  name: string;
+}

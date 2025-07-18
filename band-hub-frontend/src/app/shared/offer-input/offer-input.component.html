@@ -1,7 +1,12 @@
 <form>
   <div class="form-group fade-in">
     <label>Lokal</label>
-
+    <div class="carousel-container">
+      <app-carousel-selector
+        [elements]="venues"
+        (emitElement)="selectVenue($event)">
+      </app-carousel-selector>
+    </div>
 
     <label>Cena za godzinę</label>
     <input class="input" type="number" step="0.01" [(ngModel)]="offer.pricePerHour" (ngModelChange)="emit()" min="0" required>

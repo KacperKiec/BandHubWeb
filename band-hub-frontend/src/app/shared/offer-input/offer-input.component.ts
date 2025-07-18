@@ -11,13 +11,15 @@ import {OfferRequest, OfferStatus} from '../../core/models/offer.model';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {Venue} from '../../core/models/venue.model';
+import {CarouselSelectorComponent} from '../carousel-selector/carousel-selector.component';
 
 @Component({
   selector: 'app-offer-input',
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    CarouselSelectorComponent
   ],
   templateUrl: './offer-input.component.html',
   styleUrl: './offer-input.component.css'

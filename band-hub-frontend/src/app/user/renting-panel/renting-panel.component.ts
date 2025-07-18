@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EditAccountFormComponent} from "../edit/edit-account-form/edit-account-form.component";
 import {EditMusicianFormComponent} from "../edit/edit-musician-form/edit-musician-form.component";
 import {EditPasswordFormComponent} from "../edit/edit-password-form/edit-password-form.component";
-import {NgIf} from "@angular/common";
+import {NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {UserVenuesComponent} from '../user-venues/user-venues.component';
 import {UserOffersComponent} from '../user-offers/user-offers.component';
 import {VenueApiService} from '../../services/venue-service/venue-api.service';
@@ -17,7 +17,9 @@ import {Venue} from '../../core/models/venue.model';
     EditPasswordFormComponent,
     NgIf,
     UserVenuesComponent,
-    UserOffersComponent
+    UserOffersComponent,
+    NgSwitch,
+    NgSwitchCase
   ],
   templateUrl: './renting-panel.component.html',
   styleUrl: './renting-panel.component.css'
@@ -26,7 +28,7 @@ export class RentingPanelComponent implements OnInit {
 
   activeTab: string = 'venues';
   userId!: number;
-  venues!: Venue[];
+  venues: Venue[] = [];
 
   constructor(private venueApiService: VenueApiService) {
   }

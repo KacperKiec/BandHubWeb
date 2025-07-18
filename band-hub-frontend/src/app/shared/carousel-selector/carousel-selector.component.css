@@ -1,0 +1,82 @@
+.carousel-wrapper {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.option-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80%;
+  overflow: hidden;
+  padding: 0.5rem;
+
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 5%, black 90%, transparent 100%);
+  mask-image: linear-gradient(to right, black 0%, black 5%, black 90%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.option-inner {
+  display: flex;
+  transition: transform 0.4s ease-in-out;
+}
+
+.option {
+  flex: 0 0 auto;
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  opacity: 0.6;
+  margin: 0 5px;
+}
+
+.option.selected {
+  border-color: #615D55;
+  box-shadow: 0 0 10px #615D55;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 0.3s ease;
+  border-radius: 25%;
+}
+
+.nav-button:hover {
+  background: #efefef;
+}
+
+.nav-left {
+  left: 0;
+}
+
+.nav-right {
+  right: 0;
+}

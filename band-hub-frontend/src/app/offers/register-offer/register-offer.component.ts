@@ -14,7 +14,7 @@ import {Venue} from '../../core/models/venue.model';
 })
 export class RegisterOfferComponent implements OnInit {
   @Input() userId!: number;
-  @Input() venues!: Venue[];
+  @Input() venues: Venue[] = [];
   @Output() registered = new EventEmitter<OfferRequest>();
 
   offer!: OfferRequest;
