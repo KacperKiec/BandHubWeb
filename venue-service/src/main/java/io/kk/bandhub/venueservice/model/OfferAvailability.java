@@ -55,7 +55,7 @@ public class OfferAvailability implements Comparable<OfferAvailability>{
     }
 
     public boolean match(TimeRange other) {
-        return !this.startTime.isAfter(other.getStartTime()) && !this.endTime.isBefore(other.getStartTime());
+        return !this.startTime.isAfter(other.getStartTime()) && !this.endTime.isBefore(other.getEndTime());
     }
 }
 
