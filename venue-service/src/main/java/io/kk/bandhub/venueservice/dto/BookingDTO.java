@@ -1,24 +1,22 @@
 package io.kk.bandhub.venueservice.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 public class BookingDTO {
-
     private Integer id;
-
-    @NotNull
     private Integer offerId;
+    private Integer venueId;
     private String venueName;
-
-    private EventDTO event;
-
-    @NotNull
     private Integer tenantId;
-
     private String tenantFirstName;
     private String tenantLastName;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalDate bookingDate;
 }

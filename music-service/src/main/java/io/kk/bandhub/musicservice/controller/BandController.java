@@ -42,7 +42,7 @@ public class BandController {
     }
 
     @GetMapping(value = "/evt/{id}")
-    ResponseEntity<BandEvtDTO> getBandEventById(@PathVariable Integer id) {
+    ResponseEntity<BandEventDataDTO> getBandEventById(@PathVariable Integer id) {
         var result = service.getBandEvtById(id);
         return ResponseEntity.ok(result);
     }

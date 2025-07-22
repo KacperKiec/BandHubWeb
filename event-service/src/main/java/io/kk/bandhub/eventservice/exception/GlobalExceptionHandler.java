@@ -22,6 +22,12 @@ public class GlobalExceptionHandler {
         }
     }
 
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<ErrorResponse> handleRegistrationException(RegistrationException e) {
+        ErrorResponse errorResponse = new ErrorResponse("503", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<String>> handleValidationException(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult()

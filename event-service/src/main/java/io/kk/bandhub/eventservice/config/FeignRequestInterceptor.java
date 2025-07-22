@@ -2,7 +2,7 @@ package io.kk.bandhub.eventservice.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import io.kk.bandhub.eventservice.service.OAuth2Client;
+import io.kk.bandhub.eventservice.config.auth.OAuth2Client;
 import org.springframework.stereotype.Component;
 
 @Component

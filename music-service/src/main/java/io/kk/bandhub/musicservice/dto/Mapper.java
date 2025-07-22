@@ -51,13 +51,11 @@ public class Mapper {
         return dto;
     }
 
-    public BandEvtDTO toBandEvtDTO(Band band) {
-        BandEvtDTO dto = new BandEvtDTO();
+    public BandEventDataDTO toBandEvtDTO(Band band, Integer founderId) {
+        BandEventDataDTO dto = new BandEventDataDTO();
         dto.setId(band.getId());
+        dto.setFounderId(founderId);
         dto.setName(band.getName());
-        dto.setBio(band.getBio());
-        var genres = band.getBandGenres().stream().map(BandGenre::getGenre).map(Genre::getName).collect(Collectors.toSet());
-        dto.setGenres(genres);
         return dto;
     }
 

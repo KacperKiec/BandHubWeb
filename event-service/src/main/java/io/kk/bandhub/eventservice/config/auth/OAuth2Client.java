@@ -1,4 +1,4 @@
-package io.kk.bandhub.eventservice.service;
+package io.kk.bandhub.eventservice.config.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -73,11 +73,13 @@ public class BandServiceImpl implements BandService {
         return mapper.toBandDTO(band);
     }
 
-    public BandEvtDTO getBandEvtById(Integer id) {
+    public BandEventDataDTO getBandEvtById(Integer id) {
         var band = bandRepository.findBandById(id).orElseThrow(
                 () -> new BandException(BandError.BAND_NOT_FOUND)
         );
-        return mapper.toBandEvtDTO(band);
+
+        var founderId = bandRepository.getFounderId(id);
+        return mapper.toBandEvtDTO(band, founderId);
     }
 
     public Page<BandDTO> getAll(Pageable pageable) {

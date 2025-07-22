@@ -1,7 +1,5 @@
 package io.kk.bandhub.eventservice.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,34 +10,20 @@ import java.time.LocalTime;
 @Setter
 public class EventDTO {
     private Integer id;
-
-    @NotNull
-    private Integer organizerId;
-
-    private AccountDTO organizerDTO;
     private Integer bandId;
-    private BandDTO bandDTO;
-
-    @NotNull
+    private String bandName;
     private Integer venueId;
+    private String venueName;
 
-    private VenueDTO venueDTO;
+    private String street;
+    private String number;
+    private String city;
+    private String postalCode;
+    private String country;
 
-    @Size(max = 50)
-    @NotNull
-    private String name;
-
-    @NotNull
     private LocalDate date;
-
-    @NotNull
     private LocalTime startTime;
-
-    @NotNull
     private LocalTime endTime;
-
-    @Size(max = 255)
     private String description;
-
     private Double ticketPrice;
 }

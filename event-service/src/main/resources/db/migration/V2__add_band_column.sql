@@ -1,1 +1,0 @@
-ALTER TABLE event ADD COLUMN band_id INTEGER;

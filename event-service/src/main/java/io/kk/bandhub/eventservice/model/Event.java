@@ -24,17 +24,16 @@ public class Event {
     private Integer id;
 
     @NotNull
-    @Column(name = "organizer_id", nullable = false)
-    private Integer organizerId;
+    @Column(name = "band_id", nullable = false)
+    private Integer bandId;
 
     @NotNull
     @Column(name = "venue_id", nullable = false)
     private Integer venueId;
 
-    @Size(max = 50)
     @NotNull
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "booking_id", nullable = false)
+    private Integer bookingId;
 
     @NotNull
     @Column(name = "date", nullable = false)
@@ -48,14 +47,12 @@ public class Event {
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
 
+    @NotNull
     @Size(max = 255)
     @Column(name = "description")
     private String description;
 
+    @NotNull
     @Column(name = "ticket_price", precision = 10, scale = 2)
     private BigDecimal ticketPrice;
-
-    @Column(name = "band_id")
-    private Integer bandId;
-
 }
