@@ -1,4 +1,4 @@
-package io.kk.bandhub.venueservice.service;
+package io.kk.bandhub.venueservice.integration;
 
 import io.kk.bandhub.venueservice.dto.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;

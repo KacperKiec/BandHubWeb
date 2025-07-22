@@ -1,169 +1,19 @@
 package io.kk.bandhub.musicservice.service;
 
 import io.kk.bandhub.musicservice.dto.*;
-import io.kk.bandhub.musicservice.exception.band.BandError;
-import io.kk.bandhub.musicservice.exception.band.BandException;
-import io.kk.bandhub.musicservice.exception.genre.GenreError;
-import io.kk.bandhub.musicservice.exception.genre.GenreException;
-import io.kk.bandhub.musicservice.exception.musician.MusicianError;
-import io.kk.bandhub.musicservice.exception.musician.MusicianException;
-import io.kk.bandhub.musicservice.model.*;
-import io.kk.bandhub.musicservice.repository.band.BandRepository;
-import io.kk.bandhub.musicservice.repository.band.BandSpecification;
-import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
-import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 
-/**
- * Service class for provide data and method for BandController
- * */
-@Service
-@AllArgsConstructor
-public class BandService {
-    private final BandRepository bandRepository;
-    private final MusicianRepository musicianRepository;
-    private final GenreRepository genreRepository;
-    private final Mapper mapper;
-
-    @Transactional
-    public BandDTO save(BandRequestDTO bandDTO) {
-
-        Musician founder = musicianRepository.findMusicianById(bandDTO.getFounderId())
-                .orElseThrow(() ->new MusicianException(MusicianError.MUSICIAN_NOT_FOUND));
-
-        Band band = new Band();
-        band.setName(bandDTO.getName());
-        band.setBio(bandDTO.getBio());
-        band.setCity(bandDTO.getCity());
-        band.setCountry(bandDTO.getCountry());
-        band.setIsLookingMembers(bandDTO.isLookingMembers());
-
-        for(GenreDTO genre : bandDTO.getGenres()) {
-            var exitingGenre = genreRepository.findById(genre.getId()).orElseThrow(
-                    () -> new GenreException(GenreError.GENRE_NOT_FOUND)
-            );
-            BandGenre bandGenre = new BandGenre(band, exitingGenre);
-            band.addBandGenre(bandGenre);
-        }
-
-        BandMusician bandMusician = new BandMusician(band, founder, LocalDate.now(), true);
-        band.addBandMusician(bandMusician);
-
-        var savedBand = bandRepository.save(band);
-
-        return mapper.toBandDTO(savedBand);
-    }
-
-    public BandDTO getById(int id) {
-        var band = bandRepository.findBandById(id)
-                .orElseThrow(() -> new BandException(BandError.BAND_NOT_FOUND));
-        return mapper.toBandDTO(band);
-    }
-
-    public BandEvtDTO getBandEvtById(int id) {
-        var band = bandRepository.findBandById(id).orElseThrow(
-                () -> new BandException(BandError.BAND_NOT_FOUND)
-        );
-        return mapper.toBandEvtDTO(band);
-    }
-
-    public Page<BandDTO> getAll(Pageable pageable) {
-        return bandRepository.findAll(pageable).map(mapper::toBandDTO);
-    }
-
-    public Page<BandDTO> findBandByFilters(
-            String name,
-            List<String> cities,
-            Integer founderId,
-            List<String> genres,
-            Boolean isLookingMembers,
-            Pageable pageable) {
-
-        Specification<Band> spec = Specification.where(BandSpecification.hasName(name)
-                .and(BandSpecification.hasCity(cities))
-                .and(BandSpecification.hasFounderId(founderId))
-                .and(BandSpecification.hasGenres(genres))
-                .and(BandSpecification.isLookingMembers(isLookingMembers)));
-        return bandRepository.findAll(spec, pageable).map(mapper::toBandDTO);
-    }
-
-    @Transactional
-    public BandDTO updateBand(BandUpdateRequestDTO bandDTO) {
-        var band = bandRepository.findBandById(bandDTO.getId()).orElseThrow(
-                () ->new BandException(BandError.BAND_NOT_FOUND));
-
-        band.setName(bandDTO.getName());
-        band.setIsLookingMembers(bandDTO.isLookingMembers());
-        band.setCity(bandDTO.getCity());
-        band.setCountry(bandDTO.getCountry());
-        band.setBio(bandDTO.getBio());
-
-        for(GenreDTO genre : new HashSet<>(bandDTO.getGenres())) {
-            var g = genreRepository.findById(genre.getId()).orElseThrow(
-                    () -> new GenreException(GenreError.GENRE_NOT_FOUND)
-            );
-            boolean genreExistsInBand = band.getBandGenres().stream()
-                    .anyMatch(bandGenre -> bandGenre.getGenre().equals(g));
-
-            if (!genreExistsInBand) {
-                BandGenre newBandGenre = new BandGenre(band, g);
-                band.addBandGenre(newBandGenre);
-            }
-        }
-
-        for (BandGenre bandGenre : new HashSet<>(band.getBandGenres())) {
-            boolean genreExistsInDTO = bandDTO.getGenres().stream()
-                    .anyMatch(genre -> bandGenre.getGenre().getId().equals(genre.getId()));
-
-            if (!genreExistsInDTO) {
-                band.removeBandGenre(bandGenre);
-            }
-        }
-
-        return mapper.toBandDTO(bandRepository.save(band));
-    }
-
-    public void addMusicianToBand(BandMembershipRequestDTO dto) {
-        var band = bandRepository.findBandById(dto.getBandId()).orElseThrow(
-                () -> new BandException(BandError.BAND_NOT_FOUND)
-        );
-
-        var musician = musicianRepository.findMusicianById(dto.getMusicianId()).orElseThrow(
-                () -> new MusicianException(MusicianError.MUSICIAN_NOT_FOUND)
-        );
-
-        BandMusician bandMusician = new BandMusician(band, musician, LocalDate.now(), false);
-        band.addBandMusician(bandMusician);
-        bandRepository.save(band);
-    }
-
-    public void removeMusicianFromBand(BandMembershipRequestDTO dto) {
-        var band = bandRepository.findBandById(dto.getBandId()).orElseThrow(
-                () -> new BandException(BandError.BAND_NOT_FOUND)
-        );
-
-        for(BandMusician bm : new HashSet<>(band.getBandMusicians())) {
-            if (bm.getMusician().getId().equals(dto.getMusicianId())) {
-                band.removeBandMusician(bm);
-            }
-        }
-        bandRepository.save(band);
-    }
-
-    @Transactional
-    public void deleteBand(int bandId) {
-        var band = bandRepository.findBandById(bandId).orElseThrow(
-                () -> new BandException(BandError.BAND_NOT_FOUND));
-        bandRepository.deleteBandById(bandId);
-    }
-
+public interface BandService {
+    BandDTO save(BandRequestDTO bandDTO);
+    BandDTO getById(Integer id);
+    BandEvtDTO getBandEvtById(Integer id);
+    Page<BandDTO> getAll(Pageable pageable);
+    Page<BandDTO> findBandByFilters(String name, List<String> cities, Integer founderId, List<String> genres, Boolean isLookingMembers, Pageable pageable);
+    BandDTO updateBand(BandUpdateRequestDTO bandDTO);
+    void addMusicianToBand(BandMembershipRequestDTO dto);
+    void removeMusicianFromBand(BandMembershipRequestDTO dto);
+    void deleteBand(Integer bandId);
 }

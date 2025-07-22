@@ -3,8 +3,8 @@ package io.kk.bandhub.notificationservice;
 import io.kk.bandhub.notificationservice.controller.NotificationController;
 import io.kk.bandhub.notificationservice.dto.NotificationResponseDTO;
 import io.kk.bandhub.notificationservice.model.NotificationType;
-import io.kk.bandhub.notificationservice.service.NotificationService;
-import io.kk.bandhub.notificationservice.service.WebSocketService;
+import io.kk.bandhub.notificationservice.service.impl.NotificationServiceImpl;
+import io.kk.bandhub.notificationservice.integration.WebSocketService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class NotificationControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private NotificationService notificationService;
+    private NotificationServiceImpl notificationService;
 
     @Autowired
     private WebSocketService webSocketService;
@@ -38,8 +38,8 @@ class NotificationControllerTest {
     @TestConfiguration
     static class MockedBeansConfig {
         @Bean
-        public NotificationService notificationService() {
-            return Mockito.mock(NotificationService.class);
+        public NotificationServiceImpl notificationService() {
+            return Mockito.mock(NotificationServiceImpl.class);
         }
 
         @Bean

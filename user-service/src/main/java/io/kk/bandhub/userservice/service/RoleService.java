@@ -1,64 +1,13 @@
 package io.kk.bandhub.userservice.service;
 
-import io.kk.bandhub.userservice.dto.Mapper;
 import io.kk.bandhub.userservice.dto.RoleDTO;
-import io.kk.bandhub.userservice.exception.RoleException;
-import io.kk.bandhub.userservice.exception.RoleError;
-import io.kk.bandhub.userservice.model.Role;
-import io.kk.bandhub.userservice.repository.RoleRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class RoleService {
-
-    private final RoleRepository roleRepository;
-    private final Mapper mapper;
-
-    public RoleService(RoleRepository roleRepository, Mapper mapper) {
-        this.roleRepository = roleRepository;
-        this.mapper = mapper;
-    }
-
-    public RoleDTO save(RoleDTO roleDTO) {
-        var existingRole = roleRepository.findRoleByName(roleDTO.getName());
-        if (existingRole.isPresent()) {
-            throw new RoleException(RoleError.ROLE_ALREADY_EXISTS);
-        }
-
-        Role role = new Role();
-        role.setName(roleDTO.getName());
-
-        return mapper.toRoleDTO(roleRepository.save(role));
-    }
-
-    public void delete(Integer id) {
-        var existingRole = roleRepository.findRoleById(id).orElseThrow(
-                () -> new RoleException(RoleError.ROLE_NOT_FOUND)
-        );
-
-        roleRepository.deleteById(existingRole.getId());
-    }
-
-    public RoleDTO update(RoleDTO roleDTO) {
-        var existingRole = roleRepository.findRoleById(roleDTO.getId()).orElseThrow(
-                () -> new RoleException(RoleError.ROLE_NOT_FOUND)
-        );
-
-        existingRole.setName(roleDTO.getName());
-        return mapper.toRoleDTO(roleRepository.save(existingRole));
-    }
-
-    public RoleDTO findById(Integer id) {
-        var role = roleRepository.findRoleById(id).orElseThrow(
-                () -> new RoleException(RoleError.ROLE_NOT_FOUND)
-        );
-        return mapper.toRoleDTO(role);
-    }
-
-    public List<RoleDTO> findAll() {
-        return roleRepository.findAll().stream().map(mapper::toRoleDTO).toList();
-    }
-
+public interface RoleService {
+    RoleDTO save(RoleDTO roleDTO);
+    void delete(Integer id);
+    RoleDTO update(RoleDTO roleDTO);
+    RoleDTO findById(Integer id);
+    List<RoleDTO> findAll();
 }

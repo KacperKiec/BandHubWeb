@@ -1,8 +1,6 @@
 package io.kk.bandhub.musicservice.repository.instrument;
 
 import io.kk.bandhub.musicservice.model.Instrument;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,5 +11,4 @@ public interface InstrumentRepository {
     Optional<Instrument> findById(Integer id);
     Optional<Instrument> findByName(String name);
     List<Instrument> findAll();
-    Page<Instrument> findAll(Pageable pageable);
 }

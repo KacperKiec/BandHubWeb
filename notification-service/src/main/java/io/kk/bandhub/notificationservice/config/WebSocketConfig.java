@@ -1,5 +1,7 @@
 package io.kk.bandhub.notificationservice.config;
 
+import io.kk.bandhub.notificationservice.config.auth.JwtHandshakeInterceptor;
+import io.kk.bandhub.notificationservice.config.auth.WebSocketAuthChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

@@ -2,7 +2,7 @@ package io.kk.bandhub.musicservice.dto;
 
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.band.BandRepository;
-import io.kk.bandhub.musicservice.service.AccountServiceClient;
+import io.kk.bandhub.musicservice.integration.AccountServiceClient;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

@@ -3,7 +3,7 @@ package io.kk.bandhub.notificationservice.controller;
 import io.kk.bandhub.notificationservice.dto.NotificationRequestDTO;
 import io.kk.bandhub.notificationservice.dto.NotificationResponseDTO;
 import io.kk.bandhub.notificationservice.service.NotificationService;
-import io.kk.bandhub.notificationservice.service.WebSocketService;
+import io.kk.bandhub.notificationservice.integration.WebSocketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

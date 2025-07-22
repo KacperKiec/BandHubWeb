@@ -1,5 +1,6 @@
 package io.kk.bandhub.userservice.config;
 
+import io.kk.bandhub.userservice.config.auth.JwtCookieAuthenticationFilter;
 import io.kk.bandhub.userservice.config.custom.AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

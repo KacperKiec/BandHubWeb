@@ -1,4 +1,4 @@
-package io.kk.bandhub.venueservice.config;
+package io.kk.bandhub.venueservice.config.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

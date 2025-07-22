@@ -1,5 +1,6 @@
 package io.kk.bandhub.venueservice.config;
 
+import io.kk.bandhub.venueservice.config.auth.JwtCookieAuthenticationFilter;
 import io.kk.bandhub.venueservice.config.custom.AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

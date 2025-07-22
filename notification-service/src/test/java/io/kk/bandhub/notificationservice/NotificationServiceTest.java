@@ -6,7 +6,7 @@ import io.kk.bandhub.notificationservice.dto.NotificationResponseDTO;
 import io.kk.bandhub.notificationservice.model.Notification;
 import io.kk.bandhub.notificationservice.model.NotificationType;
 import io.kk.bandhub.notificationservice.repository.NotificationRepository;
-import io.kk.bandhub.notificationservice.service.NotificationService;
+import io.kk.bandhub.notificationservice.service.impl.NotificationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,7 @@ public class NotificationServiceTest {
     private Mapper mapper;
 
     @InjectMocks
-    private NotificationService notificationService;
+    private NotificationServiceImpl notificationService;
 
     @Test
     void shouldMarkNotificationAsRead() {

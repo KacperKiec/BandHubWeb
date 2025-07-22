@@ -1,4 +1,4 @@
-package io.kk.bandhub.userservice.config;
+package io.kk.bandhub.notificationservice.config.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

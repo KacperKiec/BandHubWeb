@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.service;
+package io.kk.bandhub.venueservice.config.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,7 +78,7 @@ public class OAuth2Client {
             //System.out.println(expiresIn);
             this.tokenExpirationTime = System.currentTimeMillis() + (expiresIn * 1000L) - 5000;
             //System.out.println(System.currentTimeMillis());
-           // System.out.println(this.tokenExpirationTime);
+            // System.out.println(this.tokenExpirationTime);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse OAuth2 token response", e);
         }

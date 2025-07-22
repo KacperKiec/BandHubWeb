@@ -1,4 +1,4 @@
-package io.kk.bandhub.notificationservice.config;
+package io.kk.bandhub.notificationservice.config.auth;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;

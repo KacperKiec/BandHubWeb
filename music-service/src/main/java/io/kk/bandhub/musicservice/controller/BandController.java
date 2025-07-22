@@ -5,7 +5,7 @@ import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.BandService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,7 +26,7 @@ import java.util.List;
  * */
 @Controller
 @RequestMapping(value = "/band")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BandController {
     private final BandService service;
 

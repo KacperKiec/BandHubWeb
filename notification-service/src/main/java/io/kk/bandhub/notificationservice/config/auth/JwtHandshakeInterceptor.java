@@ -1,4 +1,4 @@
-package io.kk.bandhub.notificationservice.config;
+package io.kk.bandhub.notificationservice.config.auth;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import java.util.Arrays;
 import java.util.Map;
 
 @RequiredArgsConstructor

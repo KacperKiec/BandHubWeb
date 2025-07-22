@@ -1,5 +1,6 @@
 package io.kk.bandhub.notificationservice.config;
 
+import io.kk.bandhub.notificationservice.config.auth.JwtCookieAuthenticationFilter;
 import io.kk.bandhub.notificationservice.config.custom.AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

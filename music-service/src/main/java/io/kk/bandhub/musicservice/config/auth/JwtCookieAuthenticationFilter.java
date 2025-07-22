@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.config;
+package io.kk.bandhub.musicservice.config.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,5 +1,6 @@
 package io.kk.bandhub.musicservice.config;
 
+import io.kk.bandhub.musicservice.config.auth.JwtCookieAuthenticationFilter;
 import io.kk.bandhub.musicservice.config.custom.AuthenticationFailureHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

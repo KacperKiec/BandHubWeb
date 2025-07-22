@@ -3,51 +3,52 @@ package io.kk.bandhub.venueservice.controller;
 import io.kk.bandhub.venueservice.dto.OfferDTO;
 import io.kk.bandhub.venueservice.dto.OfferRequestDTO;
 import io.kk.bandhub.venueservice.dto.OfferUpdateRequestDTO;
-import io.kk.bandhub.venueservice.utils.OfferStatus;
+import io.kk.bandhub.venueservice.exception.venue.VenueError;
+import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.service.OfferService;
+import io.kk.bandhub.venueservice.service.VenueService;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/offer")
+@RequiredArgsConstructor
 public class OfferController {
 
     private final OfferService offerService;
-
-    public OfferController(OfferService offerService) {
-        this.offerService = offerService;
-    }
+    private final VenueService venueService;
 
     @PostMapping
-    ResponseEntity<OfferDTO> createOffer(@RequestBody @Valid OfferRequestDTO offerDTO) {
+    ResponseEntity<OfferDTO> createOffer(@RequestBody @Valid OfferRequestDTO offerDTO, Authentication authentication) {
+        verifyAuthorities(authentication, venueService.findById(offerDTO.getVenueId()).getOwnerId());
         var result = offerService.createOffer(offerDTO);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(result.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping
-    ResponseEntity<OfferDTO> updateOffer(@RequestBody @Valid OfferUpdateRequestDTO offerDTO) {
+    ResponseEntity<OfferDTO> updateOffer(@RequestBody @Valid OfferUpdateRequestDTO offerDTO, Authentication authentication) {
+        verifyAuthorities(authentication, venueService.findById(offerDTO.getVenueId()).getOwnerId());
         var result = offerService.updateOffer(offerDTO);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<OfferDTO> deleteOffer(@PathVariable Integer id) {
+    ResponseEntity<OfferDTO> deleteOffer(@PathVariable Integer id, Authentication authentication) {
+        verifyAuthorities(authentication, venueService.findById(offerService.getOfferById(id).getVenueId()).getOwnerId());
         offerService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -55,7 +56,6 @@ public class OfferController {
     @GetMapping(value = "/user/{id}")
     ResponseEntity<List<OfferDTO>> getUserOffers(@PathVariable Integer id) {
         var result = offerService.getUserOffers(id);
-        result.forEach(offerDTO -> System.out.println(offerDTO.getId()));
         return ResponseEntity.ok(result);
     }
 
@@ -80,5 +80,15 @@ public class OfferController {
 
         var result = offerService.searchOffers(cities, status, date, pageable);
         return ResponseEntity.ok(result);
+    }
+
+    private void verifyAuthorities(Authentication authentication, Integer userId) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(userId.longValue())) {
+            throw new VenueException(VenueError.ACCESS_DENIED);
+        }
     }
 }

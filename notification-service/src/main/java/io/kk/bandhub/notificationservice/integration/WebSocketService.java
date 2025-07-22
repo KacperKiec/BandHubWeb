@@ -1,4 +1,4 @@
-package io.kk.bandhub.notificationservice.service;
+package io.kk.bandhub.notificationservice.integration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

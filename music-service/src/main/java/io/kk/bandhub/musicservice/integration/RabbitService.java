@@ -1,4 +1,4 @@
-package io.kk.bandhub.musicservice.service;
+package io.kk.bandhub.musicservice.integration;
 
 import io.kk.bandhub.musicservice.dto.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;

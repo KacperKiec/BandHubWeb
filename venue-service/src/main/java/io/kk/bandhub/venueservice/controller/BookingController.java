@@ -2,15 +2,21 @@ package io.kk.bandhub.venueservice.controller;
 
 import io.kk.bandhub.venueservice.dto.BookingDTO;
 import io.kk.bandhub.venueservice.dto.BookingRequestDTO;
-import io.kk.bandhub.venueservice.utils.OfferStatus;
+import io.kk.bandhub.venueservice.exception.booking.BookingError;
+import io.kk.bandhub.venueservice.exception.booking.BookingException;
 import io.kk.bandhub.venueservice.service.BookingService;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +24,21 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/booking")
+@RequiredArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
 
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
-
     @PostMapping
-    ResponseEntity<BookingDTO> createBooking(@RequestBody @Valid BookingRequestDTO bookingDTO) {
+    ResponseEntity<BookingDTO> createBooking(@RequestBody @Valid BookingRequestDTO bookingDTO, Authentication authentication) {
+        verifyAuthorities(authentication, bookingDTO.getTenantId());
         var result = bookingService.createBooking(bookingDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
+    ResponseEntity<Void> deleteBooking(@PathVariable Integer id, Authentication authentication) {
+        verifyAuthorities(authentication, bookingService.getBooking(id).getTenantId());
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
@@ -59,5 +64,15 @@ public class BookingController {
 
         var result = bookingService.getBookings(pageable, offerId, tenantId, status);
         return ResponseEntity.ok(result);
+    }
+
+    private void verifyAuthorities(Authentication authentication, Integer userId) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(userId.longValue())) {
+            throw new BookingException(BookingError.ACCESS_DENIED);
+        }
     }
 }

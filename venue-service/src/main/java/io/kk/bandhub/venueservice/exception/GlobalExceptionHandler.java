@@ -21,6 +21,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleVenueException(final VenueException e) {
         if (VenueError.VENUE_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (VenueError.ACCESS_DENIED.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage(), "403"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }
@@ -39,6 +41,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBookingException(final BookingException e) {
         if (BookingError.BOOKING_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (BookingError.ACCESS_DENIED.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage(), "403"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }

@@ -1,4 +1,4 @@
-package io.kk.bandhub.venueservice.service;
+package io.kk.bandhub.venueservice.integration;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.kk.bandhub.venueservice.dto.AccountDTO;

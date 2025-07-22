@@ -3,6 +3,7 @@ package io.kk.bandhub.userservice.controller;
 import io.kk.bandhub.userservice.dto.RoleDTO;
 import io.kk.bandhub.userservice.service.RoleService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/role")
+@RequiredArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
-
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
-    }
 
     @PostMapping
     public ResponseEntity<RoleDTO> addRole(@RequestBody @Valid RoleDTO roleDTO) {

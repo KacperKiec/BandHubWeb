@@ -4,7 +4,7 @@ import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.Offer;
 import io.kk.bandhub.venueservice.model.OfferAvailability;
 import io.kk.bandhub.venueservice.model.Venue;
-import io.kk.bandhub.venueservice.service.AccountServiceClient;
+import io.kk.bandhub.venueservice.integration.AccountServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

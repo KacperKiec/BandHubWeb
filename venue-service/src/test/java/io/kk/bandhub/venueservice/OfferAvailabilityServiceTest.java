@@ -96,7 +96,7 @@ class OfferAvailabilityServiceTest {
     }
 
     @Test
-    void shouldReturnFalseCauseOfferTImeFrames() {
+    void shouldReturnFalseCauseOfferTimeFrames() {
         // given
         Offer offer = createTestOffer();
 
@@ -107,6 +107,26 @@ class OfferAvailabilityServiceTest {
 
         // then
         assertEquals(false, result);
+    }
+
+    @Test
+    void shouldAddAvailability() {
+        // given
+        Offer offer = createTestOffer();
+        offer = offerAvailabilityService.setAvailabilityRanges(offer);
+        assertEquals(2, offer.getAvailabilityRanges().size());
+
+        // when
+        when(bookingRepository.findAllByOfferId(offer.getId())).thenReturn(Collections.emptyList());
+        offer = offerAvailabilityService.setAvailabilityRanges(offer);
+
+        // then
+        Set<OfferAvailability> availabilities = offer.getAvailabilityRanges();
+        assertEquals(1, availabilities.size());
+
+        OfferAvailability availability = availabilities.iterator().next();
+        assertEquals(LocalTime.of(10, 0), availability.getStartTime());
+        assertEquals(LocalTime.of(18, 0), availability.getEndTime());
     }
 }
 
