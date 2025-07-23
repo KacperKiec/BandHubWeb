@@ -1,9 +1,8 @@
 package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.*;
-import io.kk.bandhub.musicservice.exception.musician.MusicianError;
-import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.BandService;
+import io.kk.bandhub.musicservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,8 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,7 +75,7 @@ public class BandController {
     ResponseEntity<BandDTO> updateBand(@RequestBody @Valid BandUpdateRequestDTO bandUpdateRequestDTO, Authentication authentication) {
         Integer founderId = bandUpdateRequestDTO.getFounderId();
 
-        verifyAuthorities(authentication, founderId);
+        SecurityUtils.verifyAuthorities(authentication, founderId);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateBand(bandUpdateRequestDTO));
     }
@@ -87,7 +84,7 @@ public class BandController {
     ResponseEntity<Void> addMember(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
         Integer founderId = service.getById(bandMembershipRequestDTO.getBandId()).getFounderId();
 
-        verifyAuthorities(authentication, founderId);
+        SecurityUtils.verifyAuthorities(authentication, founderId);
 
         service.addMusicianToBand(bandMembershipRequestDTO);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -97,7 +94,7 @@ public class BandController {
     ResponseEntity<Void> removeMember(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
         Integer founderId = service.getById(bandMembershipRequestDTO.getBandId()).getFounderId();
 
-        verifyAuthorities(authentication, founderId);
+        SecurityUtils.verifyAuthorities(authentication, founderId);
 
         service.removeMusicianFromBand(bandMembershipRequestDTO);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -105,25 +102,15 @@ public class BandController {
 
     @PatchMapping(value = "/leave")
     ResponseEntity<Void> leaveBand(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
-        verifyAuthorities(authentication, bandMembershipRequestDTO.getMusicianId());
+        SecurityUtils.verifyAuthorities(authentication, bandMembershipRequestDTO.getMusicianId());
         service.removeMusicianFromBand(bandMembershipRequestDTO);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @DeleteMapping(value = "/{bandId}")
     ResponseEntity<Void> deleteBand(@PathVariable Integer bandId, Authentication authentication) {
-        verifyAuthorities(authentication, service.getById(bandId).getFounderId());
+        SecurityUtils.verifyAuthorities(authentication, service.getById(bandId).getFounderId());
         service.deleteBand(bandId);
         return ResponseEntity.noContent().build();
-    }
-
-    private void verifyAuthorities(Authentication authentication, Integer userId) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
-        Long userIdFromToken = jwt.getClaim("userId");
-
-        if (!userIdFromToken.equals(userId.longValue())) {
-            throw new MusicianException(MusicianError.ACCESS_DENIED);
-        }
     }
 }

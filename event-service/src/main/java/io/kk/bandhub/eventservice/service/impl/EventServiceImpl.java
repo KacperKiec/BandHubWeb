@@ -1,11 +1,9 @@
 package io.kk.bandhub.eventservice.service.impl;
 
-import io.kk.bandhub.eventservice.dto.EventDTO;
-import io.kk.bandhub.eventservice.dto.EventRequestDTO;
-import io.kk.bandhub.eventservice.dto.EventUpdateRequestDTO;
-import io.kk.bandhub.eventservice.dto.Mapper;
+import io.kk.bandhub.eventservice.dto.*;
 import io.kk.bandhub.eventservice.exception.EventError;
 import io.kk.bandhub.eventservice.exception.EventException;
+import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
 import io.kk.bandhub.eventservice.repository.EventRepository;
 import io.kk.bandhub.eventservice.repository.EventSpecification;
@@ -18,12 +16,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final VenueServiceClient venueServiceClient;
     private final Mapper mapper;
 
     @Transactional
@@ -79,12 +80,30 @@ public class EventServiceImpl implements EventService {
         ));
     }
 
-    public List<EventDTO> searchEvents(LocalDate date, Integer bandId) {
+    public List<EventDTO> searchEvents(LocalDate date, Integer bandId, List<String> cities) {
 
         Specification<Event> spec = EventSpecification.hasDate(date)
                 .and(EventSpecification.hasBandId(bandId));
 
         var events = eventRepository.findAll(spec);
-        return events.stream().map(mapper::toEventDTO).toList();
+
+        if (cities.isEmpty()) {
+            return events.stream().map(mapper::toEventDTO).toList();
+        }
+
+        List<VenueDTO> venues;
+        try {
+            venues = venueServiceClient.getVenuesByIds(events.stream().map(Event::getVenueId).toList());
+        } catch (RuntimeException e) {
+            return events.stream().map(mapper::toEventDTO).toList();
+        }
+
+        Map<Integer, String> venueIdToCity = venues.stream()
+                .collect(Collectors.toMap(VenueDTO::getId, VenueDTO::getCity));
+
+        return events.stream()
+                .filter(e -> cities.contains(venueIdToCity.get(e.getVenueId())))
+                .map(mapper::toEventDTO)
+                .toList();
     }
 }

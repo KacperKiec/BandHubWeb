@@ -2,10 +2,14 @@ package io.kk.bandhub.eventservice.integration;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.kk.bandhub.eventservice.dto.BookingEventDataDTO;
+import io.kk.bandhub.eventservice.dto.VenueDTO;
 import io.kk.bandhub.eventservice.exception.RegistrationException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @FeignClient(name = "VENUE-SERVICE")
 public interface VenueServiceClient {
@@ -17,6 +21,10 @@ public interface VenueServiceClient {
     @GetMapping("/event-data/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBookingReg")
     BookingEventDataDTO getBookingEventDataReg(@PathVariable Integer id);
+
+    @GetMapping(value = "/ids")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenues")
+    List<VenueDTO> getVenuesByIds(@RequestParam List<Integer> ids);
 
     default BookingEventDataDTO fallbackGetBooking(Integer id, Throwable throwable) {
         BookingEventDataDTO b = new BookingEventDataDTO();
@@ -42,5 +50,9 @@ public interface VenueServiceClient {
         } else {
             throw new RegistrationException("Registration failed, something went wrong");
         }
+    }
+
+    default List<VenueDTO> fallbackGetVenues(List<Integer> ids, Throwable throwable) {
+        throw new RuntimeException("Something went wrong");
     }
 }

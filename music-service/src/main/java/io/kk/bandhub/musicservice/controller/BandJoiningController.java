@@ -1,11 +1,10 @@
 package io.kk.bandhub.musicservice.controller;
 
 import io.kk.bandhub.musicservice.dto.*;
-import io.kk.bandhub.musicservice.exception.musician.MusicianError;
-import io.kk.bandhub.musicservice.exception.musician.MusicianException;
 import io.kk.bandhub.musicservice.service.BandService;
 import io.kk.bandhub.musicservice.service.InvitationService;
 import io.kk.bandhub.musicservice.service.RequestService;
+import io.kk.bandhub.musicservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,14 +29,14 @@ public class BandJoiningController {
     ResponseEntity<Void> createInvitation(@RequestBody @Valid BandMembershipRequestDTO dto, Authentication auth) {
         Integer founderId = bandService.getById(dto.getBandId()).getFounderId();
 
-        verifyAuthorities(auth, founderId);
+        SecurityUtils.verifyAuthorities(auth, founderId);
         invitationService.createInvitation(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping(value = "/request")
     ResponseEntity<Void> createRequest(@RequestBody @Valid BandMembershipRequestDTO dto, Authentication auth) {
-        verifyAuthorities(auth, dto.getMusicianId());
+        SecurityUtils.verifyAuthorities(auth, dto.getMusicianId());
         requestService.createJoinRequest(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -45,7 +44,7 @@ public class BandJoiningController {
 
     @PatchMapping(value = "/invitation")
     ResponseEntity<Void> respondInvitation(@RequestBody @Valid BandInvitationUpdateRequestDTO dto, Authentication auth) {
-        verifyAuthorities(auth, dto.getInvitedMusicianId());
+        SecurityUtils.verifyAuthorities(auth, dto.getInvitedMusicianId());
         invitationService.updateInvitation(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -54,7 +53,7 @@ public class BandJoiningController {
     ResponseEntity<Void> respondRequest(@RequestBody @Valid BandJoinUpdateRequestDTO dto, Authentication auth) {
         Integer founderId = bandService.getById(dto.getBandId()).getFounderId();
 
-        verifyAuthorities(auth, founderId);
+        SecurityUtils.verifyAuthorities(auth, founderId);
         requestService.updateRequest(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -71,15 +70,5 @@ public class BandJoiningController {
     @GetMapping(value = "/{id}/requests")
     ResponseEntity<List<BandJoinRequestDTO>> getBandRequests(@PathVariable Integer id) {
         return ResponseEntity.ok(requestService.getBandJoinRequests(id));
-    }
-
-    private void verifyAuthorities(Authentication authentication, Integer userId) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
-        Long userIdFromToken = jwt.getClaim("userId");
-
-        if (!userIdFromToken.equals(userId.longValue())) {
-            throw new MusicianException(MusicianError.ACCESS_DENIED);
-        }
     }
 }

@@ -15,6 +15,7 @@ public interface VenueRepository {
     Optional<Venue> findByNameAndOwnerId(String name, Integer ownerId);
     List<Venue> findByOwnerId(Integer ownerId);
     List<Venue> findAll();
+    List<Venue> findVenuesByIdIsIn(List<Integer> ids);
     Page<Venue> findAll(Pageable pageable);
     Page<Venue> findAll(Specification<Venue> spec, Pageable pageable);
 }

@@ -48,9 +48,10 @@ public class EventController {
     @GetMapping(value = "/search")
     ResponseEntity<List<EventDTO>> searchEvents(
             @RequestParam(required = false) Integer bandId,
-            @RequestParam(required = false)LocalDate date){
+            @RequestParam(required = false)LocalDate date,
+            @RequestParam(required = false)List<String> cities){
 
-        var result = eventService.searchEvents(date, bandId);
+        var result = eventService.searchEvents(date, bandId, cities);
         return ResponseEntity.ok(result);
     }
 

@@ -14,6 +14,7 @@ public interface VenueService {
     List<VenueDTO> getUserVenues(Integer ownerId);
     VenueDTO findById(Integer id);
     List<VenueDTO> findAll();
+    List<VenueDTO> getVenuesByIds(List<Integer> ids);
     Page<VenueDTO> findAll(Pageable pageable);
     Page<VenueDTO> findAll(Pageable pageable, String name, Integer maxCapacity, Integer minCapacity, Integer ownerId, List<String> cities);
     void delete(Integer id);

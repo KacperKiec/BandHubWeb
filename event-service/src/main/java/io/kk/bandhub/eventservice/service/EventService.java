@@ -13,5 +13,5 @@ public interface EventService {
     void deleteEvent(Integer eventId);
     List<EventDTO> getAllEvents();
     EventDTO getEventById(Integer eventId);
-    List<EventDTO> searchEvents(LocalDate date, Integer organizerId);
+    List<EventDTO> searchEvents(LocalDate date, Integer organizerId, List<String> cities);
 }

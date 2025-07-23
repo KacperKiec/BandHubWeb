@@ -73,6 +73,11 @@ public class VenueServiceImpl implements VenueService {
                 .stream().map(mapper::toVenueDTO).toList();
     }
 
+    public List<VenueDTO> getVenuesByIds(List<Integer> ids) {
+        return venueRepository.findVenuesByIdIsIn(ids).stream()
+                .map(mapper::toVenueDTO).toList();
+    }
+
     public VenueDTO findById(Integer id) {
         return mapper.toVenueDTO(venueRepository.findById(id).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)

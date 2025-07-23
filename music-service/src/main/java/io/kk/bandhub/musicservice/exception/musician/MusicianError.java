@@ -6,8 +6,7 @@ import lombok.Getter;
 public enum MusicianError {
     MUSICIAN_NOT_FOUND("Musician was not found"),
     MUSICIAN_ALREADY_EXISTS("Musician with given parameters already exists"),
-    ACCOUNT_DOESNT_EXISTS("Account with given id does not exists"),
-    ACCESS_DENIED("Access denied - you can only edit data that belongs to you");
+    ACCOUNT_DOESNT_EXISTS("Account with given id does not exists");
 
     private final String message;
 
