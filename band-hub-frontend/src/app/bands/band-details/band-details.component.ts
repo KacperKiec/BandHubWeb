@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BandApiService} from '../../services/band-service/band-api.service';
+import {BandApiService} from '../band-service/band-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Band} from '../../core/models/band.model';
-import {MusicianApiService} from '../../services/musician-service/musician-api.service';
-import {InvitationApiService} from '../../services/invitation-service/invitation-api.service';
+import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
+import {InvitationApiService} from '../../invitations/invitation-service/invitation-api.service';
 
 @Component({
   selector: 'app-band-details',

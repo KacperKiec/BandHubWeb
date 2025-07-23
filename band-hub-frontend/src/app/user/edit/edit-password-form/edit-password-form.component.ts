@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {CredentialsInputComponent} from '../../../shared/credentials-input/credentials-input.component';
 import {FormsModule} from '@angular/forms';
-import {UserApiService} from '../../../services/user-service/user-api.service';
+import {UserApiService} from '../../user-service/user-api.service';
 
 @Component({
   selector: 'app-edit-password-form',

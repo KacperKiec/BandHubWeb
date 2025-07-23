@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BandInputComponent} from '../../shared/band-input/band-input.component';
+import {BandInputComponent} from '../../bands/band-input/band-input.component';
 import {AddressSearchComponent} from '../../shared/address-search/address-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {VenueRequest} from '../../core/models/venue.model';
-import {VenueInputComponent} from '../../shared/venue-input/venue-input.component';
+import {VenueInputComponent} from '../venue-input/venue-input.component';
 
 @Component({
   selector: 'app-register-venue',

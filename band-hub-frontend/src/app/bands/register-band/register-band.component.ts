@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Genre} from '../../core/models/genre.model';
-import {MusicAttributesApiService} from '../../services/music-attributes-service/music-attributes-api.service';
+import {MusicAttributesApiService} from '../../shared/music-attributes-service/music-attributes-api.service';
 import {BandRequest} from '../../core/models/band.model';
-import {MusicianInputComponent} from '../../shared/musician-input/musician-input.component';
-import {BandInputComponent} from '../../shared/band-input/band-input.component';
+import {MusicianInputComponent} from '../../musicians/musician-input/musician-input.component';
+import {BandInputComponent} from '../band-input/band-input.component';
 
 @Component({
   selector: 'app-register-band',

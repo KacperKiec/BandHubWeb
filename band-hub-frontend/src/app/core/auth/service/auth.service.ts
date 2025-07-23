@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {AuthApiService} from '../../../services/auth-service/auth-api.service';
+import {AuthApiService} from '../auth-service/auth-api.service';
 import {Router} from '@angular/router';
 
 @Injectable({

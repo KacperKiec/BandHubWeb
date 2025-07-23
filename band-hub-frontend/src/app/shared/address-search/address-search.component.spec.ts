@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AddressSearchComponent } from './address-search.component';
+import {AddressSearchComponent} from './address-search.component';
 
 describe('AddressSearchComponent', () => {
   let component: AddressSearchComponent;

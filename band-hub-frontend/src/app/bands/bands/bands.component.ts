@@ -4,7 +4,7 @@ import {SearchResultComponent} from "../../shared/search-result/search-result.co
 import {GenreEnum} from '../../core/models/genre.model';
 import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {Router} from '@angular/router';
-import {BandApiService} from '../../services/band-service/band-api.service';
+import {BandApiService} from '../band-service/band-api.service';
 import {Band} from '../../core/models/band.model';
 
 @Component({

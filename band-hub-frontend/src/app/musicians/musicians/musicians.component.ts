@@ -4,7 +4,7 @@ import {GenreEnum} from '../../core/models/genre.model';
 import {InstrumentEnum} from '../../core/models/instrument.model';
 import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {SearchResultComponent} from '../../shared/search-result/search-result.component';
-import {MusicianApiService} from '../../services/musician-service/musician-api.service';
+import {MusicianApiService} from '../musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {Musician} from '../../core/models/musician.model';
 

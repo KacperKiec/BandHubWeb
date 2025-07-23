@@ -1,10 +1,10 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
-import {MusicianApiService} from '../../services/musician-service/musician-api.service';
+import {MusicianApiService} from '../musician-service/musician-api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Musician} from '../../core/models/musician.model';
 import {Band} from '../../core/models/band.model';
-import {InvitationApiService} from '../../services/invitation-service/invitation-api.service';
+import {InvitationApiService} from '../../invitations/invitation-service/invitation-api.service';
 
 @Component({
   selector: 'app-musician-details',

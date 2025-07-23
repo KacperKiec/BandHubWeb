@@ -2,11 +2,11 @@ import {Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewC
 import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../core/auth/service/auth.service';
-import {AuthApiService} from '../../services/auth-service/auth-api.service';
-import {NotificationService} from '../../services/notification-socket-service/notification.service';
+import {AuthApiService} from '../../core/auth/auth-service/auth-api.service';
+import {NotificationService} from '../../notifications/notification-socket-service/notification.service';
 import {Subscription} from 'rxjs';
-import {NotificationPanelComponent} from '../notification-panel/notification-panel.component';
-import {NotificationApiService} from '../../services/notification-service/notification-api.service';
+import {NotificationPanelComponent} from '../../notifications/notification-panel/notification-panel.component';
+import {NotificationApiService} from '../../notifications/notification-service/notification-api.service';
 
 @Component({
   selector: 'app-header',

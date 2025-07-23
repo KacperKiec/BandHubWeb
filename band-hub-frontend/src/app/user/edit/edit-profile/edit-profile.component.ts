@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {EditAccountFormComponent} from '../edit-account-form/edit-account-form.component';
 import {NgIf} from '@angular/common';
-import {EditMusicianFormComponent} from '../edit-musician-form/edit-musician-form.component';
+import {EditMusicianFormComponent} from '../../../musicians/edit-musician-form/edit-musician-form.component';
 import {EditPasswordFormComponent} from '../edit-password-form/edit-password-form.component';
-import {UserApiService} from '../../../services/user-service/user-api.service';
-import {MusicianApiService} from '../../../services/musician-service/musician-api.service';
+import {UserApiService} from '../../user-service/user-api.service';
+import {MusicianApiService} from '../../../musicians/musician-service/musician-api.service';
 import {AccountResponse} from '../../../core/models/account.model';
 import {Musician} from '../../../core/models/musician.model';
 

@@ -9,8 +9,8 @@ import {RegisterComponent} from './core/auth/register/register.component';
 import {PasswordReminderComponent} from './core/auth/password-reminder/password-reminder.component';
 import {ProfileComponent} from './user/profile/profile.component';
 import {EditProfileComponent} from './user/edit/edit-profile/edit-profile.component';
-import {UserBandsComponent} from './user/user-bands/user-bands.component';
-import {InvitationsComponent} from './user/invitations/invitations.component';
+import {UserBandsComponent} from './bands/user-bands/user-bands.component';
+import {InvitationsComponent} from './invitations/invitations/invitations.component';
 import {RentingPanelComponent} from './user/renting-panel/renting-panel.component';
 
 export const routes: Routes = [

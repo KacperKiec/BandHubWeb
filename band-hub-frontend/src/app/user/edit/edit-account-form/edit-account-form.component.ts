@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {PersonalInfoInputComponent} from '../../../shared/personal-info-input/personal-info-input.component';
 import {AccountPersonalData, AccountResponse, AccountUpdateRequest} from '../../../core/models/account.model';
-import {UserApiService} from '../../../services/user-service/user-api.service';
+import {UserApiService} from '../../user-service/user-api.service';
 import {Router} from '@angular/router';
 
 @Component({

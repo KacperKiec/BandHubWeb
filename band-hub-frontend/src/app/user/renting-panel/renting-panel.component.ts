@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {EditAccountFormComponent} from "../edit/edit-account-form/edit-account-form.component";
-import {EditMusicianFormComponent} from "../edit/edit-musician-form/edit-musician-form.component";
+import {EditMusicianFormComponent} from "../../musicians/edit-musician-form/edit-musician-form.component";
 import {EditPasswordFormComponent} from "../edit/edit-password-form/edit-password-form.component";
 import {NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
-import {UserVenuesComponent} from '../user-venues/user-venues.component';
-import {UserOffersComponent} from '../user-offers/user-offers.component';
-import {VenueApiService} from '../../services/venue-service/venue-api.service';
+import {UserVenuesComponent} from '../../venues/user-venues/user-venues.component';
+import {UserOffersComponent} from '../../offers/user-offers/user-offers.component';
+import {VenueApiService} from '../../venues/venue-service/venue-api.service';
 import {Venue} from '../../core/models/venue.model';
 import {Offer} from '../../core/models/offer.model';
-import {OfferApiService} from '../../services/offer-service/offer-api.service';
+import {OfferApiService} from '../../offers/offer-service/offer-api.service';
 
 @Component({
   selector: 'app-renting-panel',

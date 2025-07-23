@@ -1,19 +1,16 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
-import {MusicAttributesApiService} from '../../services/music-attributes-service/music-attributes-api.service';
+import {MusicAttributesApiService} from '../../shared/music-attributes-service/music-attributes-api.service';
 import {Instrument} from '../../core/models/instrument.model';
 import {Genre} from '../../core/models/genre.model';
 import {MusicianRequest} from '../../core/models/musician.model';
-import {MusicianInputComponent} from '../../shared/musician-input/musician-input.component';
+import {MusicianInputComponent} from '../musician-input/musician-input.component';
 
 @Component({
   selector: 'app-register-musician',
   standalone: true,
   imports: [
     FormsModule,
-    NgForOf,
-    NgIf,
     MusicianInputComponent
   ],
   templateUrl: './register-musician.component.html',

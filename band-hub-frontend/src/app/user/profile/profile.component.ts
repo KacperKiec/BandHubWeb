@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UserApiService} from '../../services/user-service/user-api.service';
+import {UserApiService} from '../user-service/user-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
-import {MusicianApiService} from '../../services/musician-service/musician-api.service';
+import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {RegisterMusicianComponent} from '../../musicians/register-musician/register-musician.component';
 import {AccountResponse} from '../../core/models/account.model';

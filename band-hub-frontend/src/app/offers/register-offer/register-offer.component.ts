@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {OfferRequest, OfferStatus} from '../../core/models/offer.model';
-import {OfferInputComponent} from '../../shared/offer-input/offer-input.component';
+import {OfferInputComponent} from '../offer-input/offer-input.component';
 import {Venue} from '../../core/models/venue.model';
 
 @Component({
