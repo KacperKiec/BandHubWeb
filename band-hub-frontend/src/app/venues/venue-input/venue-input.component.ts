@@ -42,7 +42,9 @@ export class VenueInputComponent implements OnInit, OnChanges {
       number: '',
       city: '',
       postalCode: '',
-      country: ''
+      country: '',
+      latitude: 0,
+      longitude: 0
     };
   }
 
@@ -53,8 +55,8 @@ export class VenueInputComponent implements OnInit, OnChanges {
       city: this.venue.city,
       postalCode: this.venue.postalCode,
       country: this.venue.country,
-      latitude: 0,
-      longitude: 0
+      latitude: this.venue.latitude,
+      longitude: this.venue.longitude
     };
   }
 
@@ -64,6 +66,8 @@ export class VenueInputComponent implements OnInit, OnChanges {
     this.venue.city = address.city;
     this.venue.country = address.country;
     this.venue.postalCode = address.postalCode;
+    this.venue.latitude = address.latitude;
+    this.venue.longitude = address.longitude;
     this.emit();
   }
 

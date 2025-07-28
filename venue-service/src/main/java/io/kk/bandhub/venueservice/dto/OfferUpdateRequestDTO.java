@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -22,7 +23,7 @@ public class OfferUpdateRequestDTO implements OfferTimeValidatable {
     private Integer venueId;
 
     @NotNull
-    private Double pricePerHour;
+    private BigDecimal pricePerHour;
 
     @NotNull
     private LocalDate date;

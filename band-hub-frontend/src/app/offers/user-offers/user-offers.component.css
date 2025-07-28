@@ -47,6 +47,11 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 
+.option p {
+  text-align: center;
+  margin: 0 0 5px 0;
+}
+
 .btn {
   padding: 0.75rem 1.5rem;
   background-color: #615D55;
@@ -60,4 +65,74 @@
 
 .btn:hover, .btn2:hover {
   background-color: #45403c;
+}
+
+.offer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  font-family: 'Merriweather', serif;
+  border-collapse: collapse;
+  background-color: #fff;
+  text-align: left;
+  margin-bottom: 3rem;
+  /*width: auto;*/
+
+  th {
+    padding: 0.75rem 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-size: 0.7rem;
+    font-weight: 900;
+    background-color: #ccc;
+  }
+
+  td {
+    padding: 1rem 2rem;
+    font-size: 0.8rem;
+  }
+
+  tr:nth-child(even) {
+    background-color: #eaeaea;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  padding: 4px 8px;
+  margin-right: 8px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.tab-btn.edit {
+  color: #28a745;
+}
+
+.tab-btn.edit:hover {
+  background-color: rgba(207, 138, 13, 0.1);
+}
+
+.tab-btn.delete{
+  color: #dc3545;
+}
+
+.tab-btn.delete:hover {
+  background-color: rgba(220, 53, 69, 0.1);
 }

@@ -1,7 +1,6 @@
 <div class="wrapper">
   <div class="venue-details-container fade-in">
     <div *ngIf="hasVenues && !editingMode">
-      <h2 class="panel-title">Twoje lokale</h2>
 
       <div>
         <div class="venue-grid">
@@ -65,7 +64,6 @@
       *ngIf="showForm"
       (registered)="handleVenueRegistration($event)"
       [userId]="userId">
-
     </app-register-venue>
   </div>
 </div>

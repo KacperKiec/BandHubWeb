@@ -30,6 +30,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleOfferException(final OfferException e) {
         if (OfferError.OFFER_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (OfferError.CANNOT_EDIT_OFFER.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), "400"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }

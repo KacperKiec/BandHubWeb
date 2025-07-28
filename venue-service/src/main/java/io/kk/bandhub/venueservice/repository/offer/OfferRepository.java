@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ public interface OfferRepository {
     Optional<Offer> findById(int id);
     List<Offer> findAll();
     List<Offer> findByVenueOwnerId(Integer venueOwnerId);
+    List<Offer> findOffersByDate(LocalDate date);
     Page<Offer> findAll(Pageable pageable);
     Page<Offer> findAll(Specification<Offer> spec, Pageable pageable);
 }

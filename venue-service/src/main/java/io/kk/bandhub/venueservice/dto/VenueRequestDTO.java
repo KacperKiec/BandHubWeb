@@ -47,4 +47,10 @@ public class VenueRequestDTO {
     @NotNull
     @NotBlank
     private String country;
+
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
 }

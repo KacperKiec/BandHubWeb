@@ -10,6 +10,7 @@ import io.kk.bandhub.musicservice.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,6 +55,9 @@ public class GenreServiceImpl implements GenreService {
     }
 
     public List<GenreDTO> getAllGenres() {
-        return genreRepository.findAll().stream().map(mapper::toGenreDTO).toList();
+        return genreRepository.findAll().stream()
+                .map(mapper::toGenreDTO)
+                .sorted(Comparator.comparing(GenreDTO::getName))
+                .toList();
     }
 }

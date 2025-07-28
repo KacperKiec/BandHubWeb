@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EditAccountFormComponent} from "../edit/edit-account-form/edit-account-form.component";
-import {EditMusicianFormComponent} from "../../musicians/edit-musician-form/edit-musician-form.component";
-import {EditPasswordFormComponent} from "../edit/edit-password-form/edit-password-form.component";
-import {NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
+import {NgSwitch, NgSwitchCase} from "@angular/common";
 import {UserVenuesComponent} from '../../venues/user-venues/user-venues.component';
 import {UserOffersComponent} from '../../offers/user-offers/user-offers.component';
 import {VenueApiService} from '../../venues/venue-service/venue-api.service';
@@ -14,10 +11,6 @@ import {OfferApiService} from '../../offers/offer-service/offer-api.service';
   selector: 'app-renting-panel',
   standalone: true,
   imports: [
-    EditAccountFormComponent,
-    EditMusicianFormComponent,
-    EditPasswordFormComponent,
-    NgIf,
     UserVenuesComponent,
     UserOffersComponent,
     NgSwitch,
@@ -55,7 +48,6 @@ export class RentingPanelComponent implements OnInit {
     this.offerApiService.getUserOffers(this.userId).subscribe(offers => {
       if (offers) {
         this.offers = [...offers];
-        console.log(this.offers);
       }
     });
   }

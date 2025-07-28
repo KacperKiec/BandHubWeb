@@ -45,8 +45,8 @@
   border: 2px solid transparent;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  opacity: 0.6;
   margin: 0 5px;
+  background-color: #efefef;
 }
 
 .option.selected {

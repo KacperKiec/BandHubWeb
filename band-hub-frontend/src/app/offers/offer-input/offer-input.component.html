@@ -4,6 +4,7 @@
     <div class="carousel-container">
       <app-carousel-selector
         [elements]="venues"
+        [selectedOptionId]="offer.venueId"
         (emitElement)="selectVenue($event)">
       </app-carousel-selector>
     </div>

@@ -1,8 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BandInputComponent} from '../../bands/band-input/band-input.component';
-import {AddressSearchComponent} from '../../shared/address-search/address-search.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgForOf, NgIf} from '@angular/common';
 import {VenueRequest} from '../../core/models/venue.model';
 import {VenueInputComponent} from '../venue-input/venue-input.component';
 
@@ -10,11 +7,7 @@ import {VenueInputComponent} from '../venue-input/venue-input.component';
   selector: 'app-register-venue',
   standalone: true,
   imports: [
-    BandInputComponent,
-    AddressSearchComponent,
     FormsModule,
-    NgForOf,
-    NgIf,
     ReactiveFormsModule,
     VenueInputComponent
   ],
@@ -37,7 +30,9 @@ export class RegisterVenueComponent implements OnInit {
       number: '',
       city: '',
       postalCode: '',
-      country: ''
+      country: '',
+      latitude: 0,
+      longitude: 0
     };
   }
 
@@ -51,7 +46,9 @@ export class RegisterVenueComponent implements OnInit {
       number: value.number,
       city: value.city,
       postalCode: value.postalCode,
-      country: value.country
+      country: value.country,
+      latitude: value.latitude,
+      longitude: value.longitude,
     }
   }
 

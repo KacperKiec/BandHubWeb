@@ -1,4 +1,4 @@
-package io.kk.bandhub.userservice.config;
+package io.kk.bandhub.userservice.config.init;
 
 import io.kk.bandhub.userservice.model.Role;
 import io.kk.bandhub.userservice.repository.JpaRoleRepository;
@@ -16,6 +16,10 @@ public class RoleInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        initialize();
+    }
+
+    public void initialize() {
         if (roleRepository.count() == 0) {
             roleRepository.saveAll(List.of(
                     new Role("ADMIN"),

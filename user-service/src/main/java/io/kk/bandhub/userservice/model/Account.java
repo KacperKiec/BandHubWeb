@@ -48,7 +48,7 @@ public class Account {
 
     @NotNull
     @Column(name = "gender", nullable = false)
-    private Boolean gender = false;
+    private Boolean gender = true;
 
     @Size(max = 50)
     @Column(name = "city", length = 50)

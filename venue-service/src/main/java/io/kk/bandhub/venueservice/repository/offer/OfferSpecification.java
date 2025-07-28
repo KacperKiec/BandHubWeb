@@ -35,4 +35,17 @@ public class OfferSpecification {
             return builder.equal(root.get("date"), date);
         };
     }
+
+    public static Specification<Offer> hasCoordinates(Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude) {
+        return (root, query, builder) -> {
+            if (minLatitude == null || maxLatitude == null || minLongitude == null || maxLongitude == null) {
+                return builder.conjunction();
+            }
+
+            return builder.and(
+                    builder.between(root.get("venue").get("latitude"), minLatitude, maxLatitude),
+                    builder.between(root.get("venue").get("longitude"), minLongitude, maxLongitude)
+            );
+        };
+    }
 }

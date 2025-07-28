@@ -17,5 +17,5 @@ public interface OfferService {
     List<OfferDTO> getUserOffers(Integer id);
     OfferDTO getOfferById(Integer offerId);
     List<OfferDTO> getAllOffers();
-    Page<OfferDTO> searchOffers(List<String> cities, OfferStatus status, LocalDate date, Pageable pageable);
+    Page<OfferDTO> searchOffers(List<String> cities, OfferStatus status, LocalDate date, Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude, Pageable pageable);
 }

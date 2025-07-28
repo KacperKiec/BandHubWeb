@@ -14,7 +14,7 @@ export class OfferApiService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
   getUserOffers(userId: number): Observable<Offer[]> {
-    return this.http.get<Offer[]>(`${this.apiURL}/user/${userId}`)
+    return this.http.get<Offer[]>(`${this.apiURL}/user/${userId}`, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -22,7 +22,7 @@ export class OfferApiService {
   }
 
   addOffer(offer: OfferRequest): Observable<Offer> {
-    return this.http.post<Offer>(`${this.apiURL}`, offer)
+    return this.http.post<Offer>(`${this.apiURL}`, offer, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -30,7 +30,7 @@ export class OfferApiService {
   }
 
   deleteOffer(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiURL}/${id}`)
+    return this.http.delete<void>(`${this.apiURL}/${id}`, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -38,7 +38,7 @@ export class OfferApiService {
   }
 
   updateOffer(offer: OfferUpdateRequest): Observable<Offer> {
-    return this.http.put<Offer>(`${this.apiURL}`, offer)
+    return this.http.put<Offer>(`${this.apiURL}`, offer, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

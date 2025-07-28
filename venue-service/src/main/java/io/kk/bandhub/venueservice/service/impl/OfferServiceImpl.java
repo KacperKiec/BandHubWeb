@@ -15,6 +15,7 @@ import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import io.kk.bandhub.venueservice.repository.offer.OfferSpecification;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
+import io.kk.bandhub.venueservice.utils.TimeRange;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,10 @@ public class OfferServiceImpl implements OfferService {
     public OfferDTO createOffer(OfferRequestDTO offerDTO) {
         Offer offer = new Offer();
         setOfferFields(offer, offerDTO.getDate(), offerDTO.getStatus(), offerDTO.getEndTime(), offerDTO.getStartTime(), offerDTO.getPricePerHour(), offerDTO.getVenueId());
+
+        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), null)) {
+            throw new OfferException(OfferError.OFFER_ALREADY_EXISTS);
+        }
         offerAvailabilityService.setAvailabilityRanges(offer);
 
         return mapper.toOfferDTO(offerRepository.save(offer));
@@ -52,17 +57,21 @@ public class OfferServiceImpl implements OfferService {
         );
 
         setOfferFields(offer, offerDTO.getDate(), offerDTO.getStatus(), offerDTO.getEndTime(), offerDTO.getStartTime(), offerDTO.getPricePerHour(), offerDTO.getVenueId());
+
+        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), offer.getId())) {
+            throw new OfferException(OfferError.OFFER_ALREADY_EXISTS);
+        }
         offerAvailabilityService.setAvailabilityRanges(offer);
 
         return mapper.toOfferDTO(offerRepository.save(offer));
     }
 
-    private void setOfferFields(Offer offer, LocalDate date, OfferStatus status, LocalTime endTime, LocalTime startTime, Double pricePerHour, Integer venueId) {
+    private void setOfferFields(Offer offer, LocalDate date, OfferStatus status, LocalTime endTime, LocalTime startTime, BigDecimal pricePerHour, Integer venueId) {
         offer.setDate(date);
         offer.setStatus(status);
         offer.setEndTime(endTime);
         offer.setStartTime(startTime);
-        offer.setPricePerHour(BigDecimal.valueOf(pricePerHour));
+        offer.setPricePerHour(pricePerHour);
 
         var venue = venueRepository.findById(venueId).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
@@ -79,7 +88,11 @@ public class OfferServiceImpl implements OfferService {
 
     public List<OfferDTO> getUserOffers(Integer id) {
         return offerRepository.findByVenueOwnerId(id).stream()
-                .map(mapper::toOfferDTO).toList();
+                .map(mapper::toOfferDTO)
+                .sorted(Comparator.comparing(OfferDTO::getDate)
+                .thenComparing(OfferDTO::getStartTime))
+                .toList();
+
     }
 
     public OfferDTO getOfferById(Integer offerId) {
@@ -97,11 +110,16 @@ public class OfferServiceImpl implements OfferService {
             List<String> cities,
             OfferStatus status,
             LocalDate date,
+            Double minLatitude,
+            Double maxLatitude,
+            Double minLongitude,
+            Double maxLongitude,
             Pageable pageable) {
 
         Specification<Offer> spec = OfferSpecification.hasCity(cities)
                 .and(OfferSpecification.hasDate(date))
-                .and(OfferSpecification.hasStatus(status));
+                .and(OfferSpecification.hasStatus(status))
+                .and(OfferSpecification.hasCoordinates(minLatitude, maxLatitude, minLongitude, maxLongitude));
         return offerRepository.findAll(spec, pageable).map(mapper::toOfferDTO);
     }
 }

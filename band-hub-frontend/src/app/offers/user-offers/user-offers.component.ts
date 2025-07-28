@@ -9,12 +9,12 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {NgIf} from '@angular/common';
+import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
 import {Venue} from '../../core/models/venue.model';
 import {RegisterOfferComponent} from '../register-offer/register-offer.component';
-import {RegisterVenueComponent} from '../../venues/register-venue/register-venue.component';
-import {Offer, OfferRequest, OfferUpdateRequest} from '../../core/models/offer.model';
+import {Offer, OfferRequest, OfferStatus, OfferUpdateRequest} from '../../core/models/offer.model';
 import {OfferApiService} from '../offer-service/offer-api.service';
+import {EditOfferFormComponent} from '../edit-offer-form/edit-offer-form.component';
 
 @Component({
   selector: 'app-user-offers',
@@ -22,7 +22,9 @@ import {OfferApiService} from '../offer-service/offer-api.service';
   imports: [
     NgIf,
     RegisterOfferComponent,
-    RegisterVenueComponent
+    NgForOf,
+    EditOfferFormComponent,
+    DecimalPipe
   ],
   templateUrl: './user-offers.component.html',
   styleUrl: './user-offers.component.css',
@@ -58,6 +60,14 @@ export class UserOffersComponent implements OnInit, OnChanges {
   private checkCollectionsState() {
     this.hasVenues = this.venues && this.venues.length > 0;
     this.hasOffers = this.offers && this.offers.length > 0;
+  }
+
+  getOfferStatus(status: OfferStatus) {
+    switch(status) {
+      case OfferStatus.ACTIVE: return "AKTYWNA";
+      case OfferStatus.CLAIMED: return "ZAJĘTA";
+      case OfferStatus.CANCELED: return "ANULOWANA";
+    }
   }
 
   showRegistrationForm() {

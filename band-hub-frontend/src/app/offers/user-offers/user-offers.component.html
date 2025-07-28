@@ -1,6 +1,6 @@
 <div class="container fade-in">
   <div class="offer-details-container">
-    <div class="create-offer-card" *ngIf="(!hasOffers || !hasVenues) && !showForm">
+    <div class="create-offer-card" *ngIf="(!hasOffers || !hasVenues) && !showForm && !editingMode">
       <h2 *ngIf="!hasVenues">Nie posiadasz zarejestrowanych lokali.</h2>
 
       <div class="offer-options" *ngIf="!hasVenues && !showForm">
@@ -9,7 +9,7 @@
         </div>
       </div>
 
-      <h2 *ngIf="!hasOffers && hasVenues && !showForm">Nie dodałeś jeszcze żadnego ogłoszenia.</h2>
+      <h2 *ngIf="!hasOffers && hasVenues && !showForm && !editingMode">Nie dodałeś jeszcze żadnego ogłoszenia.</h2>
 
       <div class="offer-options" *ngIf="!hasOffers && hasVenues && !showForm">
         <div class="option">
@@ -19,11 +19,56 @@
       </div>
     </div>
 
+    <div class="offer-container" *ngIf="hasOffers && hasVenues && !showForm && !editingMode">
+      <table>
+        <thead>
+        <tr>
+          <th>Lokal</th>
+          <th>Cena za godzinę</th>
+          <th>Data</th>
+          <th>Początek</th>
+          <th>Koniec</th>
+          <th>Status</th>
+          <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let offer of offers">
+          <td>{{ offer.venueName }}</td>
+          <td>{{ offer.pricePerHour | number:'1.2-2' }} PLN</td>
+          <td>{{ offer.date }}</td>
+          <td>{{ offer.startTime }}</td>
+          <td>{{ offer.endTime }}</td>
+          <td>{{ getOfferStatus(offer.status) }}</td>
+          <td>
+            <div class="buttons">
+              <button class="tab-btn edit" (click)="turnEditingMode(offer)" title="Edytuj">✏️</button>
+              <button class="tab-btn delete" (click)="deleteOffer(offer.id)" title="Usuń">❌</button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="option create-option">
+        <p>Wystaw kolejne ogłoszenia!</p>
+        <button class="btn" (click)="addAnotherOffer()">Dodaj ofertę</button>
+      </div>
+    </div>
+
     <app-register-offer
       *ngIf="showForm"
       (registered)="handleOfferRegistration($event)"
       [userId]="userId"
       [venues]="venues">
     </app-register-offer>
+
+    <app-edit-offer-form
+      *ngIf="editingMode"
+      [userId]="userId"
+      [offerTemplate]="offerToEdit"
+      [venues]="venues"
+      (updated)="handleOfferUpdating($event)">
+    </app-edit-offer-form>
   </div>
 </div>

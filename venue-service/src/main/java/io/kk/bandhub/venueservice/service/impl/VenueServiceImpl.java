@@ -34,7 +34,7 @@ public class VenueServiceImpl implements VenueService {
         }
 
         Venue venue = new Venue();
-        setVenueFields(venue, dto.getName(), dto.getDescription(), dto.getCapacity(), dto.getOwnerId(), dto.getCity(), dto.getCountry(), dto.getStreet(), dto.getNumber(), dto.getPostalCode());
+        setVenueFields(venue, dto.getName(), dto.getDescription(), dto.getCapacity(), dto.getOwnerId(), dto.getCity(), dto.getCountry(), dto.getStreet(), dto.getNumber(), dto.getPostalCode(), dto.getLatitude(), dto.getLongitude());
 
         var mappedVenue = mapper.toVenueDTOReg(venue);
         venueRepository.save(venue);
@@ -49,14 +49,14 @@ public class VenueServiceImpl implements VenueService {
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
         );
 
-        setVenueFields(existingVenue, dto.getName(), dto.getDescription(), dto.getCapacity(), dto.getOwnerId(), dto.getCity(), dto.getCountry(), dto.getStreet(), dto.getNumber(), dto.getPostalCode());
+        setVenueFields(existingVenue, dto.getName(), dto.getDescription(), dto.getCapacity(), dto.getOwnerId(), dto.getCity(), dto.getCountry(), dto.getStreet(), dto.getNumber(), dto.getPostalCode(), dto.getLatitude(), dto.getLongitude());
 
         venueRepository.save(existingVenue);
 
         return mapper.toVenueDTO(existingVenue);
     }
 
-    private void setVenueFields(Venue venue, String name, String description, Integer capacity, Integer ownerId, String city, String country, String street, String number, String postalCode) {
+    private void setVenueFields(Venue venue, String name, String description, Integer capacity, Integer ownerId, String city, String country, String street, String number, String postalCode, Double latitude, Double longitude) {
         venue.setName(name);
         venue.setDescription(description);
         venue.setCapacity(capacity);
@@ -66,6 +66,8 @@ public class VenueServiceImpl implements VenueService {
         venue.setStreet(street);
         venue.setNumber(number);
         venue.setPostalCode(postalCode);
+        venue.setLatitude(latitude);
+        venue.setLongitude(longitude);
     }
 
     public List<VenueDTO> getUserVenues(Integer ownerId) {

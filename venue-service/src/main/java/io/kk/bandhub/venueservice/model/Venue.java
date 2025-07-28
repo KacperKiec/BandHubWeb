@@ -7,9 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
@@ -62,4 +59,12 @@ public class Venue {
     @NotNull
     @Column(name = "country", nullable = false, length = 50)
     private String country;
+
+    @NotNull
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @NotNull
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
 }

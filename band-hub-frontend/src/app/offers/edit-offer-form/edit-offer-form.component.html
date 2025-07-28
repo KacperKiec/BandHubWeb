@@ -1,0 +1,10 @@
+<form class="container" #updateForm=ngForm (ngSubmit)="submitForm()">
+  <app-offer-input
+    [userId]="userId"
+    [inputOffer]="offerTemplate"
+    [venues]="venues"
+    (outputOffer)="getOffer($event)">
+  </app-offer-input>
+
+  <button class="confirm-button">Zapisz</button>
+</form>

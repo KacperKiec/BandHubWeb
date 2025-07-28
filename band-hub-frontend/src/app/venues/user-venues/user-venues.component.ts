@@ -9,11 +9,9 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
-import {RegisterBandComponent} from '../../bands/register-band/register-band.component';
 import {RegisterVenueComponent} from '../register-venue/register-venue.component';
 import {Venue, VenueRequest, VenueUpdateRequest} from '../../core/models/venue.model';
 import {VenueApiService} from '../venue-service/venue-api.service';
-import {EditBandComponent} from '../../bands/edit-band/edit-band.component';
 import {EditVenueFormComponent} from '../edit-venue-form/edit-venue-form.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
@@ -22,10 +20,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
   standalone: true,
   imports: [
     NgIf,
-    RegisterBandComponent,
     RegisterVenueComponent,
     NgForOf,
-    EditBandComponent,
     EditVenueFormComponent
   ],
   templateUrl: './user-venues.component.html',

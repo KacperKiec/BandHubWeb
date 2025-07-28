@@ -10,6 +10,7 @@ import io.kk.bandhub.musicservice.service.InstrumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,6 +55,9 @@ public class InstrumentServiceImpl implements InstrumentService {
     }
 
     public List<InstrumentDTO> getAll() {
-        return instrumentRepository.findAll().stream().map(mapper::toInstrumentDTO).toList();
+        return instrumentRepository.findAll().stream()
+                .map(mapper::toInstrumentDTO)
+                .sorted(Comparator.comparing(InstrumentDTO::getName))
+                .toList();
     }
 }

@@ -28,7 +28,7 @@ export class CarouselSelectorComponent implements OnInit, OnChanges {
   @Output() emitElement = new EventEmitter<number>();
 
   currentIndex: number = 0;
-  selectedOptionId: number | null = null;
+  @Input() selectedOptionId: number | null = null;
 
   mockedElements = [
     {id: 1, name: 'Home'},

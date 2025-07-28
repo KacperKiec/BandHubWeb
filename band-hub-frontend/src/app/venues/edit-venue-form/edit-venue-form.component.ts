@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Venue, VenueRequest, VenueUpdateRequest} from '../../core/models/venue.model';
-import {BandInputComponent} from '../../bands/band-input/band-input.component';
 import {FormsModule} from '@angular/forms';
 import {VenueInputComponent} from '../venue-input/venue-input.component';
 
@@ -8,7 +7,6 @@ import {VenueInputComponent} from '../venue-input/venue-input.component';
   selector: 'app-edit-venue-form',
   standalone: true,
   imports: [
-    BandInputComponent,
     FormsModule,
     VenueInputComponent
   ],
@@ -35,6 +33,8 @@ export class EditVenueFormComponent implements OnInit {
         city: this.venueTemplate.city,
         postalCode: this.venueTemplate.postalCode,
         country: this.venueTemplate.country,
+        latitude: this.venueTemplate.latitude,
+        longitude: this.venueTemplate.longitude
       };
     }
   }
@@ -51,6 +51,8 @@ export class EditVenueFormComponent implements OnInit {
       city: value.city,
       postalCode: value.postalCode,
       country: value.country,
+      latitude: value.latitude,
+      longitude: value.longitude
     };
   }
 

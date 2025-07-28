@@ -73,9 +73,13 @@ public class OfferController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) OfferStatus status,
-            @RequestParam(required = false)LocalDate date) {
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) Double minLatitude,
+            @RequestParam(required = false) Double maxLatitude,
+            @RequestParam(required = false) Double minLongitude,
+            @RequestParam(required = false) Double maxLongitude) {
 
-        var result = offerService.searchOffers(cities, status, date, pageable);
+        var result = offerService.searchOffers(cities, status, date, minLatitude, maxLatitude, minLongitude, maxLongitude, pageable);
         return ResponseEntity.ok(result);
     }
 }

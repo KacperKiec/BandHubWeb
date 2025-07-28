@@ -15,6 +15,8 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    default-schema: public
+    schemas: public
   rabbitmq:
     host: localhost
     port: 5672

@@ -43,4 +43,10 @@ public class VenueUpdateRequestDTO {
     @Size(max = 50)
     @NotNull
     private String country;
+
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
 }

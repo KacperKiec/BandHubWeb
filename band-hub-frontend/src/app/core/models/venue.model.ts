@@ -9,6 +9,8 @@ export interface Venue {
   city: string;
   postalCode: string;
   country: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface VenueRequest {
@@ -21,6 +23,8 @@ export interface VenueRequest {
   city: string;
   postalCode: string;
   country: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface VenueUpdateRequest {
@@ -34,4 +38,6 @@ export interface VenueUpdateRequest {
   city: string;
   postalCode: string;
   country: string;
+  latitude: number;
+  longitude: number;
 }
