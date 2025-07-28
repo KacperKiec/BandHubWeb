@@ -1,0 +1,7 @@
+<div
+  class="error-panel"
+  [@expandCollapse]="isVisible ? 'visible' : 'hidden'"
+>
+  <span>{{ error }}</span>
+  <button class="close-btn" (click)="onClose()">X</button>
+</div>

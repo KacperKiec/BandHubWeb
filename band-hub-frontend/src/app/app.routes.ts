@@ -12,6 +12,7 @@ import {EditProfileComponent} from './user/edit/edit-profile/edit-profile.compon
 import {UserBandsComponent} from './bands/user-bands/user-bands.component';
 import {InvitationsComponent} from './invitations/invitations/invitations.component';
 import {RentingPanelComponent} from './user/renting-panel/renting-panel.component';
+import {OffersComponent} from './offers/offers/offers.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,5 +28,6 @@ export const routes: Routes = [
   { path: 'profile/edit', component: EditProfileComponent },
   { path: 'user/bands', component: UserBandsComponent },
   { path: 'user/renting', component: RentingPanelComponent },
-  { path: 'invitations', component: InvitationsComponent }
+  { path: 'invitations', component: InvitationsComponent },
+  { path: 'offers', component: OffersComponent }
 ]

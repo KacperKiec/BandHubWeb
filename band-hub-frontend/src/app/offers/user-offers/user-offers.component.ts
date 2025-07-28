@@ -86,7 +86,6 @@ export class UserOffersComponent implements OnInit, OnChanges {
   }
 
   handleOfferRegistration(offer: OfferRequest) {
-    console.log(offer);
     this.offerApiService.addOffer(offer).subscribe(offer => {
       if (offer) {
         this.showForm = false;
@@ -96,7 +95,6 @@ export class UserOffersComponent implements OnInit, OnChanges {
   }
 
   handleOfferUpdating(offer: OfferUpdateRequest) {
-    console.log(offer);
     this.offerApiService.updateOffer(offer).subscribe(offer => {
       if (offer) {
         this.editingMode = false;
@@ -109,9 +107,6 @@ export class UserOffersComponent implements OnInit, OnChanges {
     this.offerApiService.deleteOffer(id).subscribe({
       next: () => {
         this.updateData.emit(true);
-      },
-      error: err => {
-        console.error('Blad podczas usuwania oferty: ', err);
       }
     });
   }

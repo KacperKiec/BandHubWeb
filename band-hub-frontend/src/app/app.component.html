@@ -2,6 +2,9 @@
 <app-navbar [isMenuOpen]="isMenuOpen" (closeMenuEmitter)="setMenuStatus($event)"></app-navbar>
 <div class="container">
   <app-header (emitOpeningMenu)="setMenuStatus($event)"></app-header>
+
+  <app-error-panel [error]="errorMessage" (close)="errorMessage = ''"></app-error-panel>
+
   <app-loader></app-loader>
   <main>
     <router-outlet></router-outlet>
