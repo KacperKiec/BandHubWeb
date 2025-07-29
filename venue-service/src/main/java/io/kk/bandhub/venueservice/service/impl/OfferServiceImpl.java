@@ -41,7 +41,7 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = new Offer();
         setOfferFields(offer, offerDTO.getDate(), offerDTO.getStatus(), offerDTO.getEndTime(), offerDTO.getStartTime(), offerDTO.getPricePerHour(), offerDTO.getVenueId());
 
-        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), null)) {
+        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), offer.getVenue().getId(), null)) {
             throw new OfferException(OfferError.OFFER_ALREADY_EXISTS);
         }
         offerAvailabilityService.setAvailabilityRanges(offer);
@@ -57,7 +57,7 @@ public class OfferServiceImpl implements OfferService {
 
         setOfferFields(offer, offerDTO.getDate(), offerDTO.getStatus(), offerDTO.getEndTime(), offerDTO.getStartTime(), offerDTO.getPricePerHour(), offerDTO.getVenueId());
 
-        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), offer.getId())) {
+        if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), offer.getVenue().getId(), offer.getId())) {
             throw new OfferException(OfferError.OFFER_ALREADY_EXISTS);
         }
         offerAvailabilityService.setAvailabilityRanges(offer);

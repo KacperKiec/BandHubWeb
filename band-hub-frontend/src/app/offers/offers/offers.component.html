@@ -19,9 +19,9 @@
 
   <div class="details-wrapper" [@expandCollapse]="isVisible ? 'visible' : 'hidden'" [class.open]="isVisible">
     <ng-container *ngIf="selectedOffers.length > 0">
-      <h4>{{ selectedOffers[0]?.venueName }}</h4>
+      <h4>{{ selectedOffers[0].venueName }}</h4>
 
-      <p>Liczba miejsc w sali: {{ selectedOffers[0]?.capacity }}</p>
+      <p>Liczba miejsc w sali: {{ selectedOffers[0].capacity }}</p>
 
       <ng-container *ngFor="let offer of selectedOffers">
         <h5>Oferta #{{ offer.id }}</h5>

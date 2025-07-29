@@ -15,7 +15,7 @@ public interface OfferRepository {
     Optional<Offer> findById(int id);
     List<Offer> findAll();
     List<Offer> findByVenueOwnerId(Integer venueOwnerId);
-    List<Offer> findOffersByDate(LocalDate date);
+    List<Offer> findOffersByDateAndVenueId(LocalDate date, Integer venueId);
     Page<Offer> findAll(Pageable pageable);
     List<Offer> findAll(Specification<Offer> spec);
 }

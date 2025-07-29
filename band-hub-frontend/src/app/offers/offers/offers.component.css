@@ -11,7 +11,7 @@
 .map-wrapper {
   width: 60%;
   height: 100%;
-  margin: 0 4rem;
+  margin: 0 2rem;
   border: 2px solid #615D55;
   transition: width 0.3s ease;
   z-index: 10;
@@ -40,7 +40,6 @@
 .details-wrapper.open {
   width: 20%;
   padding: 1rem;
-  /*margin-right: -4rem;*/
 }
 
 .details-wrapper p {
@@ -58,9 +57,6 @@
 }
 
 .search-panel {
-  position: fixed;
-  top: 6.5rem;
-  left: -1rem;
   width: 260px;
   height: fit-content;
   background-color: rgba(255, 255, 255, 0.9);
@@ -69,7 +65,6 @@
   flex-direction: column;
   justify-content: center;
   border: 2px solid #615D55;
-  margin: 0 2rem;
   padding: 0.5rem;
   z-index: 100;
 }

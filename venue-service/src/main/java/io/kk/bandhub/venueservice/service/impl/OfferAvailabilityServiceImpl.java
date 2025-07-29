@@ -22,8 +22,8 @@ public class OfferAvailabilityServiceImpl implements OfferAvailabilityService {
     private final BookingRepository bookingRepository;
     private final OfferRepository offerRepository;
 
-    public Boolean isPossibleToCreate(TimeRange timeRange, LocalDate date, Integer existingOfferId) {
-        var offers = offerRepository.findOffersByDate(date);
+    public Boolean isPossibleToCreate(TimeRange timeRange, LocalDate date, Integer venueId, Integer existingOfferId) {
+        var offers = offerRepository.findOffersByDateAndVenueId(date, venueId);
 
         for (Offer offer : offers) {
             if (!offer.getEndTime().isBefore(timeRange.getStartTime()) &&

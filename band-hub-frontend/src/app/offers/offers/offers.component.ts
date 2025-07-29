@@ -102,7 +102,7 @@ export class OffersComponent implements OnInit {
 
   showDetails(value: {lat: number, lng: number}) {
     this.selectedOffers = [];
-    this.isVisible = !this.isVisible;
+    this.isVisible = true;
     // this.selectedOffer = this.offers.find(offer => offer.id === id)!;
 
     this.offers.forEach(offer => {
