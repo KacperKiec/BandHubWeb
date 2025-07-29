@@ -9,24 +9,23 @@ import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
 import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Offer;
-import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
-import io.kk.bandhub.venueservice.service.OfferService;
-import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import io.kk.bandhub.venueservice.repository.offer.OfferSpecification;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
+import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
+import io.kk.bandhub.venueservice.service.OfferService;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.utils.TimeRange;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -106,20 +105,25 @@ public class OfferServiceImpl implements OfferService {
         return offerRepository.findAll().stream().map(mapper::toOfferDTO).toList();
     }
 
-    public Page<OfferDTO> searchOffers(
+    public List<OfferDTO> searchOffers(
             List<String> cities,
             OfferStatus status,
             LocalDate date,
             Double minLatitude,
             Double maxLatitude,
             Double minLongitude,
-            Double maxLongitude,
-            Pageable pageable) {
+            Double maxLongitude) {
 
         Specification<Offer> spec = OfferSpecification.hasCity(cities)
                 .and(OfferSpecification.hasDate(date))
                 .and(OfferSpecification.hasStatus(status))
                 .and(OfferSpecification.hasCoordinates(minLatitude, maxLatitude, minLongitude, maxLongitude));
-        return offerRepository.findAll(spec, pageable).map(mapper::toOfferDTO);
+        return offerRepository.findAll(spec).stream().map(offer -> {
+            var dto = mapper.toOfferDTO(offer);
+            dto.setLatitude(offer.getVenue().getLatitude());
+            dto.setLongitude(offer.getVenue().getLongitude());
+            dto.setCapacity(offer.getVenue().getCapacity());
+            return dto;
+        }).toList();
     }
 }

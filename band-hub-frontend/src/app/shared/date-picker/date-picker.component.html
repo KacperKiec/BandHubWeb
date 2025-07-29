@@ -1,0 +1,24 @@
+<div class="date-picker-card">
+  <div class="calendar">
+    <div class="calendar-header">
+      <button (click)="prevMonth()">&lt;</button>
+      <span>{{ getCurrentDate() }}</span>
+      <button (click)="nextMonth()">&gt;</button>
+    </div>
+    <div class="calendar-grid">
+      <div class="day-name" *ngFor="let day of dayNames">{{ day.toString() }}</div>
+
+      <div
+        class="day"
+        *ngFor="let dayObj of daysInMonth"
+        [ngClass]="{
+          'selected': dayObj.day !== null && isSelected(dayObj.day),
+          'empty': dayObj.day === null
+        }"
+        (click)="dayObj.day && selectDate(dayObj.day)">
+        {{ dayObj.day || '' }}
+      </div>
+
+    </div>
+  </div>
+</div>

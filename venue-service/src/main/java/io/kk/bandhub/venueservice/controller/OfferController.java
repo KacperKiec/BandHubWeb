@@ -9,10 +9,6 @@ import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -69,8 +65,7 @@ public class OfferController {
     }
 
     @GetMapping(value = "/search")
-    ResponseEntity<Page<OfferDTO>> searchOffers(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    ResponseEntity<List<OfferDTO>> searchOffers(
             @RequestParam(required = false) List<String> cities,
             @RequestParam(required = false) OfferStatus status,
             @RequestParam(required = false) LocalDate date,
@@ -79,7 +74,7 @@ public class OfferController {
             @RequestParam(required = false) Double minLongitude,
             @RequestParam(required = false) Double maxLongitude) {
 
-        var result = offerService.searchOffers(cities, status, date, minLatitude, maxLatitude, minLongitude, maxLongitude, pageable);
+        var result = offerService.searchOffers(cities, status, date, minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(result);
     }
 }

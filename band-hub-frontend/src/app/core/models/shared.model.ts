@@ -23,3 +23,22 @@ export interface CarouselElement {
   id: number;
   name: string;
 }
+
+export interface MapPoint {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface CoordinatesRanges {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+}
+
+export interface TimeRange {
+  startTime: string;
+  endTime: string;
+}

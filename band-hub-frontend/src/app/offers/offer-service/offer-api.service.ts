@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
-import {Offer, OfferRequest, OfferUpdateRequest} from '../../core/models/offer.model';
+import {Offer, OfferRequest, OfferSearchingParams, OfferUpdateRequest} from '../../core/models/offer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,46 @@ export class OfferApiService {
 
   updateOffer(offer: OfferUpdateRequest): Observable<Offer> {
     return this.http.put<Offer>(`${this.apiURL}`, offer, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  getOffers(offerParams: OfferSearchingParams): Observable<Offer[]> {
+    let params = new HttpParams();
+
+    if (offerParams.status) {
+      params = params.set('status', offerParams.status);
+    }
+
+    if (offerParams.date) {
+      params = params.set('date', offerParams.date);
+    }
+
+    if (offerParams.minLatitude !== null && offerParams.minLatitude !== undefined) {
+      params = params.set('minLatitude', offerParams.minLatitude.toString());
+    }
+
+    if (offerParams.maxLatitude !== null && offerParams.maxLatitude !== undefined) {
+      params = params.set('maxLatitude', offerParams.maxLatitude.toString());
+    }
+
+    if (offerParams.minLongitude !== null && offerParams.minLongitude !== undefined) {
+      params = params.set('minLongitude', offerParams.minLongitude.toString());
+    }
+
+    if (offerParams.maxLongitude !== null && offerParams.maxLongitude !== undefined) {
+      params = params.set('maxLongitude', offerParams.maxLongitude.toString());
+    }
+
+    if (offerParams.cities && offerParams.cities.length > 0) {
+      offerParams.cities.forEach(city => {
+        params = params.append('cities', city.toString());
+      });
+    }
+
+    return this.http.get<Offer[]>(`${this.apiURL}/search`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

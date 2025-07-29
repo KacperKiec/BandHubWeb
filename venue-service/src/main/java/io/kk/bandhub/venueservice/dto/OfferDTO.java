@@ -14,10 +14,13 @@ public class OfferDTO {
     private Integer id;
     private Integer venueId;
     private String venueName;
+    private Integer capacity;
     private Double pricePerHour;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     private OfferStatus status;
     private Set<OfferAvailabilityDTO> availableRanges;
+    private Double latitude;
+    private Double longitude;
 }

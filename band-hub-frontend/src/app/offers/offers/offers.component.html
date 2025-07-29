@@ -1,0 +1,51 @@
+<div class="container fade-in">
+
+  <div class="search-panel">
+    <h4>Filtruj</h4>
+    <div class="date-picker-wrapper">
+      <app-date-picker
+      (pickedDate)="getDate($event)">
+      </app-date-picker>
+    </div>
+  </div>
+
+  <div class="map-wrapper" [class.narrow]="isVisible">
+    <app-map
+      [points]="mapPoints"
+      (pointClicked)="showDetails($event)"
+      (mapMoved)="getCoords($event)">
+    </app-map>
+  </div>
+
+  <div class="details-wrapper" [@expandCollapse]="isVisible ? 'visible' : 'hidden'" [class.open]="isVisible">
+    <ng-container *ngIf="selectedOffers.length > 0">
+      <h4>{{ selectedOffers[0]?.venueName }}</h4>
+
+      <p>Liczba miejsc w sali: {{ selectedOffers[0]?.capacity }}</p>
+
+      <ng-container *ngFor="let offer of selectedOffers">
+        <h5>Oferta #{{ offer.id }}</h5>
+        <p>Cena za godzinę: {{ offer.pricePerHour | number:'1.2-2' }} PLN</p>
+        <p>Status: {{ getOfferStatus(offer.status) }}</p>
+
+        <div *ngFor="let range of offer.availableRanges" class="time-range-item">
+          <button (click)="selectTimeRange(offer, range)">
+            {{ getShortTime(range.startTime) }} - {{ getShortTime(range.endTime) }}
+          </button>
+        </div>
+      </ng-container>
+
+
+      <div class="reservation-wrapper" *ngIf="booking">
+        <p>Wybrane godziny rezerwacji</p>
+        <div class="reservation-time-ranges" title="Edytuj godziny rezerwacji w podanych ramach czasowych.">
+          <input type="time" [(ngModel)]="booking.startTime">
+          <input type="time" [(ngModel)]="booking.endTime">
+        </div>
+      </div>
+
+      <button class="close-button" (click)="isVisible = false" title="Zamknij panel">×</button>
+
+    </ng-container>
+  </div>
+</div>
