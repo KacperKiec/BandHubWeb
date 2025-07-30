@@ -1,7 +1,5 @@
 package io.kk.bandhub.venueservice.service.impl;
 
-import io.kk.bandhub.venueservice.exception.offer.OfferError;
-import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.Offer;
 import io.kk.bandhub.venueservice.model.OfferAvailability;
@@ -14,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,11 @@ public class OfferAvailabilityServiceImpl implements OfferAvailabilityService {
     private final BookingRepository bookingRepository;
     private final OfferRepository offerRepository;
 
+
+    /**
+     * Funkcja sprawdzająca czy możliwe jest stworzenie oferty takiej
+     * żeby nie kolidowała z innymi ofertami
+     * */
     public Boolean isPossibleToCreate(TimeRange timeRange, LocalDate date, Integer venueId, Integer existingOfferId) {
         var offers = offerRepository.findOffersByDateAndVenueId(date, venueId);
 
@@ -54,10 +60,6 @@ public class OfferAvailabilityServiceImpl implements OfferAvailabilityService {
 
     private Set<OfferAvailability> getAvailabilities(Offer offer) {
         var bookings = bookingRepository.findAllByOfferId(offer.getId());
-
-        if (!checkChangingPossibility(offer.getAvailabilityRanges(), bookings)) {
-            throw new OfferException(OfferError.CANNOT_EDIT_OFFER);
-        }
 
         var availabilities = offer.getAvailabilityRanges();
         availabilities.clear();
@@ -92,15 +94,19 @@ public class OfferAvailabilityServiceImpl implements OfferAvailabilityService {
         return availabilities;
     }
 
-    private Boolean checkChangingPossibility(Set<OfferAvailability> availabilities, List<Booking> bookings) {
+    /**
+     * Funkcja sprawdzająca czy dana oferta jest możliwa do edycji
+     * ze względu na zaburzenie ram czasowych istniejących rezerwacji
+     * */
+    public Boolean checkChangingPossibility(Offer offer) {
 
-        for (Booking booking : bookings) {
-            for (OfferAvailability availability : availabilities) {
-                if (!availability.match(new TimeRange(booking.getStartTime(), booking.getEndTime()))) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        var bookings = bookingRepository.findAllByOfferId(offer.getId());
+
+        var earliestBooking = bookings.stream().min(Comparator.comparing(Booking::getStartTime));
+        var latestBooking = bookings.stream().max(Comparator.comparing(Booking::getEndTime));
+
+        if (earliestBooking.isPresent() && earliestBooking.get().getStartTime().isBefore(offer.getStartTime())) return false;
+
+        return latestBooking.isEmpty() || !latestBooking.get().getEndTime().isAfter(offer.getEndTime());
     }
 }

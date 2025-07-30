@@ -9,4 +9,5 @@ public interface OfferAvailabilityService {
     Boolean isPossibleToCreate(TimeRange timeRange, LocalDate date, Integer venueId, Integer existingOfferId);
     Boolean isAvailable(Offer offer, TimeRange timeRange);
     Offer setAvailabilityRanges(Offer offer);
+    Boolean checkChangingPossibility(Offer offer);
 }

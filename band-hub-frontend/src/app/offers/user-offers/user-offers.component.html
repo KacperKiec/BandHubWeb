@@ -14,12 +14,31 @@
       <div class="offer-options" *ngIf="!hasOffers && hasVenues && !showForm">
         <div class="option">
           <button class="btn" (click)="showRegistrationForm()">Dodaj ofertę</button>
+          <br>
           <p>Ogłaszaj swoje obiekty, aby wynajmować je innym użytkownikom.</p>
         </div>
       </div>
     </div>
 
     <div class="offer-container" *ngIf="hasOffers && hasVenues && !showForm && !editingMode">
+
+      <div class="filter-panel">
+        <label class="filter"
+               (click)="filterOffers([OfferStatus.ACTIVE]); activeTab = 'active'"
+               [class.active]="activeTab === 'active'"
+        >Aktywne</label>
+
+        <label class="filter"
+               (click)="filterOffers([OfferStatus.CLAIMED]); activeTab = 'claimed'"
+               [class.active]="activeTab === 'claimed'"
+        >Zajęte</label>
+
+        <label class="filter"
+               (click)="filterOffers([OfferStatus.CANCELED, OfferStatus.ENDED]); activeTab = 'canceled'"
+               [class.active]="activeTab === 'canceled'"
+        >Anulowane/Zakończone</label>
+      </div>
+
       <table>
         <thead>
         <tr>
@@ -33,7 +52,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let offer of offers">
+        <tr *ngFor="let offer of offersToDisplay">
           <td>{{ offer.venueName }}</td>
           <td>{{ offer.pricePerHour | number:'1.2-2' }} PLN</td>
           <td>{{ offer.date }}</td>

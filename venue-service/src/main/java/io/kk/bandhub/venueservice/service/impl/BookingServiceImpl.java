@@ -42,6 +42,8 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = new Booking();
         booking.setBookingDate(LocalDate.now());
         booking.setTenantId(bookingDTO.getTenantId());
+        booking.setStartTime(bookingDTO.getStartTime());
+        booking.setEndTime(bookingDTO.getEndTime());
 
         var offer = offerRepository.findById(bookingDTO.getOfferId()).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
@@ -49,6 +51,10 @@ public class BookingServiceImpl implements BookingService {
 
         if(offer.getStatus() != OfferStatus.ACTIVE) {
             throw new OfferException(OfferError.OFFER_NOT_FOUND);
+        }
+
+        if (offer.getVenue().getOwnerId().equals(bookingDTO.getTenantId())) {
+            throw new BookingException(BookingError.CANNOT_CREATE_BOOKING);
         }
 
         if (offerAvailabilityService.isAvailable(offer, new TimeRange(bookingDTO.getStartTime(), bookingDTO.getEndTime()))) {
@@ -82,6 +88,14 @@ public class BookingServiceImpl implements BookingService {
         return mapper.toBookingDTO(bookingRepository.findById(bookingId).orElseThrow(
                 () -> new BookingException(BookingError.BOOKING_NOT_FOUND)
         ));
+    }
+
+    public List<BookingDTO> getUserBookings(Integer tenantId) {
+        return bookingRepository.findAllByTenantId(tenantId).stream().map(mapper::toBookingDTO).toList();
+    }
+
+    public List<BookingDTO> getOwnerBookings(Integer ownerId) {
+        return bookingRepository.findAllByVenueOwnerId(ownerId).stream().map(mapper::toBookingDTO).toList();
     }
 
     public List<BookingDTO> getAllBookings() {

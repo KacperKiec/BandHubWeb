@@ -21,6 +21,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleVenueException(final VenueException e) {
         if (VenueError.VENUE_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (VenueError.CANNOT_DELETE_VENUE.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), "400"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }
@@ -30,7 +32,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleOfferException(final OfferException e) {
         if (OfferError.OFFER_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
-        } else if (OfferError.CANNOT_EDIT_OFFER.equals(e.getStatus())) {
+        } else if (OfferError.CANNOT_EDIT_OFFER.equals(e.getStatus()) || OfferError.CANNOT_DELETE_OFFER.equals(e.getStatus())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), "400"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
@@ -41,6 +43,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBookingException(final BookingException e) {
         if (BookingError.BOOKING_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
+        } else if (BookingError.CANNOT_CREATE_BOOKING.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), "400"));
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         }

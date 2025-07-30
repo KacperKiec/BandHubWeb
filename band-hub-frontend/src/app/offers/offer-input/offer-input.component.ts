@@ -48,7 +48,8 @@ export class OfferInputComponent implements OnInit, OnChanges {
   statusLabels: Record<OfferStatus, string> = {
     [OfferStatus.ACTIVE]: 'Aktywna',
     [OfferStatus.CLAIMED]: 'Zajęta',
-    [OfferStatus.CANCELED]: 'Anulowana'
+    [OfferStatus.CANCELED]: 'Anulowana',
+    [OfferStatus.ENDED]: 'Zakoczona'
   };
 
   constructor(private cdr: ChangeDetectorRef) {

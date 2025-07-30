@@ -29,7 +29,7 @@
         <p>Status: {{ getOfferStatus(offer.status) }}</p>
 
         <div *ngFor="let range of offer.availableRanges" class="time-range-item">
-          <button (click)="selectTimeRange(offer, range)">
+          <button (click)="prepareBooking(offer, range)">
             {{ getShortTime(range.startTime) }} - {{ getShortTime(range.endTime) }}
           </button>
         </div>
@@ -42,9 +42,19 @@
           <input type="time" [(ngModel)]="booking.startTime">
           <input type="time" [(ngModel)]="booking.endTime">
         </div>
+
+        <button class="confirm-button"
+                (click)="confirmBooking()"
+                [disabled]="!canSubmit"
+                [title]="!canSubmit ? submitDisableReason : ''"
+        >Zarezerwuj</button>
+
       </div>
 
-      <button class="close-button" (click)="isVisible = false" title="Zamknij panel">×</button>
+      <button class="close-button"
+              (click)="closeDetails()"
+              title="Zamknij panel"
+      >×</button>
 
     </ng-container>
   </div>

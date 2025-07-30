@@ -53,7 +53,6 @@ export class RegisterVenueComponent implements OnInit {
   }
 
   submit() {
-    console.log('Lokal zarejestrowany' + this.venue);
     this.registered.emit(this.venue);
   }
 }

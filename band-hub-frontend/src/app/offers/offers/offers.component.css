@@ -148,3 +148,25 @@ app-date-picker {
 .close-button:hover {
   color: #000;
 }
+
+.confirm-button {
+  font-family: 'Merriweather', serif;
+  display: block;
+  color: #E4DCC6;
+  height: 10%;
+  margin: 1.5rem auto 0;
+  border: 1px solid #615D55;
+  border-radius: 25px;
+  background-color: #0E1418;
+  width: fit-content;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #ccc;
+  color: #666;
+  pointer-events: auto;
+}

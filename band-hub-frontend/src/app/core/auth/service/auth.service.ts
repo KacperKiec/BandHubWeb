@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {AuthApiService} from '../auth-service/auth-api.service';
 import {Router} from '@angular/router';
@@ -12,7 +12,7 @@ export class AuthService {
 
   isLoggedIn$ = this.loggedIn.asObservable();
 
-  constructor(private authApiService: AuthApiService, private router: Router) {
+  constructor(private authApiService: AuthApiService, private router: Router, private zone: NgZone) {
   }
 
   setLoginStatus(status: boolean): void {
@@ -23,11 +23,15 @@ export class AuthService {
     this.authApiService.checkLoginStatus().subscribe({
       next: (resp) => {
         this.setLoginStatus(resp);
+        if (!resp) {
+          this.router.navigate(['/home']);
+        }
       },
       error: () => {
         this.setLoginStatus(false);
-        this.router.navigate(['/home'])
+        this.router.navigate(['/home']);
       }
+
     });
   }
 }

@@ -42,6 +42,8 @@ export class UserOffersComponent implements OnInit, OnChanges {
   editingMode: boolean = false;
 
   offerToEdit!: Offer;
+  offersToDisplay: Offer[] = [];
+  activeTab: string = 'active';
 
   constructor(private cdr: ChangeDetectorRef, private offerApiService: OfferApiService) {
   }
@@ -51,11 +53,17 @@ export class UserOffersComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['venues'] || changes['offers']) {
+    if ((changes['venues'] || changes['offers'])) {
       this.checkCollectionsState();
+
+      if (this.offers && this.offers.length > 0) {
+        this.filterOffers([OfferStatus.ACTIVE]);
+      }
+
       this.cdr.detectChanges();
     }
   }
+
 
   private checkCollectionsState() {
     this.hasVenues = this.venues && this.venues.length > 0;
@@ -67,6 +75,7 @@ export class UserOffersComponent implements OnInit, OnChanges {
       case OfferStatus.ACTIVE: return "AKTYWNA";
       case OfferStatus.CLAIMED: return "ZAJĘTA";
       case OfferStatus.CANCELED: return "ANULOWANA";
+      case OfferStatus.ENDED: return "ZAKOŃCZONA";
     }
   }
 
@@ -110,4 +119,10 @@ export class UserOffersComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  filterOffers(statuses: OfferStatus[]) {
+    this.offersToDisplay = this.offers.filter(offer => statuses.includes(offer.status));
+  }
+
+  protected readonly OfferStatus = OfferStatus;
 }

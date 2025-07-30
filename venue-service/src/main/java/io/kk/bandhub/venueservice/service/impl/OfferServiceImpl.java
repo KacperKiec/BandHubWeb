@@ -9,6 +9,7 @@ import io.kk.bandhub.venueservice.exception.offer.OfferException;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
 import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Offer;
+import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import io.kk.bandhub.venueservice.repository.offer.OfferSpecification;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
@@ -34,6 +35,7 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final VenueRepository venueRepository;
     private final OfferAvailabilityService offerAvailabilityService;
+    private final BookingRepository bookingRepository;
     private final Mapper mapper;
 
     @Transactional
@@ -60,7 +62,12 @@ public class OfferServiceImpl implements OfferService {
         if (!offerAvailabilityService.isPossibleToCreate(new TimeRange(offer.getStartTime(), offer.getEndTime()), offer.getDate(), offer.getVenue().getId(), offer.getId())) {
             throw new OfferException(OfferError.OFFER_ALREADY_EXISTS);
         }
+
         offerAvailabilityService.setAvailabilityRanges(offer);
+
+        if (!offerAvailabilityService.checkChangingPossibility(offer)) {
+            throw new OfferException(OfferError.CANNOT_EDIT_OFFER);
+        }
 
         return mapper.toOfferDTO(offerRepository.save(offer));
     }
@@ -82,6 +89,13 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.findById(offerId).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
         );
+
+        var bookings = bookingRepository.findAllByOfferId(offerId);
+
+        if (!bookings.isEmpty()) {
+            throw new OfferException(OfferError.CANNOT_DELETE_OFFER);
+        }
+
         offerRepository.deleteById(offerId);
     }
 

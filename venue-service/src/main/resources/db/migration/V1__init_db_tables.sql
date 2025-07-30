@@ -18,7 +18,7 @@ CREATE TABLE offer (
     date date NOT NULL,
     start_time time NOT NULL,
     end_time time NOT NULL,
-    status varchar(20) CHECK (status IN ('ACTIVE', 'CLAIMED', 'CANCELED')) NOT NULL,
+    status varchar(20) CHECK (status IN ('ACTIVE', 'CLAIMED', 'CANCELED', 'ENDED')) NOT NULL,
     FOREIGN KEY (venue_id) REFERENCES venue(id) ON DELETE CASCADE
 );
 

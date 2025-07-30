@@ -7,7 +7,8 @@ import {DatePickerComponent} from '../../shared/date-picker/date-picker.componen
 import {Offer, OfferSearchingParams, OfferStatus} from '../../core/models/offer.model';
 import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Booking} from '../../core/models/booking.model';
+import {BookingRequest} from '../../core/models/booking.model';
+import {BookingApiService} from '../../bookings/booking-service/booking-api.service';
 
 @Component({
   selector: 'app-offers',
@@ -61,17 +62,21 @@ export class OffersComponent implements OnInit {
   };
   params!: OfferSearchingParams;
 
-  selectedOffer!: Offer;
   selectedOffers: Offer[] = [];
-  booking!:Booking;
+  booking!:BookingRequest;
+  canSubmit: boolean = true;
+  submitDisableReason: string = "";
 
-  constructor(private offerApiService: OfferApiService) {
+  constructor(private offerApiService: OfferApiService, private bookingApiService: BookingApiService) {
   }
 
   ngOnInit() {
     const rawId = localStorage.getItem('userId');
     if (rawId) {
       this.userId = JSON.parse(rawId);
+    } else {
+      this.canSubmit = false;
+      this.submitDisableReason = "Przed dokonaniem rezerwacji musisz się zalogować";
     }
 
     this.updateParamsAndFetchOffers();
@@ -88,6 +93,7 @@ export class OffersComponent implements OnInit {
   }
 
   updateParamsAndFetchOffers() {
+    this.closeDetails();
     this.params = {
       cities: [],
       status: OfferStatus.ACTIVE,
@@ -103,7 +109,6 @@ export class OffersComponent implements OnInit {
   showDetails(value: {lat: number, lng: number}) {
     this.selectedOffers = [];
     this.isVisible = true;
-    // this.selectedOffer = this.offers.find(offer => offer.id === id)!;
 
     this.offers.forEach(offer => {
       if(offer.latitude === value.lat && offer.longitude === value.lng) {
@@ -112,15 +117,29 @@ export class OffersComponent implements OnInit {
     });
 
     this.selectedOffers.sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    this.selectedOffers.forEach(offer => {
+      offer.availableRanges.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    });
   }
 
-  selectTimeRange(offer: Offer, range: TimeRange) {
+  prepareBooking(offer: Offer, range: TimeRange) {
     this.booking = {
       tenantId: this.userId,
       offerId: offer.id,
       startTime: range.startTime,
       endTime: range.endTime,
       bookingDate: new Date().toISOString().substring(0, 10)
+    }
+  }
+
+  closeDetails() {
+    this.isVisible = false;
+
+    if (this.booking) {
+      this.booking.startTime = '';
+      this.booking.endTime = '';
+      this.booking.offerId = 0;
     }
   }
 
@@ -132,7 +151,6 @@ export class OffersComponent implements OnInit {
     this.offerApiService.getOffers(this.params).subscribe(offers => {
       if (offers) {
         this.offers = offers;
-        console.log(this.offers);
         this.mapPoints = this.offers.map(offer => ({
           id: offer.id,
           name: offer.venueName,
@@ -148,6 +166,17 @@ export class OffersComponent implements OnInit {
       case OfferStatus.ACTIVE: return "AKTYWNA";
       case OfferStatus.CLAIMED: return "ZAJĘTA";
       case OfferStatus.CANCELED: return "ANULOWANA";
+      case OfferStatus.ENDED: return "ZAKOŃCZONA";
     }
+  }
+
+  confirmBooking() {
+    console.log(this.booking);
+    this.bookingApiService.createBooking(this.booking).subscribe({
+      next: () => {
+        this.closeDetails();
+        this.updateParamsAndFetchOffers();
+      }
+    });
   }
 }

@@ -7,9 +7,11 @@ import io.kk.bandhub.venueservice.dto.VenueUpdateRequestDTO;
 import io.kk.bandhub.venueservice.exception.venue.VenueError;
 import io.kk.bandhub.venueservice.exception.venue.VenueException;
 import io.kk.bandhub.venueservice.model.Venue;
+import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
 import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
 import io.kk.bandhub.venueservice.repository.venue.VenueSpecification;
 import io.kk.bandhub.venueservice.service.VenueService;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +27,7 @@ import java.util.List;
 public class VenueServiceImpl implements VenueService {
 
     private final VenueRepository venueRepository;
+    private final OfferRepository offerRepository;
     private final Mapper mapper;
 
     @Transactional
@@ -115,6 +119,15 @@ public class VenueServiceImpl implements VenueService {
         venueRepository.findById(id).orElseThrow(
                 () -> new VenueException(VenueError.VENUE_NOT_FOUND)
         );
+
+        var offers = offerRepository.findOffersByVenueId(id);
+
+        for (var offer : offers) {
+            if (offer.getStatus() == OfferStatus.ACTIVE && !offer.getDate().isBefore(LocalDate.now())) {
+                throw new VenueException(VenueError.CANNOT_DELETE_VENUE);
+            }
+        }
+
         venueRepository.deleteById(id);
     }
 }

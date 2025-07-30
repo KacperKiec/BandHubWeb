@@ -14,10 +14,9 @@ export class ErrorHandlerService {
     const statusCode = error.status;
     let errorMessage = '';
 
-    if (statusCode === 400 || Array.isArray(error.error)) {
+    if (statusCode === 400 && Array.isArray(error.error)) {
       const errors = error.error as string[];
       errorMessage = `Błędy walidacji:\n${errors.join('\n')}`;
-      // alert(errorMessage);
     } else if (error.error?.message) {
       const backendMessage = error.error.message;
       const errorCode = error.error.errorCode || statusCode;

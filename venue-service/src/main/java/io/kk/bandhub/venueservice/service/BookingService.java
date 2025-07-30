@@ -13,5 +13,7 @@ public interface BookingService {
     void deleteBooking(Integer bookingId);
     BookingDTO getBooking(Integer bookingId);
     List<BookingDTO> getAllBookings();
+    List<BookingDTO> getUserBookings(Integer tenantId);
+    List<BookingDTO> getOwnerBookings(Integer ownerId);
     Page<BookingDTO> getBookings(Pageable pageable, Integer tenantId, Integer offerId, OfferStatus status);
 }

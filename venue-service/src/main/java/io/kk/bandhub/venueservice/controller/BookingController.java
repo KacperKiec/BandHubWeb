@@ -52,12 +52,26 @@ public class BookingController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "/user/{id}")
+    ResponseEntity<List<BookingDTO>> getUserBookings(@PathVariable Integer id, Authentication authentication) {
+        SecurityUtils.verifyAuthorities(authentication, id);
+        var result = bookingService.getUserBookings(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(value = "/owner/{id}")
+    ResponseEntity<List<BookingDTO>> getOwnerBookings(@PathVariable Integer id, Authentication authentication) {
+        SecurityUtils.verifyAuthorities(authentication, id);
+        var result = bookingService.getOwnerBookings(id);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/search")
     ResponseEntity<Page<BookingDTO>> getBookings(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) Integer offerId,
             @RequestParam(required = false) Integer tenantId,
-            @RequestParam(required = false)OfferStatus status) {
+            @RequestParam(required = false) OfferStatus status) {
 
         var result = bookingService.getBookings(pageable, offerId, tenantId, status);
         return ResponseEntity.ok(result);

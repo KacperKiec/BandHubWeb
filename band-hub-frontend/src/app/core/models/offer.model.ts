@@ -16,7 +16,8 @@ export interface Offer {
 export enum OfferStatus {
   ACTIVE = "ACTIVE",
   CLAIMED = "CLAIMED",
-  CANCELED = "CANCELED"
+  CANCELED = "CANCELED",
+  ENDED = "ENDED"
 }
 
 export interface OfferAvailability {
