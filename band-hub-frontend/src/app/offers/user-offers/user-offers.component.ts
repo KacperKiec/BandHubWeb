@@ -64,7 +64,6 @@ export class UserOffersComponent implements OnInit, OnChanges {
     }
   }
 
-
   private checkCollectionsState() {
     this.hasVenues = this.venues && this.venues.length > 0;
     this.hasOffers = this.offers && this.offers.length > 0;

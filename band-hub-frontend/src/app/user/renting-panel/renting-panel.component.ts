@@ -6,6 +6,9 @@ import {VenueApiService} from '../../venues/venue-service/venue-api.service';
 import {Venue} from '../../core/models/venue.model';
 import {Offer} from '../../core/models/offer.model';
 import {OfferApiService} from '../../offers/offer-service/offer-api.service';
+import {OwnerBookingsComponent} from '../../bookings/owner-bookings/owner-bookings.component';
+import {BookingApiService} from '../../bookings/booking-service/booking-api.service';
+import {Booking} from '../../core/models/booking.model';
 
 @Component({
   selector: 'app-renting-panel',
@@ -14,7 +17,8 @@ import {OfferApiService} from '../../offers/offer-service/offer-api.service';
     UserVenuesComponent,
     UserOffersComponent,
     NgSwitch,
-    NgSwitchCase
+    NgSwitchCase,
+    OwnerBookingsComponent
   ],
   templateUrl: './renting-panel.component.html',
   styleUrl: './renting-panel.component.css'
@@ -25,8 +29,13 @@ export class RentingPanelComponent implements OnInit {
   userId!: number;
   venues: Venue[] = [];
   offers: Offer[] = [];
+  bookings: Booking[] = [];
 
-  constructor(private venueApiService: VenueApiService, private offerApiService: OfferApiService) {
+  currentPageB = 0;
+  pageSizeB = 10;
+  totalPagesB = 0;
+
+  constructor(private venueApiService: VenueApiService, private offerApiService: OfferApiService, private bookingApiService: BookingApiService) {
   }
 
   ngOnInit() {
@@ -49,6 +58,19 @@ export class RentingPanelComponent implements OnInit {
       if (offers) {
         this.offers = [...offers];
       }
+    });
+
+    this.loadBookingPage(0);
+  }
+
+  loadBookingPage(page: number) {
+    this.bookingApiService.getOwnerBookings(this.userId, page, this.pageSizeB).subscribe({
+      next: (response) => {
+        this.totalPagesB = response.page.totalPages;
+        this.currentPageB = response.page.number;
+        this.bookings = [...response.content];
+      },
+      error: (err) => console.error('Error occurred:', err)
     });
   }
 

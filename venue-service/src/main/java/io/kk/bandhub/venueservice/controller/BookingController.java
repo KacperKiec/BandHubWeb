@@ -34,9 +34,9 @@ public class BookingController {
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<Void> deleteBooking(@PathVariable Integer id, Authentication authentication) {
+    ResponseEntity<Void> deleteBooking(@PathVariable Integer id, @RequestParam String initiator, Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, bookingService.getBooking(id).getTenantId());
-        bookingService.deleteBooking(id);
+        bookingService.deleteBooking(id, initiator);
         return ResponseEntity.noContent().build();
     }
 
@@ -53,16 +53,22 @@ public class BookingController {
     }
 
     @GetMapping(value = "/user/{id}")
-    ResponseEntity<List<BookingDTO>> getUserBookings(@PathVariable Integer id, Authentication authentication) {
+    ResponseEntity<Page<BookingDTO>> getUserBookings(
+            @PathVariable Integer id,
+            @PageableDefault(size = 10, sort = "bookingDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, id);
-        var result = bookingService.getUserBookings(id);
+        var result = bookingService.getUserBookings(id, pageable);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping(value = "/owner/{id}")
-    ResponseEntity<List<BookingDTO>> getOwnerBookings(@PathVariable Integer id, Authentication authentication) {
+    ResponseEntity<Page<BookingDTO>> getOwnerBookings(
+            @PathVariable Integer id,
+            @PageableDefault(size = 10, sort = "bookingDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, id);
-        var result = bookingService.getOwnerBookings(id);
+        var result = bookingService.getOwnerBookings(id, pageable);
         return ResponseEntity.ok(result);
     }
 

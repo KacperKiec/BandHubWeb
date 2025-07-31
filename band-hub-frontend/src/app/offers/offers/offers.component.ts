@@ -93,7 +93,6 @@ export class OffersComponent implements OnInit {
   }
 
   updateParamsAndFetchOffers() {
-    this.closeDetails();
     this.params = {
       cities: [],
       status: OfferStatus.ACTIVE,

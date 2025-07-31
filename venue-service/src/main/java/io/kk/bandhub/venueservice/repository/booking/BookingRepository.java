@@ -14,7 +14,7 @@ public interface BookingRepository {
     Optional<Booking> findById(int id);
     List<Booking> findAll();
     List<Booking> findAllByOfferId(Integer offerId);
-    List<Booking> findAllByTenantId(Integer tenantId);
-    List<Booking> findAllByVenueOwnerId(Integer venueOwnerId);
+    Page<Booking> findAllByTenantId(Integer tenantId, Pageable pageable);
+    Page<Booking> findAllByOffer_Venue_OwnerId(Integer ownerId, Pageable pageable);
     Page<Booking> findAll(Specification<Booking> spec, Pageable pageable);
 }

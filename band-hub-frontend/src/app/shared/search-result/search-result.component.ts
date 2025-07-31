@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {SearchDisplayItem} from '../../core/models/shared.model';
 import {Genre} from '../../core/models/genre.model';
 
@@ -8,7 +8,6 @@ import {Genre} from '../../core/models/genre.model';
   standalone: true,
   imports: [
     NgForOf,
-    NgOptimizedImage,
     NgIf
   ],
   templateUrl: './search-result.component.html',

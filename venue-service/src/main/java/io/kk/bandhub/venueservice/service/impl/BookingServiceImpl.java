@@ -1,19 +1,22 @@
 package io.kk.bandhub.venueservice.service.impl;
 
-import io.kk.bandhub.venueservice.dto.*;
+import io.kk.bandhub.venueservice.dto.BookingDTO;
+import io.kk.bandhub.venueservice.dto.BookingRequestDTO;
+import io.kk.bandhub.venueservice.dto.Mapper;
+import io.kk.bandhub.venueservice.dto.NotificationType;
 import io.kk.bandhub.venueservice.exception.booking.BookingError;
 import io.kk.bandhub.venueservice.exception.booking.BookingException;
 import io.kk.bandhub.venueservice.exception.offer.OfferError;
 import io.kk.bandhub.venueservice.exception.offer.OfferException;
-import io.kk.bandhub.venueservice.model.Booking;
-import io.kk.bandhub.venueservice.model.Offer;
-import io.kk.bandhub.venueservice.service.BookingService;
-import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
 import io.kk.bandhub.venueservice.integration.RabbitService;
-import io.kk.bandhub.venueservice.utils.OfferStatus;
+import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
 import io.kk.bandhub.venueservice.repository.booking.BookingSpecification;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
+import io.kk.bandhub.venueservice.service.BookingService;
+import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
+import io.kk.bandhub.venueservice.utils.NotificationCreator;
+import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.utils.TimeRange;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDTO createBooking(BookingRequestDTO bookingDTO) {
         Booking booking = new Booking();
-        booking.setBookingDate(LocalDate.now());
+        booking.setBookingDate(bookingDTO.getBookingDate());
         booking.setTenantId(bookingDTO.getTenantId());
         booking.setStartTime(bookingDTO.getStartTime());
         booking.setEndTime(bookingDTO.getEndTime());
@@ -64,7 +66,17 @@ public class BookingServiceImpl implements BookingService {
             offer = offerAvailabilityService.setAvailabilityRanges(offer);
             offerRepository.save(offer);
 
-            sendNotification(offer, booking);
+            String title = "Nowa rezerwacja";
+            String content = "Ktoś zarezerwował miejsce w %s na dzień %s.".formatted(offer.getVenue().getName(), booking.getBookingDate().toString());
+
+            var dto = NotificationCreator.createNotification(NotificationType.NEW_BOOKING, offer.getVenue().getOwnerId(), title, content);
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("tenantId", booking.getTenantId());
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+
             return mapper.toBookingDTO(booking);
         } else {
             throw new BookingException(BookingError.OFFER_ALREADY_CLAIMED);
@@ -72,7 +84,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Transactional
-    public void deleteBooking(Integer bookingId) {
+    public void deleteBooking(Integer bookingId, String initiator) {
         var existingBooking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new OfferException(OfferError.OFFER_NOT_FOUND)
         );
@@ -82,6 +94,31 @@ public class BookingServiceImpl implements BookingService {
 
         offer = offerAvailabilityService.setAvailabilityRanges(offer);
         offerRepository.save(offer);
+
+        if(initiator.equals("owner")) {
+            String title = "Anulowano rezerwację";
+            String content = "Rezerwacja lokalu %s została anulowana przez właściciela.".formatted(offer.getVenue().getName());
+
+            var dto = NotificationCreator.createNotification(NotificationType.BOOKING_CANCELED, existingBooking.getTenantId(), title, content);
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("venueId", offer.getVenue().getId());
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+
+        } else if (initiator.equals("tenant")) {
+            String title = "Anulowano rezerwację";
+            String content = "Rezerwacja lokalu %s została anulowana przez najemcę.".formatted(offer.getVenue().getName());
+
+            var dto = NotificationCreator.createNotification(NotificationType.BOOKING_CANCELED, offer.getVenue().getOwnerId(), title, content);
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("tenantId", existingBooking.getTenantId());
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+        }
     }
 
     public BookingDTO getBooking(Integer bookingId) {
@@ -90,12 +127,12 @@ public class BookingServiceImpl implements BookingService {
         ));
     }
 
-    public List<BookingDTO> getUserBookings(Integer tenantId) {
-        return bookingRepository.findAllByTenantId(tenantId).stream().map(mapper::toBookingDTO).toList();
+    public Page<BookingDTO> getUserBookings(Integer tenantId, Pageable pageable) {
+        return bookingRepository.findAllByTenantId(tenantId, pageable).map(mapper::toBookingDTO);
     }
 
-    public List<BookingDTO> getOwnerBookings(Integer ownerId) {
-        return bookingRepository.findAllByVenueOwnerId(ownerId).stream().map(mapper::toBookingDTO).toList();
+    public Page<BookingDTO> getOwnerBookings(Integer ownerId, Pageable pageable) {
+        return bookingRepository.findAllByOffer_Venue_OwnerId(ownerId, pageable).map(mapper::toBookingDTO);
     }
 
     public List<BookingDTO> getAllBookings() {
@@ -113,19 +150,5 @@ public class BookingServiceImpl implements BookingService {
                 .and(BookingSpecification.hasStatus(status));
 
         return bookingRepository.findAll(spec, pageable).map(mapper::toBookingDTO);
-    }
-
-    private void sendNotification(Offer offer, Booking booking) {
-        NotificationRequestDTO dto = new NotificationRequestDTO();
-        dto.setType(NotificationType.NEW_BOOKING);
-        dto.setRecipientId(offer.getVenue().getOwnerId());
-        dto.setTitle("Nowa rezerwacja");
-        dto.setContent("Ktoś zarezerwował miejsce w %s na dzień %s.".formatted(offer.getVenue().getName(), booking.getBookingDate().toString()));
-
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put("tenantId", booking.getTenantId());
-        dto.setMetadata(metadata);
-
-        rabbitService.sendNotification(dto);
     }
 }

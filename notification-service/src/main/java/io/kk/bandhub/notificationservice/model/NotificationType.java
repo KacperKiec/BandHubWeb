@@ -7,6 +7,7 @@ public enum NotificationType {
     BAND_REJECTED_REQUEST,
     NEW_MESSAGE,
     NEW_EVENT,
-    NEW_BOOKING
+    NEW_BOOKING,
+    BOOKING_CANCELED
 }
 

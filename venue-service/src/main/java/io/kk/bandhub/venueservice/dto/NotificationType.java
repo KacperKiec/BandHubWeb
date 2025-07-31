@@ -9,5 +9,6 @@ public enum NotificationType implements Serializable {
     BAND_REQUEST_REJECTED,
     NEW_MESSAGE,
     NEW_EVENT,
-    NEW_BOOKING
+    NEW_BOOKING,
+    BOOKING_CANCELED
 }

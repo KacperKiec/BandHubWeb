@@ -13,6 +13,13 @@
       (click)="activeTab = 'offers'">
       📢 Oferty
     </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'bookings'"
+      (click)="activeTab = 'bookings'">
+      📖 Rezerwacje
+    </button>
   </div>
 
   <div class="tab-content" [ngSwitch]="activeTab">
@@ -30,5 +37,16 @@
       [userId]="userId"
       (updateData)="updateData($event)">
     </app-user-offers>
+
+    <app-owner-bookings
+      *ngSwitchCase="'bookings'"
+      [userId]="userId"
+      [offers]="offers"
+      [bookings]="bookings"
+      [currentPage]="currentPageB"
+      [totalPages]="totalPagesB"
+      (pageChange)="loadBookingPage($event)"
+      (updateData)="updateData($event)">
+    </app-owner-bookings>
   </div>
 </div>

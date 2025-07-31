@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="page-panel">
+    <div class="page-panel" *ngIf="results.length !== 0">
       <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
         <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
       </button>
@@ -28,6 +28,10 @@
         <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
       </button>
     </div>
+
+    <p *ngIf="results.length === 0">
+      Brak danych do wyświetlenia
+    </p>
 
   </div>
 </div>

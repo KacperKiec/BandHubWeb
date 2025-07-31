@@ -9,6 +9,7 @@ export interface Booking {
   startTime: string;
   endTime: string;
   bookingDate: string;
+  bookedDate: string;
 }
 
 export interface BookingRequest {
