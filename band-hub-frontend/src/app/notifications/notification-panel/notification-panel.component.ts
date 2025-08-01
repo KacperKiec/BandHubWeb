@@ -27,10 +27,13 @@ export class NotificationPanelComponent implements OnInit {
     BAND_INVITATION: '✉️',
     BAND_REQUEST: '📝',
     JOINED_BAND: '✅',
+    LEFT_BAND: '⛔',
+    DELETED_BAND: '❌',
     BAND_REJECTED_REQUEST: '❌',
     NEW_MESSAGE: '💬',
     NEW_EVENT: '📅',
-    NEW_BOOKING: '📌'
+    NEW_BOOKING: '📌',
+    BOOKING_CANCELED: '⛔'
   };
 
   currentPage = 0;
@@ -146,7 +149,25 @@ export class NotificationPanelComponent implements OnInit {
         break;
       }
       case "NEW_BOOKING": {
+        this.router.navigate(['user/renting'], { queryParams: { mode: 'bookings' } });
+        break;
+      }
+      case "BOOKING_CANCELED": {
+        const venueId = notification.metadata['venueId'];
+        const tenantId = notification.metadata['tenantId'];
 
+        if (tenantId) this.router.navigate(['user/renting'], { queryParams: { mode: 'bookings' } });
+        if (venueId) this.router.navigate(['user/bookings']);
+        break;
+      }
+      case "DELETED_BAND": {
+        const bandId = notification.metadata['bandId'];
+        this.router.navigate(['/bands', bandId]);
+        break;
+      }
+      case "LEFT_BAND": {
+        const bandId = notification.metadata['bandId'];
+        this.router.navigate(['/bands', bandId]);
         break;
       }
       default:

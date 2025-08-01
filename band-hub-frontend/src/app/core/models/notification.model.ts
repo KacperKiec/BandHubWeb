@@ -12,8 +12,11 @@ export enum NotificationType {
   BAND_INVITATION = "Zaproszenie do zespołu",
   BAND_REQUEST = "Zgłoszenie do zespołu",
   JOINED_BAND = "Dołączono do zespołu",
+  LEFT_BAND = "Opuszczono zespół",
+  DELETED_BAND = "Rozwiązano zespół",
   BAND_REJECTED_REQUEST = "Odrzucono zgłoszenie",
   NEW_MESSAGE = "Nowa wiadomość",
   NEW_EVENT = "Nowe wydarzenie",
-  NEW_BOOKING = "Nowa rezerwacja"
+  NEW_BOOKING = "Nowa rezerwacja",
+  BOOKING_CANCELED = "Rezerwacja anulowana"
 }

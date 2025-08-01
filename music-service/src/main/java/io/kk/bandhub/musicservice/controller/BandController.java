@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,15 +46,6 @@ public class BandController {
     @GetMapping(value = "/all")
     ResponseEntity<Page<BandDTO>> getAllBands(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(service.getAll(pageable));
-    }
-
-    @GetMapping(value = "/recommended")
-    ResponseEntity<Page<BandDTO>> getRecommendedBands(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam(required = false) String userCity,
-            @RequestParam(required = false) List<String> userGenres) {
-
-        return ResponseEntity.ok(service.findBandByFilters(null, Collections.singletonList(userCity), null, userGenres, true, pageable));
     }
 
     @GetMapping(value = "/search")
@@ -103,7 +93,7 @@ public class BandController {
     @PatchMapping(value = "/leave")
     ResponseEntity<Void> leaveBand(@RequestBody @Valid BandMembershipRequestDTO bandMembershipRequestDTO, Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, bandMembershipRequestDTO.getMusicianId());
-        service.removeMusicianFromBand(bandMembershipRequestDTO);
+        service.leaveBand(bandMembershipRequestDTO);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 

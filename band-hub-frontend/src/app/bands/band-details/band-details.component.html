@@ -29,9 +29,7 @@
             <li *ngFor="let member of band.musicians" class="member-tile" (click)="getMusicianDetails(member.id)">
               <label class="member-name">{{member.firstName}} {{member.lastName}}{{ band.founderId === member.id ? '👑 ' : '' }}</label>
 
-              <label *ngIf="member.instruments.length === 0" class="instruments-label"> - Brak instrumentów</label>
-              <label *ngIf="member.instruments.length <= 3 && member.instruments.length !== 0" [innerText]="' - ' + member.instruments.join(', ')" class="instruments-label"></label>
-              <label *ngIf="member.instruments.length > 3" [innerText]="' - ' + member.instruments.slice(0, 3) + ', ...'" class="instruments-label"></label>
+              <label class="instruments-label">{{ getInstrumentLabel(member.instruments) }}</label>
 
             </li>
           </ul>

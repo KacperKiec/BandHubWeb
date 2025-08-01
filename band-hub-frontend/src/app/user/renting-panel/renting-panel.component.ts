@@ -9,6 +9,7 @@ import {OfferApiService} from '../../offers/offer-service/offer-api.service';
 import {OwnerBookingsComponent} from '../../bookings/owner-bookings/owner-bookings.component';
 import {BookingApiService} from '../../bookings/booking-service/booking-api.service';
 import {Booking} from '../../core/models/booking.model';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-renting-panel',
@@ -35,7 +36,7 @@ export class RentingPanelComponent implements OnInit {
   pageSizeB = 10;
   totalPagesB = 0;
 
-  constructor(private venueApiService: VenueApiService, private offerApiService: OfferApiService, private bookingApiService: BookingApiService) {
+  constructor(private venueApiService: VenueApiService, private offerApiService: OfferApiService, private bookingApiService: BookingApiService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -45,6 +46,10 @@ export class RentingPanelComponent implements OnInit {
     }
 
     this.initData()
+    this.route.queryParams.subscribe(params => {
+      this.activeTab = params['mode'] ?? 'venues';
+    });
+
   }
 
   initData() {

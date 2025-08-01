@@ -1,11 +1,11 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SearchBarComponent} from "../../shared/search-bar/search-bar.component";
 import {SearchResultComponent} from "../../shared/search-result/search-result.component";
-import {GenreEnum} from '../../core/models/genre.model';
 import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {Router} from '@angular/router';
 import {BandApiService} from '../band-service/band-api.service';
 import {Band} from '../../core/models/band.model';
+import {MusicAttributesApiService} from '../../shared/music-attributes-service/music-attributes-api.service';
 
 @Component({
   selector: 'app-bands',
@@ -17,17 +17,14 @@ import {Band} from '../../core/models/band.model';
   templateUrl: './bands.component.html',
   styleUrl: './bands.component.css'
 })
-export class BandsComponent implements OnInit{
-  @Output()filters: {label: string, type: string, options?: string[]}[] = [
-    {label: "Miasto", type: "text"},
-    {label: "Gatunek", type: "select", options: Object.values(GenreEnum)},
-    {label: "Szuka muzyków", type: "checkbox"}
-  ];
-  @Output() placeholderText = 'Nazwa';
-  @Output() bandsToDisplay: SearchDisplayItem[];
+export class BandsComponent implements OnInit {
+  genres: string[] = [];
 
+  placeholderText = 'Nazwa';
+  bandsToDisplay: SearchDisplayItem[];
   searchingParams: {name: string, value: string}[]= [];
   preparedParams: {name: string, value: string[]}[]=[];
+  filters: {label: string, type: string, options?: string[]}[] = [];
 
   currentPage = 0;
   pageSize = 10;
@@ -47,13 +44,21 @@ export class BandsComponent implements OnInit{
     }
   ];
 
-  constructor(private router: Router, private bandApiService: BandApiService) {
+  constructor(private router: Router, private bandApiService: BandApiService, private musicAttributesApiService: MusicAttributesApiService) {
     this.bandsToDisplay = this.sampleBands.map(this.mapBandToDisplayItem);
   }
 
   ngOnInit() {
+    this.musicAttributesApiService.getGenres().subscribe(genres => {
+      if (genres) {
+        this.genres = genres.map(g => g.name);
+        this.buildFilters();
+      }
+    });
+
     this.loadPage(this.currentPage);
   }
+
 
   loadPage(page: number) {
     this.bandApiService.getBandsWithParams(this.preparedParams, page, this.pageSize).subscribe({
@@ -108,5 +113,13 @@ export class BandsComponent implements OnInit{
       isLookingFor: band.isLookingMembers,
       image: '/assets/user.jpg'
     };
+  }
+
+  private buildFilters() {
+    this.filters = [
+      { label: "Miasto", type: "text" },
+      { label: "Gatunek", type: "select", options: this.genres },
+      { label: "Szuka muzyków", type: "checkbox" }
+    ];
   }
 }

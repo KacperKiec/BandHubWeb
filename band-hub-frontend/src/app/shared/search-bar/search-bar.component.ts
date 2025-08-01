@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -26,7 +27,8 @@ import {Address} from '../../core/models/location.model';
     AddressSearchComponent
   ],
   templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.css'
+  styleUrl: './search-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchBarComponent implements OnInit, OnChanges {
   public dropdownStatus = false;

@@ -74,6 +74,7 @@ public class Mapper {
         bookingDTO.setEndTime(booking.getEndTime());
         bookingDTO.setBookingDate(booking.getBookingDate());
         bookingDTO.setBookedDate(booking.getOffer().getDate());
+        bookingDTO.setPricePerHour(booking.getOffer().getPricePerHour());
         bookingDTO.setTenantId(booking.getTenantId());
         var accountDTO = accountServiceClient.getAccount(bookingDTO.getTenantId());
         bookingDTO.setTenantFirstName(accountDTO.getFirstName());

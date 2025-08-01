@@ -1,12 +1,11 @@
-import {Component, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SearchBarComponent} from '../../shared/search-bar/search-bar.component';
-import {GenreEnum} from '../../core/models/genre.model';
-import {InstrumentEnum} from '../../core/models/instrument.model';
 import {filterElement, SearchDisplayItem} from '../../core/models/shared.model';
 import {SearchResultComponent} from '../../shared/search-result/search-result.component';
 import {MusicianApiService} from '../musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {Musician} from '../../core/models/musician.model';
+import {MusicAttributesApiService} from '../../shared/music-attributes-service/music-attributes-api.service';
 
 @Component({
   selector: 'app-musicians',
@@ -19,15 +18,12 @@ import {Musician} from '../../core/models/musician.model';
   styleUrl: './musicians.component.css'
 })
 export class MusiciansComponent implements OnInit {
-  @Output()filters: {label: string, type: string, options?: string[]}[] = [
-    {label: "Miasto", type: "text"},
-    {label: "Gatunek", type: "select", options: Object.values(GenreEnum)},
-    {label: "Instrument", type: "select", options: Object.values(InstrumentEnum)},
-    {label: "Szuka zespołu", type: "checkbox"},
-    {label: "Wiek", type: "range", options: ['1', '99']}
-  ];
-  @Output() placeholderText = 'Imie i Nazwisko';
-  @Output() musiciansToDisplay: SearchDisplayItem[];
+  instruments: string[] = [];
+  genres: string[] = [];
+
+  filters: {label: string, type: string, options?: string[]}[] = [];
+  placeholderText = 'Imie i Nazwisko';
+  musiciansToDisplay: SearchDisplayItem[];
 
   searchingParams: {name: string, value: string}[]= [];
   preparedParams: {name: string, value: string[]}[]=[];
@@ -65,11 +61,25 @@ export class MusiciansComponent implements OnInit {
     }
   ];
 
-  constructor(private musicianApiService: MusicianApiService, private router: Router) {
+  constructor(private musicianApiService: MusicianApiService, private router: Router, private musicAttributesApiService: MusicAttributesApiService) {
     this.musiciansToDisplay = this.sampleMusicians.map(this.mapMusicianToDisplayItem);
   }
 
   ngOnInit() {
+    this.musicAttributesApiService.getGenres().subscribe(genres => {
+      if (genres) {
+        this.genres = genres.map(g => g.name);
+      }
+    });
+
+    this.musicAttributesApiService.getInstruments().subscribe(instruments => {
+      if (instruments) {
+        this.instruments = instruments.map(i => i.name);
+      }
+    });
+
+    this.buildFilters()
+
     this.loadPage(this.currentPage);
   }
 
@@ -140,5 +150,15 @@ export class MusiciansComponent implements OnInit {
       isLookingFor: musician.isLookingBand,
       image: '/assets/user.jpg'
     };
+  }
+
+  private buildFilters() {
+    this.filters = [
+      {label: "Miasto", type: "text"},
+      {label: "Gatunek", type: "select", options: this.genres},
+      {label: "Instrument", type: "select", options: this.instruments},
+      {label: "Szuka zespołu", type: "checkbox"},
+      {label: "Wiek", type: "range", options: ['1', '99']}
+    ];
   }
 }

@@ -109,7 +109,7 @@ public class BookingServiceImpl implements BookingService {
 
         } else if (initiator.equals("tenant")) {
             String title = "Anulowano rezerwację";
-            String content = "Rezerwacja lokalu %s została anulowana przez najemcę.".formatted(offer.getVenue().getName());
+            String content = "Rezerwacja lokalu %s w dniu %s została anulowana przez najemcę.".formatted(offer.getVenue().getName(), offer.getDate());
 
             var dto = NotificationCreator.createNotification(NotificationType.BOOKING_CANCELED, offer.getVenue().getOwnerId(), title, content);
 

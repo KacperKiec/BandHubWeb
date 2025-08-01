@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {InvitationApiService} from '../invitation-service/invitation-api.service';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
 import {
   BandInvitation,
@@ -9,7 +9,7 @@ import {
   BandJoinUpdateRequest,
   RequestStatus
 } from '../../core/models/invitation.model';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-invitations',
@@ -17,7 +17,8 @@ import {ActivatedRoute} from '@angular/router';
   imports: [
     NgIf,
     DatePipe,
-    NgForOf
+    NgForOf,
+    NgStyle
   ],
   templateUrl: './invitations.component.html',
   styleUrl: './invitations.component.css'
@@ -29,7 +30,7 @@ export class InvitationsComponent implements OnInit {
   hasUserBands: boolean = false;
   bandRequests: BandJoinRequest[] = [];
 
-  constructor(private invitationApiService: InvitationApiService, private musicianApiService: MusicianApiService, private route: ActivatedRoute) {
+  constructor(private invitationApiService: InvitationApiService, private musicianApiService: MusicianApiService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
@@ -118,5 +119,9 @@ export class InvitationsComponent implements OnInit {
         console.error('Błąd przy akceptacji/odrzuceniu zaproszenia:', err);
       }
     });
+  }
+
+  goToBand(id: number) {
+    this.router.navigate(['/bands', id]);
   }
 }

@@ -55,7 +55,7 @@ public class BookingController {
     @GetMapping(value = "/user/{id}")
     ResponseEntity<Page<BookingDTO>> getUserBookings(
             @PathVariable Integer id,
-            @PageableDefault(size = 10, sort = "bookingDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "Offer.date", direction = Sort.Direction.DESC) Pageable pageable,
             Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, id);
         var result = bookingService.getUserBookings(id, pageable);
@@ -65,7 +65,7 @@ public class BookingController {
     @GetMapping(value = "/owner/{id}")
     ResponseEntity<Page<BookingDTO>> getOwnerBookings(
             @PathVariable Integer id,
-            @PageableDefault(size = 10, sort = "bookingDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "Offer.date", direction = Sort.Direction.DESC) Pageable pageable,
             Authentication authentication) {
         SecurityUtils.verifyAuthorities(authentication, id);
         var result = bookingService.getOwnerBookings(id, pageable);

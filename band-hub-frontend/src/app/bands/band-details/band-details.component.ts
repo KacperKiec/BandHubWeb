@@ -5,6 +5,7 @@ import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {Band} from '../../core/models/band.model';
 import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
 import {InvitationApiService} from '../../invitations/invitation-service/invitation-api.service';
+import {Instrument} from '../../core/models/instrument.model';
 
 @Component({
   selector: 'app-band-details',
@@ -33,6 +34,7 @@ export class BandDetailsComponent implements OnInit{
         band.image = 'assets/user.jpg';
       }
       this.band = band;
+      console.log(band);
     });
 
     const rawId = localStorage.getItem('userId');
@@ -42,9 +44,7 @@ export class BandDetailsComponent implements OnInit{
 
     this.musicianApiService.getMusicianById(this.userId).subscribe(musician => {
       this.isUserMusician = !!musician;
-      console.log(musician);
-      console.log("is musician: " + this.isUserMusician);
-    })
+    });
   }
 
   getMusicianDetails(id: number) {
@@ -68,4 +68,18 @@ export class BandDetailsComponent implements OnInit{
       }
     });
   }
+
+  getInstrumentLabel(instruments: Instrument[]): string {
+    if (!instruments || instruments.length === 0) {
+      return ' - Brak instrumentów';
+    }
+
+    const names = instruments.map(i => i.name);
+    if (names.length <= 3) {
+      return ' - ' + names.join(', ');
+    }
+
+    return ' - ' + names.slice(0, 3).join(', ') + ', ...';
+  }
+
 }

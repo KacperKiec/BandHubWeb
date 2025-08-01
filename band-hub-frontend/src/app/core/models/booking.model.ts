@@ -10,6 +10,7 @@ export interface Booking {
   endTime: string;
   bookingDate: string;
   bookedDate: string;
+  pricePerHour: number;
 }
 
 export interface BookingRequest {

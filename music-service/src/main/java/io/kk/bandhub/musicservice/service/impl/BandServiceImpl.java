@@ -7,6 +7,8 @@ import io.kk.bandhub.musicservice.exception.genre.GenreError;
 import io.kk.bandhub.musicservice.exception.genre.GenreException;
 import io.kk.bandhub.musicservice.exception.musician.MusicianError;
 import io.kk.bandhub.musicservice.exception.musician.MusicianException;
+import io.kk.bandhub.musicservice.integration.AccountServiceClient;
+import io.kk.bandhub.musicservice.integration.RabbitService;
 import io.kk.bandhub.musicservice.model.Band;
 import io.kk.bandhub.musicservice.model.BandGenre;
 import io.kk.bandhub.musicservice.model.BandMusician;
@@ -16,6 +18,7 @@ import io.kk.bandhub.musicservice.repository.band.BandSpecification;
 import io.kk.bandhub.musicservice.repository.genre.GenreRepository;
 import io.kk.bandhub.musicservice.repository.musician.MusicianRepository;
 import io.kk.bandhub.musicservice.service.BandService;
+import io.kk.bandhub.musicservice.utils.NotificationCreator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,8 +27,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service class for provide data and method for BandController
@@ -36,6 +41,8 @@ public class BandServiceImpl implements BandService {
     private final BandRepository bandRepository;
     private final MusicianRepository musicianRepository;
     private final GenreRepository genreRepository;
+    private final RabbitService rabbitService;
+    private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
 
     @Transactional
@@ -153,6 +160,37 @@ public class BandServiceImpl implements BandService {
     }
 
     public void removeMusicianFromBand(BandMembershipRequestDTO dto) {
+        var band = removeMusician(dto);
+
+        String title = "Opuszczono zespół";
+        String content = "Właściciel zespołu %s usunął Cię z niego. Nie jesteś już jego członkiem.".formatted(band.getName());
+
+        var notificationRequestDTO = NotificationCreator.createNotification(NotificationType.LEFT_BAND, dto.getMusicianId(), title, content);
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("bandId", band.getId());
+        notificationRequestDTO.setMetadata(metadata);
+
+        rabbitService.sendNotification(notificationRequestDTO);
+    }
+
+    public void leaveBand(BandMembershipRequestDTO dto) {
+        var band = removeMusician(dto);
+        var account = accountServiceClient.getAccount(dto.getMusicianId());
+
+        String title = "Opuszczono zespół";
+        String content = "Użytkownik %s %s opuścił zespół %s".formatted(account.getFirstName(), account.getLastName(), band.getName());
+
+        var notificationRequestDTO = NotificationCreator.createNotification(NotificationType.LEFT_BAND, bandRepository.getFounderId(band.getId()), title, content);
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("bandId", band.getId());
+        notificationRequestDTO.setMetadata(metadata);
+
+        rabbitService.sendNotification(notificationRequestDTO);
+    }
+
+    private Band removeMusician(BandMembershipRequestDTO dto) {
         var band = bandRepository.findBandById(dto.getBandId()).orElseThrow(
                 () -> new BandException(BandError.BAND_NOT_FOUND)
         );
@@ -163,13 +201,26 @@ public class BandServiceImpl implements BandService {
             }
         }
         bandRepository.save(band);
+        return band;
     }
 
     @Transactional
     public void deleteBand(Integer bandId) {
-        bandRepository.findBandById(bandId).orElseThrow(
+        var existingBand = bandRepository.findBandById(bandId).orElseThrow(
                 () -> new BandException(BandError.BAND_NOT_FOUND));
         bandRepository.deleteBandById(bandId);
+
+        String title = "Rozwiązano zespół";
+        String content = "Zespół %s został rozwiązany przez jego właściciela.".formatted(existingBand.getName());
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("bandId", existingBand.getId());
+
+        for (var bm : existingBand.getBandMusicians()) {
+            var dto = NotificationCreator.createNotification(NotificationType.DELETED_BAND, bm.getMusician().getId(), title, content);
+            dto.setMetadata(metadata);
+
+            rabbitService.sendNotification(dto);
+        }
     }
 
 }

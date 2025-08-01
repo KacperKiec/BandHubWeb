@@ -3,6 +3,7 @@ package io.kk.bandhub.venueservice.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -20,4 +21,5 @@ public class BookingDTO {
     private LocalTime endTime;
     private LocalDate bookingDate;
     private LocalDate bookedDate;
+    private BigDecimal pricePerHour;
 }

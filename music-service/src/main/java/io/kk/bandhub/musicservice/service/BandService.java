@@ -15,5 +15,6 @@ public interface BandService {
     BandDTO updateBand(BandUpdateRequestDTO bandDTO);
     void addMusicianToBand(BandMembershipRequestDTO dto);
     void removeMusicianFromBand(BandMembershipRequestDTO dto);
+    void leaveBand(BandMembershipRequestDTO dto);
     void deleteBand(Integer bandId);
 }

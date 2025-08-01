@@ -28,7 +28,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let invitation of invitations">
-          <td>{{ invitation.bandName }}</td>
+          <td (click)="goToBand(invitation.bandId)" [ngStyle]="{ cursor: 'pointer' }">{{ invitation.bandName }}</td>
           <td>{{ getStatusLabel(invitation.status) }}</td>
           <td>{{ invitation.creationDate | date:'medium' }}</td>
           <td>
@@ -55,7 +55,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let request of bandRequests">
-        <td>{{ request.bandName }}</td>
+        <td (click)="goToBand(request.bandId)" [ngStyle]="{ cursor: 'pointer' }">{{ request.bandName }}</td>
         <td>{{ getStatusLabel(request.status) }}</td>
         <td>{{ request.applicantFirstName }} {{ request.applicantLastName }}</td>
         <td>{{ request.creationDate | date:'medium' }}</td>
