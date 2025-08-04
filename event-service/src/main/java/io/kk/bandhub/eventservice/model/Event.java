@@ -24,6 +24,10 @@ public class Event {
     private Integer id;
 
     @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @NotNull
     @Column(name = "band_id", nullable = false)
     private Integer bandId;
 

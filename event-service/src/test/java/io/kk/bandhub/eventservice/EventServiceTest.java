@@ -1,6 +1,7 @@
 package io.kk.bandhub.eventservice;
 
 import io.kk.bandhub.eventservice.dto.*;
+import io.kk.bandhub.eventservice.exception.RegistrationException;
 import io.kk.bandhub.eventservice.integration.MusicServiceClient;
 import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
@@ -14,9 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
@@ -109,6 +113,47 @@ public class EventServiceTest {
 
         // then
         verify(eventRepository).save(any(Event.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenEventOverlapsWithAnotherEventOrOffer() {
+        // given
+        EventRequestDTO request = new EventRequestDTO();
+        request.setBandId(1);
+        request.setCreatorId(30);
+        request.setVenueId(100);
+        request.setDate(LocalDate.now().plusDays(3));
+        request.setStartTime(LocalTime.of(19, 0));
+        request.setEndTime(LocalTime.of(21, 0));
+        request.setDescription("Wydarzenie kolidujące");
+        request.setTicketPrice(15.0);
+
+        VenueDTO venueData = VenueDTO.builder()
+                .id(100)
+                .name("Owner Venue")
+                .ownerId(30)
+                .street("Główna")
+                .number("12")
+                .city("Miasto")
+                .country("PL")
+                .postalCode("12-121")
+                .build();
+
+        BandEventDataDTO band = new BandEventDataDTO();
+        band.setId(1);
+        band.setName("Test Band");
+        band.setFounderId(30);
+
+        Event existingEvent = new Event();
+        existingEvent.setStartTime(LocalTime.of(18, 30));
+        existingEvent.setEndTime(LocalTime.of(20, 0));
+
+        when(eventRepository.findAllByDateAndVenueId(eq(request.getDate()), eq(request.getVenueId())))
+                .thenReturn(List.of(existingEvent));
+
+        // when + then
+        assertThrows(RegistrationException.class, () -> eventService.createEvent(request));
+        verify(eventRepository, never()).save(any(Event.class));
     }
 
 }

@@ -35,7 +35,7 @@ public class Mapper {
         }
 
         if (!creatorId.equals(bandData.getFounderId())) {
-            throw new RegistrationException("Creator is not band founder");
+            throw new RegistrationException("Creator must be the band founder");
         }
 
         VenueDTO venue = VenueDTO.builder()
@@ -61,7 +61,7 @@ public class Mapper {
         }
 
         if (!creatorId.equals(bandData.getFounderId())) {
-            throw new RegistrationException("Creator is not band founder");
+            throw new RegistrationException("Creator must be the band founder");
         }
 
         return buildDTO(event, venueData, bandData);
@@ -70,6 +70,7 @@ public class Mapper {
     private EventDTO buildDTO(Event event, VenueDTO venue, BandEventDataDTO band) {
         EventDTO dto = new EventDTO();
         dto.setId(event.getId());
+        dto.setName(event.getName());
         dto.setVenueId(venue.getId());
         dto.setVenueName(venue.getName());
         dto.setStreet(venue.getStreet());

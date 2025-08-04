@@ -2,6 +2,7 @@ package io.kk.bandhub.eventservice.integration;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.kk.bandhub.eventservice.dto.BookingEventDataDTO;
+import io.kk.bandhub.eventservice.dto.OfferDTO;
 import io.kk.bandhub.eventservice.dto.VenueDTO;
 import io.kk.bandhub.eventservice.exception.RegistrationException;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @FeignClient(name = "VENUE-SERVICE")
@@ -29,6 +31,10 @@ public interface VenueServiceClient {
     @GetMapping(value = "/venue/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenue")
     VenueDTO getVenueById(@PathVariable Integer id);
+
+    @GetMapping(value = "/offers/venue/{id}")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetOffers")
+    List<OfferDTO> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date);
 
     default BookingEventDataDTO fallbackGetData(Integer id, Throwable throwable) {
         BookingEventDataDTO b = new BookingEventDataDTO();
@@ -61,6 +67,10 @@ public interface VenueServiceClient {
     }
 
     default VenueDTO fallbackGetVenue(Integer id, Throwable throwable) {
+        throw new RuntimeException("Something went wrong");
+    }
+
+    default List<OfferDTO> fallbackGetOffers(Integer id, LocalDate date, Throwable throwable) {
         throw new RuntimeException("Something went wrong");
     }
 }

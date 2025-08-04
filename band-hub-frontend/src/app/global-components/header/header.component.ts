@@ -126,6 +126,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/user/bookings']);
   }
 
+  goToUserEvents() {
+    this.router.navigate(['/user/events']);
+  }
+
   logOut() {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);

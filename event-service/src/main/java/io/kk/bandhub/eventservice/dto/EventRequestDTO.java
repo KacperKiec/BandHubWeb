@@ -16,6 +16,9 @@ public class EventRequestDTO {
     private Integer creatorId;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private Integer bandId;
 
     private Integer bookingId;

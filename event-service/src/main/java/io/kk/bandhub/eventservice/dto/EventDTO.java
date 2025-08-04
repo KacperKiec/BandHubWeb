@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Setter
 public class EventDTO {
     private Integer id;
+    private String name;
     private Integer bandId;
     private String bandName;
     private Integer venueId;

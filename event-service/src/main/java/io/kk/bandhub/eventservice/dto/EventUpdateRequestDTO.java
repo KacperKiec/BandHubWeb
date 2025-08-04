@@ -15,6 +15,9 @@ public class EventUpdateRequestDTO {
     private Integer id;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private Integer creatorId;
 
     @NotNull

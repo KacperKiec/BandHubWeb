@@ -1,5 +1,6 @@
 CREATE TABLE event (
     id SERIAL PRIMARY KEY,
+    name varchar(255) NOT NULL,
     band_id INTEGER NOT NULL,
     venue_id INTEGER NOT NULL,
     booking_id INTEGER,

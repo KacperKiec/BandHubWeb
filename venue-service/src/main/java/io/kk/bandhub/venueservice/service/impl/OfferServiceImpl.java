@@ -119,6 +119,11 @@ public class OfferServiceImpl implements OfferService {
         return offerRepository.findAll().stream().map(mapper::toOfferDTO).toList();
     }
 
+    public List<OfferDTO> getNotCanceledOffersByVenueAndDate(Integer venueId, LocalDate date) {
+        return offerRepository.findOffersByDateAndVenueIdAndStatusIn(date, venueId, List.of(OfferStatus.ACTIVE, OfferStatus.CLAIMED))
+                .stream().map(mapper::toOfferDTO).toList();
+    }
+
     public List<OfferDTO> searchOffers(
             List<String> cities,
             OfferStatus status,

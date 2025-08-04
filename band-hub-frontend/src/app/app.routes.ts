@@ -14,6 +14,7 @@ import {InvitationsComponent} from './invitations/invitations/invitations.compon
 import {RentingPanelComponent} from './user/renting-panel/renting-panel.component';
 import {OffersComponent} from './offers/offers/offers.component';
 import {UserBookingsComponent} from './bookings/user-bookings/user-bookings.component';
+import {UserEventsComponent} from './events/user-events/user-events.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -31,5 +32,6 @@ export const routes: Routes = [
   { path: 'user/renting', component: RentingPanelComponent },
   { path: 'invitations', component: InvitationsComponent },
   { path: 'offers', component: OffersComponent },
-  { path: 'user/bookings', component: UserBookingsComponent}
+  { path: 'user/bookings', component: UserBookingsComponent},
+  { path: 'user/events', component: UserEventsComponent }
 ]

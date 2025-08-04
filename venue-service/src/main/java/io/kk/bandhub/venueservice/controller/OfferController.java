@@ -64,6 +64,12 @@ public class OfferController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "/venue/{id}")
+    ResponseEntity<List<OfferDTO>> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date) {
+        var result = offerService.getNotCanceledOffersByVenueAndDate(id, date);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/search")
     ResponseEntity<List<OfferDTO>> searchOffers(
             @RequestParam(required = false) List<String> cities,

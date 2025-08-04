@@ -15,5 +15,6 @@ public interface OfferService {
     List<OfferDTO> getUserOffers(Integer id);
     OfferDTO getOfferById(Integer offerId);
     List<OfferDTO> getAllOffers();
+    List<OfferDTO> getNotCanceledOffersByVenueAndDate(Integer venueId, LocalDate date);
     List<OfferDTO> searchOffers(List<String> cities, OfferStatus status, LocalDate date, Double minLatitude, Double maxLatitude, Double minLongitude, Double maxLongitude);
 }

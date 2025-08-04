@@ -3,11 +3,13 @@ package io.kk.bandhub.eventservice.service.impl;
 import io.kk.bandhub.eventservice.dto.*;
 import io.kk.bandhub.eventservice.exception.EventError;
 import io.kk.bandhub.eventservice.exception.EventException;
+import io.kk.bandhub.eventservice.exception.RegistrationException;
 import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
 import io.kk.bandhub.eventservice.repository.EventRepository;
 import io.kk.bandhub.eventservice.repository.EventSpecification;
 import io.kk.bandhub.eventservice.service.EventService;
+import io.kk.bandhub.eventservice.utils.TimeRange;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,7 @@ public class EventServiceImpl implements EventService {
     public void createEvent(EventRequestDTO eventDTO) {
 
         Event event = new Event();
+        event.setName(eventDTO.getName());
         event.setBandId(eventDTO.getBandId());
         event.setVenueId(eventDTO.getVenueId());
         event.setDate(eventDTO.getDate());
@@ -40,6 +44,7 @@ public class EventServiceImpl implements EventService {
         event.setDescription(eventDTO.getDescription());
 
         if (eventDTO.getBookingId() == null) {
+            checkEventOverlapping(event);
             mapper.toEventDTOOwnerReg(event, eventDTO.getCreatorId());
         } else {
             event.setBookingId(eventDTO.getBookingId());
@@ -55,6 +60,7 @@ public class EventServiceImpl implements EventService {
                 () -> new EventException(EventError.EVENT_NOT_FOUND)
         );
 
+        existingEvent.setName(existingEvent.getName());
         existingEvent.setVenueId(eventDTO.getVenueId());
         existingEvent.setBandId(eventDTO.getBandId());
         existingEvent.setDate(eventDTO.getDate());
@@ -64,7 +70,9 @@ public class EventServiceImpl implements EventService {
         existingEvent.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
 
         if (eventDTO.getBookingId() == null) {
+            checkEventOverlapping(existingEvent);
             var mappedEvent = mapper.toEventDTOOwnerReg(existingEvent, eventDTO.getCreatorId());
+
             eventRepository.save(existingEvent);
             return mappedEvent;
         } else {
@@ -117,5 +125,22 @@ public class EventServiceImpl implements EventService {
                 .filter(e -> cities.contains(venueIdToCity.get(e.getVenueId())))
                 .map(mapper::toEventDTO)
                 .toList();
+    }
+
+    private void checkEventOverlapping(Event event) {
+        var events = eventRepository.findAllByDateAndVenueId(event.getDate(), event.getVenueId());
+        var offers = venueServiceClient.getOffersByVenueAndDate(event.getVenueId(), event.getDate());
+
+        Set<TimeRange> timeRanges = events.stream().map(e -> new TimeRange(e.getStartTime(), e.getEndTime())).collect(Collectors.toSet());
+        timeRanges.addAll(offers.stream().map(o -> new TimeRange(o.getStartTime(), o.getEndTime())).collect(Collectors.toSet()));
+
+        for (TimeRange timeRange : timeRanges) {
+            boolean overlaps = !event.getEndTime().isBefore(timeRange.getStartTime()) &&
+                    !event.getStartTime().isAfter(timeRange.getEndTime());
+
+            if (overlaps) {
+                throw new RegistrationException("Event time overlaps with other events or existing offers time bounds");
+            }
+        }
     }
 }

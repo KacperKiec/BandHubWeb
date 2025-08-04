@@ -3,6 +3,7 @@ package io.kk.bandhub.eventservice.repository;
 import io.kk.bandhub.eventservice.model.Event;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,5 +12,6 @@ public interface EventRepository {
     void deleteById(Integer id);
     Optional<Event> findById(Integer id);
     List<Event> findAll();
+    List<Event> findAllByDateAndVenueId(LocalDate date, Integer venueId);
     List<Event> findAll(Specification<Event> spec);
 }
