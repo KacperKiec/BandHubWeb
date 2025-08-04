@@ -4,7 +4,7 @@ import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.model.Offer;
 import io.kk.bandhub.venueservice.model.OfferAvailability;
 import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
-import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
+import io.kk.bandhub.venueservice.service.impl.OfferAvailabilityServiceImpl;
 import io.kk.bandhub.venueservice.utils.TimeRange;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class OfferAvailabilityServiceTest {
     private BookingRepository bookingRepository;
 
     @InjectMocks
-    private OfferAvailabilityService offerAvailabilityService;
+    private OfferAvailabilityServiceImpl offerAvailabilityService;
 
     private Offer createTestOffer() {
         Offer offer = new Offer();

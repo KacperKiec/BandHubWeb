@@ -2,7 +2,7 @@ CREATE TABLE event (
     id SERIAL PRIMARY KEY,
     band_id INTEGER NOT NULL,
     venue_id INTEGER NOT NULL,
-    booking_id INTEGER NOT NULL,
+    booking_id INTEGER,
     date date NOT NULL,
     start_time time NOT NULL,
     end_time time NOT NULL,

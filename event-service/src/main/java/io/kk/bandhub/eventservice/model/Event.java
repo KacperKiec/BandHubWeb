@@ -31,7 +31,6 @@ public class Event {
     @Column(name = "venue_id", nullable = false)
     private Integer venueId;
 
-    @NotNull
     @Column(name = "booking_id", nullable = false)
     private Integer bookingId;
 

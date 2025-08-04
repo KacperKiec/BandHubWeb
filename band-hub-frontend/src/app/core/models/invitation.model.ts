@@ -33,8 +33,8 @@ export interface BandJoinUpdateRequest {
 }
 
 export enum RequestStatus {
-  PENDING,
-  REJECTED,
-  ACCEPTED,
-  CANCELED
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED',
+  ACCEPTED = 'ACCEPTED',
+  CANCELED = 'CANCELED'
 }

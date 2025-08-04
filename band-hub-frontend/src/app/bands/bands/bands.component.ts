@@ -111,7 +111,7 @@ export class BandsComponent implements OnInit {
       city: band.city,
       genres: band.genres,
       isLookingFor: band.isLookingMembers,
-      image: '/assets/user.jpg'
+      image: band.image ?? 'assets/user.jpg',
     };
   }
 

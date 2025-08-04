@@ -27,7 +27,7 @@
     <img class="icon" ngSrc="/icons8-chat-message-48.png" height="32" width="32" alt="Friends Icon">
     <label>Czat</label>
   </div>
-  <div class="option">
+  <div class="option" (click)="authAction()">
     <img *ngIf="isUserLoggedIn" class="icon" ngSrc="/icons8-log-out-48.png" height="32" width="32" alt="Sign Out Icon">
     <label *ngIf="isUserLoggedIn">Wyloguj</label>
 

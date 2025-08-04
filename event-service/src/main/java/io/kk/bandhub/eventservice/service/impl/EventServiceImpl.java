@@ -32,14 +32,20 @@ public class EventServiceImpl implements EventService {
 
         Event event = new Event();
         event.setBandId(eventDTO.getBandId());
+        event.setVenueId(eventDTO.getVenueId());
         event.setDate(eventDTO.getDate());
         event.setStartTime(eventDTO.getStartTime());
         event.setEndTime(eventDTO.getEndTime());
         event.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
         event.setDescription(eventDTO.getDescription());
-        event.setBookingId(eventDTO.getBookingId());
 
-        mapper.toEventDTOReg(event);
+        if (eventDTO.getBookingId() == null) {
+            mapper.toEventDTOOwnerReg(event, eventDTO.getCreatorId());
+        } else {
+            event.setBookingId(eventDTO.getBookingId());
+            mapper.toEventDTOReg(event, eventDTO.getCreatorId());
+        }
+
         eventRepository.save(event);
     }
 
@@ -49,18 +55,24 @@ public class EventServiceImpl implements EventService {
                 () -> new EventException(EventError.EVENT_NOT_FOUND)
         );
 
-        existingEvent.setVenueId(eventDTO.getBookingId());
+        existingEvent.setVenueId(eventDTO.getVenueId());
         existingEvent.setBandId(eventDTO.getBandId());
         existingEvent.setDate(eventDTO.getDate());
         existingEvent.setStartTime(eventDTO.getStartTime());
         existingEvent.setEndTime(eventDTO.getEndTime());
         existingEvent.setDescription(eventDTO.getDescription());
         existingEvent.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
-        existingEvent.setBookingId(eventDTO.getBookingId());
 
-        var mappedEvent = mapper.toEventDTOReg(existingEvent);
-        eventRepository.save(existingEvent);
-        return mappedEvent;
+        if (eventDTO.getBookingId() == null) {
+            var mappedEvent = mapper.toEventDTOOwnerReg(existingEvent, eventDTO.getCreatorId());
+            eventRepository.save(existingEvent);
+            return mappedEvent;
+        } else {
+            existingEvent.setBookingId(eventDTO.getBookingId());
+            var mappedEvent = mapper.toEventDTOReg(existingEvent, eventDTO.getCreatorId());
+            eventRepository.save(existingEvent);
+            return mappedEvent;
+        }
     }
 
     public void deleteEvent(Integer eventId) {

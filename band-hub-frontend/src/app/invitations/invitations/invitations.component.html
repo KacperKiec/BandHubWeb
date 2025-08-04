@@ -41,7 +41,7 @@
       </tbody>
     </table>
 
-    <label *ngIf="invitations.length === 0 && activeTab ==='invitations'">Brak zaproszeń do wyświetlenia</label>
+    <label *ngIf="invitations.length === 0 && activeTab ==='invitations'">Brak nierozpatrzonych zaproszeń do wyświetlenia</label>
 
     <table *ngIf="bandRequests.length > 0 && activeTab === 'requests'">
       <thead>
@@ -69,6 +69,6 @@
       </tbody>
     </table>
 
-    <label *ngIf="bandRequests.length === 0 && activeTab ==='requests'">Brak zgłoszeń do wyświetlenia</label>
+    <label *ngIf="bandRequests.length === 0 && activeTab ==='requests'">Brak nierozpatrzonych zgłoszeń do wyświetlenia</label>
   </div>
 </div>

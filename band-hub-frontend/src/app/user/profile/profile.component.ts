@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserApiService} from '../user-service/user-api.service';
-import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {RegisterMusicianComponent} from '../../musicians/register-musician/register-musician.component';
@@ -13,7 +13,6 @@ import {Band} from '../../core/models/band.model';
   standalone: true,
   imports: [
     NgForOf,
-    NgOptimizedImage,
     NgIf,
     RegisterMusicianComponent
   ],

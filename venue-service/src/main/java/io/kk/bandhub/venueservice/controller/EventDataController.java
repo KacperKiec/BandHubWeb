@@ -31,6 +31,7 @@ public class EventDataController {
         data.setTenantId(booking.getTenantId());
         data.setStartTime(booking.getStartTime());
         data.setEndTime(booking.getEndTime());
+        data.setDate(booking.getOffer().getDate());
 
         data.setStreet(venue.getStreet());
         data.setNumber(venue.getNumber());

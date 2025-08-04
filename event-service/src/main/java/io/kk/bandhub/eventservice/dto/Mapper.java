@@ -15,58 +15,78 @@ public class Mapper {
     private final MusicServiceClient musicServiceClient;
 
     public EventDTO toEventDTO(Event event) {
-        EventDTO eventDTO = setBasicEventFields(event);
-        eventDTO.setVenueId(event.getVenueId());
-
-        var bookingEventData = venueServiceClient.getBookingEventData(event.getBookingId());
-
-        setVenueEventFields(eventDTO, bookingEventData);
-
+        var venueEventData = venueServiceClient.getVenueById(event.getVenueId());
         var bandEventData = musicServiceClient.getBand(event.getBandId());
-        eventDTO.setBandId(bandEventData.getId());
-        eventDTO.setBandName(bandEventData.getName());
-        return eventDTO;
+
+        return buildDTO(event, venueEventData, bandEventData);
     }
 
-    public EventDTO toEventDTOReg(Event event) {
-        EventDTO eventDTO = setBasicEventFields(event);
+    public EventDTO toEventDTOReg(Event event, Integer creatorId) {
+        var venueEventData = venueServiceClient.getVenueEventData(event.getBookingId());
+        var bandData = musicServiceClient.getBandReg(event.getBandId());
 
-        var bookingEventData = venueServiceClient.getBookingEventDataReg(event.getBookingId());
-
-        if (event.getStartTime().isBefore(bookingEventData.getStartTime()) || event.getEndTime().isAfter(bookingEventData.getEndTime()))
-            throw new RegistrationException("Registration failed because of bad data (event time ranges do not match with booking time ranges)");
-
-        setVenueEventFields(eventDTO, bookingEventData);
-
-        var bandEventData = musicServiceClient.getBandReg(event.getBandId());
-        eventDTO.setBandId(bandEventData.getId());
-        eventDTO.setBandName(bandEventData.getName());
-
-        if (!bandEventData.getFounderId().equals(bookingEventData.getTenantId())) {
-            throw new RegistrationException("Registration failed because of bad data (user does not exist)");
+        if (event.getStartTime().isBefore(venueEventData.getStartTime())
+                || event.getEndTime().isAfter(venueEventData.getEndTime())) {
+            throw new RegistrationException("Event time out of booking bounds");
         }
 
-        return eventDTO;
+        if (!creatorId.equals(venueEventData.getTenantId())) {
+            throw new RegistrationException("Creator is not the booking tenant");
+        }
+
+        if (!creatorId.equals(bandData.getFounderId())) {
+            throw new RegistrationException("Creator is not band founder");
+        }
+
+        VenueDTO venue = VenueDTO.builder()
+                .id(venueEventData.getVenueId())
+                .name(venueEventData.getVenueName())
+                .street(venueEventData.getStreet())
+                .number(venueEventData.getNumber())
+                .city(venueEventData.getCity())
+                .postalCode(venueEventData.getPostalCode())
+                .country(venueEventData.getCountry())
+                .build();
+
+        return buildDTO(event, venue, bandData);
     }
 
-    private EventDTO setBasicEventFields(Event event) {
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.setId(event.getId());
-        eventDTO.setDescription(event.getDescription());
-        eventDTO.setDate(event.getDate());
-        eventDTO.setStartTime(event.getStartTime());
-        eventDTO.setEndTime(event.getEndTime());
-        eventDTO.setTicketPrice(event.getTicketPrice().doubleValue());
-        return eventDTO;
+
+    public EventDTO toEventDTOOwnerReg(Event event, Integer creatorId) {
+        var venueData = venueServiceClient.getVenueById(event.getVenueId());
+        var bandData = musicServiceClient.getBandReg(event.getBandId());
+
+        if (!creatorId.equals(venueData.getOwnerId())) {
+            throw new RegistrationException("Only venue owner can create this event");
+        }
+
+        if (!creatorId.equals(bandData.getFounderId())) {
+            throw new RegistrationException("Creator is not band founder");
+        }
+
+        return buildDTO(event, venueData, bandData);
     }
 
-    private void setVenueEventFields(EventDTO eventDTO, BookingEventDataDTO bookingEventData) {
-        eventDTO.setVenueId(bookingEventData.getVenueId());
-        eventDTO.setVenueName(bookingEventData.getVenueName());
-        eventDTO.setStreet(bookingEventData.getStreet());
-        eventDTO.setNumber(bookingEventData.getNumber());
-        eventDTO.setCity(bookingEventData.getCity());
-        eventDTO.setPostalCode(bookingEventData.getPostalCode());
-        eventDTO.setCountry(bookingEventData.getCountry());
+    private EventDTO buildDTO(Event event, VenueDTO venue, BandEventDataDTO band) {
+        EventDTO dto = new EventDTO();
+        dto.setId(event.getId());
+        dto.setVenueId(venue.getId());
+        dto.setVenueName(venue.getName());
+        dto.setStreet(venue.getStreet());
+        dto.setNumber(venue.getNumber());
+        dto.setCity(venue.getCity());
+        dto.setPostalCode(venue.getPostalCode());
+        dto.setCountry(venue.getCountry());
+
+        dto.setBandId(band.getId());
+        dto.setBandName(band.getName());
+
+        dto.setDate(event.getDate());
+        dto.setStartTime(event.getStartTime());
+        dto.setEndTime(event.getEndTime());
+        dto.setDescription(event.getDescription());
+        dto.setTicketPrice(event.getTicketPrice().doubleValue());
+
+        return dto;
     }
 }

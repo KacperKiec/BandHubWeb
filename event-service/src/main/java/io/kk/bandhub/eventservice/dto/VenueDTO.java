@@ -1,5 +1,6 @@
 package io.kk.bandhub.eventservice.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
+@Builder
 public class VenueDTO {
     private Integer id;
     private Integer ownerId;

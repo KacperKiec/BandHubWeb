@@ -15,10 +15,13 @@ public class EventUpdateRequestDTO {
     private Integer id;
 
     @NotNull
-    private Integer bandId;
+    private Integer creatorId;
 
     @NotNull
+    private Integer bandId;
+
     private Integer bookingId;
+    private Integer venueId;
 
     @NotNull
     private LocalDate date;

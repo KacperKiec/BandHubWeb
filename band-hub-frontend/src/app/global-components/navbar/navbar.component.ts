@@ -1,7 +1,8 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../core/auth/service/auth.service';
+import {AuthApiService} from '../../core/auth/auth-service/auth-api.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +12,7 @@ import {AuthService} from '../../core/auth/service/auth.service';
     NgClass,
     NgIf,
     RouterLink,
-    RouterOutlet,
+
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -23,7 +24,7 @@ export class NavbarComponent implements OnInit{
 
   private count: number = 0;
 
-  constructor(private el: ElementRef, private authService: AuthService, private router: Router) {}
+  constructor(private el: ElementRef, private authService: AuthService, private router: Router, private authApiService: AuthApiService) {}
 
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe(status => {
@@ -52,6 +53,18 @@ export class NavbarComponent implements OnInit{
   goToCurrentUerProfile() {
     if(this.isUserLoggedIn) {
       this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/auth/login']);
+    }
+  }
+
+  authAction() {
+    if(this.isUserLoggedIn) {
+      this.authApiService.logout().subscribe(() => {
+        this.authService.setLoginStatus(false);
+        this.router.navigate(['/']);
+      });
+
     } else {
       this.router.navigate(['/auth/login']);
     }

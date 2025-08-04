@@ -11,11 +11,15 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class EventRequestDTO {
+
+    @NotNull
+    private Integer creatorId;
+
     @NotNull
     private Integer bandId;
 
-    @NotNull
     private Integer bookingId;
+    private Integer venueId;
 
     @NotNull
     private LocalDate date;

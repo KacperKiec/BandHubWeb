@@ -3,6 +3,7 @@ package io.kk.bandhub.eventservice.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -13,6 +14,7 @@ public class BookingEventDataDTO {
     private Integer tenantId;
     private LocalTime startTime;
     private LocalTime endTime;
+    private LocalDate date;
 
     private String street;
     private String number;

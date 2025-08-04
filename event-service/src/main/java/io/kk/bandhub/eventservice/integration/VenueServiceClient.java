@@ -15,18 +15,22 @@ import java.util.List;
 public interface VenueServiceClient {
 
     @GetMapping("/event-data/{id}")
-    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBooking")
-    BookingEventDataDTO getBookingEventData(@PathVariable Integer id);
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetData")
+    BookingEventDataDTO getVenueEventData(@PathVariable Integer id);
 
     @GetMapping("/event-data/{id}")
-    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBookingReg")
-    BookingEventDataDTO getBookingEventDataReg(@PathVariable Integer id);
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetDataReg")
+    BookingEventDataDTO getVenueEventDataReg(@PathVariable Integer id);
 
     @GetMapping(value = "/ids")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenues")
     List<VenueDTO> getVenuesByIds(@RequestParam List<Integer> ids);
 
-    default BookingEventDataDTO fallbackGetBooking(Integer id, Throwable throwable) {
+    @GetMapping(value = "/venue/{id}")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenue")
+    VenueDTO getVenueById(@PathVariable Integer id);
+
+    default BookingEventDataDTO fallbackGetData(Integer id, Throwable throwable) {
         BookingEventDataDTO b = new BookingEventDataDTO();
         b.setVenueId(null);
         b.setVenueName("unknown");
@@ -42,7 +46,7 @@ public interface VenueServiceClient {
         return b;
     }
 
-    default BookingEventDataDTO fallbackGetBookingReg(Throwable throwable) {
+    default BookingEventDataDTO fallbackGetDataReg(Throwable throwable) {
         if (throwable instanceof feign.FeignException.ServiceUnavailable) {
             throw new RegistrationException("Registration failed because of service unavailability");
         } else if (throwable instanceof feign.FeignException.NotFound) {
@@ -53,6 +57,10 @@ public interface VenueServiceClient {
     }
 
     default List<VenueDTO> fallbackGetVenues(List<Integer> ids, Throwable throwable) {
+        throw new RuntimeException("Something went wrong");
+    }
+
+    default VenueDTO fallbackGetVenue(Integer id, Throwable throwable) {
         throw new RuntimeException("Something went wrong");
     }
 }

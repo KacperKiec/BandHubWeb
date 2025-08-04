@@ -39,8 +39,6 @@ export class InvitationsComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    console.log("userId", this.userId);
-
     this.loadData();
 
     this.route.queryParams.subscribe(params => {
