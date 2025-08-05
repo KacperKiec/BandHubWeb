@@ -4,11 +4,18 @@ import io.kk.bandhub.eventservice.dto.*;
 import io.kk.bandhub.eventservice.exception.EventError;
 import io.kk.bandhub.eventservice.exception.EventException;
 import io.kk.bandhub.eventservice.exception.RegistrationException;
+import io.kk.bandhub.eventservice.integration.MusicServiceClient;
+import io.kk.bandhub.eventservice.integration.RabbitService;
 import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
-import io.kk.bandhub.eventservice.repository.EventRepository;
-import io.kk.bandhub.eventservice.repository.EventSpecification;
+import io.kk.bandhub.eventservice.model.UserEvent;
+import io.kk.bandhub.eventservice.repository.event.EventRepository;
+import io.kk.bandhub.eventservice.repository.event.EventSpecification;
+import io.kk.bandhub.eventservice.repository.user_event.UserEventRepository;
 import io.kk.bandhub.eventservice.service.EventService;
+import io.kk.bandhub.eventservice.utils.NotificationCreator;
+import io.kk.bandhub.eventservice.utils.NotificationType;
+import io.kk.bandhub.eventservice.utils.RelationType;
 import io.kk.bandhub.eventservice.utils.TimeRange;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +35,10 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final UserEventRepository userEventRepository;
     private final VenueServiceClient venueServiceClient;
+    private final MusicServiceClient musicServiceClient;
+    private final RabbitService rabbitService;
     private final Mapper mapper;
 
     @Transactional
@@ -45,10 +56,23 @@ public class EventServiceImpl implements EventService {
 
         if (eventDTO.getBookingId() == null) {
             checkEventOverlapping(event);
-            mapper.toEventDTOOwnerReg(event, eventDTO.getCreatorId());
+            var dto = buildOwnerEvent(event, eventDTO.getCreatorId());
+
+            saveUserEventsAndSendNotifications(event, dto);
         } else {
             event.setBookingId(eventDTO.getBookingId());
-            mapper.toEventDTOReg(event, eventDTO.getCreatorId());
+            var dto = buildEvent(event, eventDTO.getCreatorId());
+
+            userEventRepository.save(buildUserEvent(event, dto.getOwnerId(), RelationType.LANDLORD));
+            String title = "Nowe wydarzenie";
+            String content = "Zespół %s wynajmujący twój lokal utworzył nowe wydarzenie, sprawdź swój harmonogram.".formatted(dto.getBandName());
+            var notificationRequestDTO = NotificationCreator.createNotification(NotificationType.NEW_EVENT, dto.getOwnerId(), title, content);
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("bandId", dto.getBandId());
+            notificationRequestDTO.setMetadata(metadata);
+            rabbitService.sendNotification(notificationRequestDTO);
+
+            saveUserEventsAndSendNotifications(event, dto);
         }
 
         eventRepository.save(event);
@@ -71,33 +95,48 @@ public class EventServiceImpl implements EventService {
 
         if (eventDTO.getBookingId() == null) {
             checkEventOverlapping(existingEvent);
-            var mappedEvent = mapper.toEventDTOOwnerReg(existingEvent, eventDTO.getCreatorId());
+            var mappedEvent = buildEvent(existingEvent, eventDTO.getCreatorId());
 
             eventRepository.save(existingEvent);
             return mappedEvent;
         } else {
             existingEvent.setBookingId(eventDTO.getBookingId());
-            var mappedEvent = mapper.toEventDTOReg(existingEvent, eventDTO.getCreatorId());
+            var mappedEvent = buildEvent(existingEvent, eventDTO.getCreatorId());
             eventRepository.save(existingEvent);
             return mappedEvent;
         }
     }
 
+    @Transactional
     public void deleteEvent(Integer eventId) {
         eventRepository.findById(eventId).orElseThrow(
                 () -> new EventException(EventError.EVENT_NOT_FOUND)
         );
+
+        var userEvents = userEventRepository.findAllByEventId(eventId);
+        userEvents.forEach(e -> userEventRepository.deleteById(e.getId()));
+
         eventRepository.deleteById(eventId);
     }
 
     public List<EventDTO> getAllEvents() {
-        return eventRepository.findAll().stream().map(mapper::toEventDTO).toList();
+        return eventRepository.findAll().stream().map(e -> {
+            var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
+            var bandEventData = musicServiceClient.getBand(e.getBandId());
+
+            return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
+        }).toList();
     }
 
     public EventDTO getEventById(Integer eventId) {
-        return mapper.toEventDTO(eventRepository.findById(eventId).orElseThrow(
+        var event = eventRepository.findById(eventId).orElseThrow(
                 () -> new EventException(EventError.EVENT_NOT_FOUND)
-        ));
+        );
+
+        var venueEventData = venueServiceClient.getVenueById(event.getVenueId());
+        var bandEventData = musicServiceClient.getBand(event.getBandId());
+
+        return mapper.buildEventDTO(event, venueEventData, bandEventData, userEventRepository.findAllByEventId(event.getId()).size());
     }
 
     public List<EventDTO> searchEvents(LocalDate date, Integer bandId, List<String> cities) {
@@ -108,14 +147,24 @@ public class EventServiceImpl implements EventService {
         var events = eventRepository.findAll(spec);
 
         if (cities.isEmpty()) {
-            return events.stream().map(mapper::toEventDTO).toList();
+            return events.stream().map(e -> {
+                var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
+                var bandEventData = musicServiceClient.getBand(e.getBandId());
+
+                return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
+            }).toList();
         }
 
         List<VenueDTO> venues;
         try {
             venues = venueServiceClient.getVenuesByIds(events.stream().map(Event::getVenueId).toList());
-        } catch (RuntimeException e) {
-            return events.stream().map(mapper::toEventDTO).toList();
+        } catch (RuntimeException ex) {
+            return events.stream().map(e -> {
+                var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
+                var bandEventData = musicServiceClient.getBand(e.getBandId());
+
+                return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
+            }).toList();
         }
 
         Map<Integer, String> venueIdToCity = venues.stream()
@@ -123,8 +172,12 @@ public class EventServiceImpl implements EventService {
 
         return events.stream()
                 .filter(e -> cities.contains(venueIdToCity.get(e.getVenueId())))
-                .map(mapper::toEventDTO)
-                .toList();
+                .map(e -> {
+                    var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
+                    var bandEventData = musicServiceClient.getBand(e.getBandId());
+
+                    return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
+                }).toList();
     }
 
     private void checkEventOverlapping(Event event) {
@@ -141,6 +194,77 @@ public class EventServiceImpl implements EventService {
             if (overlaps) {
                 throw new RegistrationException("Event time overlaps with other events or existing offers time bounds");
             }
+        }
+    }
+
+    private EventDTO buildEvent(Event event, Integer creatorId) {
+        var venueEventData = venueServiceClient.getVenueEventData(event.getBookingId());
+        var bandData = musicServiceClient.getBandReg(event.getBandId());
+
+        if (event.getStartTime().isBefore(venueEventData.getStartTime())
+                || event.getEndTime().isAfter(venueEventData.getEndTime())) {
+            throw new RegistrationException("Event time out of booking bounds");
+        }
+
+        if (!creatorId.equals(venueEventData.getTenantId())) {
+            throw new RegistrationException("Creator is not the booking tenant");
+        }
+
+        if (!creatorId.equals(bandData.getFounderId())) {
+            throw new RegistrationException("Creator must be the band founder");
+        }
+
+        VenueDTO venue = VenueDTO.builder()
+                .id(venueEventData.getVenueId())
+                .name(venueEventData.getVenueName())
+                .street(venueEventData.getStreet())
+                .number(venueEventData.getNumber())
+                .city(venueEventData.getCity())
+                .postalCode(venueEventData.getPostalCode())
+                .country(venueEventData.getCountry())
+                .build();
+
+        return mapper.buildEventDTO(event, venue, bandData, userEventRepository.findAllByEventId(event.getId()).size());
+    }
+
+    private EventDTO buildOwnerEvent(Event event, Integer creatorId) {
+        var venueData = venueServiceClient.getVenueById(event.getVenueId());
+        var bandData = musicServiceClient.getBandReg(event.getBandId());
+
+        if (!creatorId.equals(venueData.getOwnerId())) {
+            throw new RegistrationException("Only venue owner can create this event");
+        }
+
+        if (!creatorId.equals(bandData.getFounderId())) {
+            throw new RegistrationException("Creator must be the band founder");
+        }
+
+        return mapper.buildEventDTO(event, venueData, bandData, userEventRepository.findAllByEventId(event.getId()).size());
+    }
+
+    private UserEvent buildUserEvent(Event event, Integer userId, RelationType relation) {
+        UserEvent userEvent = new UserEvent();
+        userEvent.setUserId(userId);
+        userEvent.setEvent(event);
+        userEvent.setRelation(relation);
+        return userEvent;
+    }
+
+    private void saveUserEventsAndSendNotifications(Event event, EventDTO dto) {
+        var list = musicServiceClient.getBandMembersIds(event.getBandId());
+        for (Integer userId : list) {
+            userEventRepository.save(buildUserEvent(event, userId, RelationType.PARTICIPANT));
+
+            String title = "Nowe wydarzenie";
+            String content = "Zespół %s ma nowe wydarzenie muzyczne, sprawdź swój harmonogram.".formatted(dto.getBandName());
+
+            var notificationRequestDTO = NotificationCreator.createNotification(NotificationType.NEW_EVENT, userId, title, content);
+
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("bandId", dto.getBandId());
+            notificationRequestDTO.setMetadata(metadata);
+
+            rabbitService.sendNotification(notificationRequestDTO);
         }
     }
 }

@@ -1,9 +1,8 @@
 package io.kk.bandhub.eventservice.controller;
 
-import io.kk.bandhub.eventservice.dto.EventDTO;
-import io.kk.bandhub.eventservice.dto.EventRequestDTO;
-import io.kk.bandhub.eventservice.dto.EventUpdateRequestDTO;
+import io.kk.bandhub.eventservice.dto.*;
 import io.kk.bandhub.eventservice.service.EventService;
+import io.kk.bandhub.eventservice.service.UserEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +19,7 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final UserEventService userEventService;
 
     @PostMapping
     ResponseEntity<Void> createEvent(@RequestBody @Valid EventRequestDTO eventDTO) {
@@ -33,9 +33,27 @@ public class EventController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/all")
+    @PostMapping(value = "/follow")
+    ResponseEntity<Void> followEvent(@RequestBody FollowRequestDTO followRequest) {
+        userEventService.followEvent(followRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping(value = "/follow")
+    ResponseEntity<Void> unfollowEvent(@RequestBody FollowRequestDTO followRequest) {
+        userEventService.unfollowEvent(followRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
     ResponseEntity<List<EventDTO>> getAllEvents() {
         var result = eventService.getAllEvents();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping(value = "/user/{id}")
+    ResponseEntity<List<UserEventDTO>> getUserEvents(@PathVariable Integer id) {
+        var result = userEventService.getUserEvents(id);
         return ResponseEntity.ok(result);
     }
 
@@ -48,8 +66,8 @@ public class EventController {
     @GetMapping(value = "/search")
     ResponseEntity<List<EventDTO>> searchEvents(
             @RequestParam(required = false) Integer bandId,
-            @RequestParam(required = false)LocalDate date,
-            @RequestParam(required = false)List<String> cities){
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) List<String> cities) {
 
         var result = eventService.searchEvents(date, bandId, cities);
         return ResponseEntity.ok(result);

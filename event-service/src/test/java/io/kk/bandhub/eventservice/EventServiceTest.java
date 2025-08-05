@@ -5,7 +5,7 @@ import io.kk.bandhub.eventservice.exception.RegistrationException;
 import io.kk.bandhub.eventservice.integration.MusicServiceClient;
 import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
-import io.kk.bandhub.eventservice.repository.EventRepository;
+import io.kk.bandhub.eventservice.repository.event.EventRepository;
 import io.kk.bandhub.eventservice.service.impl.EventServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

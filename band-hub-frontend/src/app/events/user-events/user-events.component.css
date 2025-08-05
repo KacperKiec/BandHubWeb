@@ -1,18 +1,62 @@
 .container {
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem auto;
+  height: 100%;
+  width: 70%;
+  position: relative;
+  padding: 2rem 2rem 5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
 }
 
 .calendar-container {
-  width: 90%;
-  height: 600px;
+  width: 80%;
+  height: fit-content;
   margin: 0 auto;
-  display: flex;          /* dodaj flex */
-  flex-direction: column; /* kolumnowo */
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
-.calendar-container app-calendar {
-  flex: 1 1 auto;         /* rozciągnij w flex container */
-  display: block;
-  width: 100%;
-  height: 100%;
+.header {
+  text-align: center;
+  color: #E4DCC6;
+  margin: 1rem 0 0;
+}
+
+.add-event-container {
+  background-color: rgba(255, 255, 255, 0.3);
+  margin: 1rem auto 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #615D55;
+  border-radius: 15px;
+  padding: 1rem;
+  width: fit-content;
+  height: fit-content;
+}
+
+.add-event-container button {
+  width: fit-content;
+  height: fit-content;
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #615D55;
+  background-color: #0E1418;
+  color: #E4DCC6;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-event-container button:hover {
+  background-color: #27272e;
+}
+
+.add-event-container p {
+  margin: 0 0 0.5rem;
 }

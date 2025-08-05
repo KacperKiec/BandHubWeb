@@ -15,4 +15,54 @@ export interface EventDTO {
   endTime: string;
   description: string;
   ticketPrice: number;
+  followersCount: number;
+}
+
+export interface EventRequestDTO {
+  creatorId: number;
+  name: string;
+  bandId: number;
+  bookingId: number;
+  venueId: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  ticketPrice: number;
+}
+
+export interface EventUpdateRequestDTO {
+  id: number;
+  creatorId: number;
+  name: string;
+  bandId: number;
+  bookingId: number;
+  venueId: number;
+  date: string;
+  startTime: string;
+  endTime: string;
+  description: string;
+  ticketPrice: number;
+}
+
+export interface FollowRequest {
+  userId: number;
+  eventId: number;
+}
+
+export interface UserEventDTO {
+  id: number;
+  userId: number;
+  eventId: number;
+  eventName: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  relation: RelationType;
+}
+
+export enum RelationType {
+  LANDLORD = "LANDLORD",
+  PARTICIPANT = "PARTICIPANT",
+  FOLLOWER = "FOLLOWER"
 }

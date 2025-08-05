@@ -1,9 +1,7 @@
 package io.kk.bandhub.eventservice.dto;
 
-import io.kk.bandhub.eventservice.exception.RegistrationException;
-import io.kk.bandhub.eventservice.integration.MusicServiceClient;
-import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
+import io.kk.bandhub.eventservice.model.UserEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,63 +9,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Mapper {
 
-    private final VenueServiceClient venueServiceClient;
-    private final MusicServiceClient musicServiceClient;
-
-    public EventDTO toEventDTO(Event event) {
-        var venueEventData = venueServiceClient.getVenueById(event.getVenueId());
-        var bandEventData = musicServiceClient.getBand(event.getBandId());
-
-        return buildDTO(event, venueEventData, bandEventData);
-    }
-
-    public EventDTO toEventDTOReg(Event event, Integer creatorId) {
-        var venueEventData = venueServiceClient.getVenueEventData(event.getBookingId());
-        var bandData = musicServiceClient.getBandReg(event.getBandId());
-
-        if (event.getStartTime().isBefore(venueEventData.getStartTime())
-                || event.getEndTime().isAfter(venueEventData.getEndTime())) {
-            throw new RegistrationException("Event time out of booking bounds");
-        }
-
-        if (!creatorId.equals(venueEventData.getTenantId())) {
-            throw new RegistrationException("Creator is not the booking tenant");
-        }
-
-        if (!creatorId.equals(bandData.getFounderId())) {
-            throw new RegistrationException("Creator must be the band founder");
-        }
-
-        VenueDTO venue = VenueDTO.builder()
-                .id(venueEventData.getVenueId())
-                .name(venueEventData.getVenueName())
-                .street(venueEventData.getStreet())
-                .number(venueEventData.getNumber())
-                .city(venueEventData.getCity())
-                .postalCode(venueEventData.getPostalCode())
-                .country(venueEventData.getCountry())
+    public UserEventDTO buildUserEventDTO(UserEvent userEvent) {
+        return UserEventDTO.builder()
+                .id(userEvent.getId())
+                .userId(userEvent.getUserId())
+                .eventId(userEvent.getEvent().getId())
+                .eventName(userEvent.getEvent().getName())
+                .date(userEvent.getEvent().getDate())
+                .startTime(userEvent.getEvent().getStartTime())
+                .endTime(userEvent.getEvent().getEndTime())
+                .relation(userEvent.getRelation())
                 .build();
-
-        return buildDTO(event, venue, bandData);
     }
 
-
-    public EventDTO toEventDTOOwnerReg(Event event, Integer creatorId) {
-        var venueData = venueServiceClient.getVenueById(event.getVenueId());
-        var bandData = musicServiceClient.getBandReg(event.getBandId());
-
-        if (!creatorId.equals(venueData.getOwnerId())) {
-            throw new RegistrationException("Only venue owner can create this event");
-        }
-
-        if (!creatorId.equals(bandData.getFounderId())) {
-            throw new RegistrationException("Creator must be the band founder");
-        }
-
-        return buildDTO(event, venueData, bandData);
-    }
-
-    private EventDTO buildDTO(Event event, VenueDTO venue, BandEventDataDTO band) {
+    public EventDTO buildEventDTO(Event event, VenueDTO venue, BandEventDataDTO band, Integer followersCount) {
         EventDTO dto = new EventDTO();
         dto.setId(event.getId());
         dto.setName(event.getName());
@@ -87,6 +42,7 @@ public class Mapper {
         dto.setEndTime(event.getEndTime());
         dto.setDescription(event.getDescription());
         dto.setTicketPrice(event.getTicketPrice().doubleValue());
+        dto.setFollowersCount(followersCount);
 
         return dto;
     }

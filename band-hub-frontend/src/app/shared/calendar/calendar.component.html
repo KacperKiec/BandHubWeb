@@ -24,8 +24,7 @@
   <mwl-calendar-month-view
     [viewDate]="viewDate"
     [events]="events"
-    [cellTemplate]="customCellTemplate"
-    (eventClicked)="eventClicked($event)">
+    [cellTemplate]="customCellTemplate">
   </mwl-calendar-month-view>
 
 
@@ -42,6 +41,7 @@
       <div
         *ngFor="let event of day.events"
         class="custom-event-bar"
+        [title]="event.tooltip"
         (click)="showDetails(event.id)"
       >
         {{ event.title }}

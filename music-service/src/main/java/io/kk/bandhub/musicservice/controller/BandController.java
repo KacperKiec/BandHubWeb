@@ -103,4 +103,10 @@ public class BandController {
         service.deleteBand(bandId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/{id}/members")
+    ResponseEntity<List<Integer>> getBandMembersIds(@PathVariable Integer id) {
+        var result = service.getById(id).getMusicians().stream().map(MusicianDTO::getId).toList();
+        return ResponseEntity.ok(result);
+    }
 }

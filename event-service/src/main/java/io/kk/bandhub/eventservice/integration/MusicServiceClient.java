@@ -7,6 +7,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @FeignClient(name = "MUSIC-SERVICE")
 public interface MusicServiceClient {
 
@@ -17,6 +19,10 @@ public interface MusicServiceClient {
     @GetMapping("/band/evt/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandReg")
     BandEventDataDTO getBandReg(@PathVariable Integer id);
+
+    @GetMapping("/band/{id}/members")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandReg")
+    List<Integer> getBandMembersIds(@PathVariable Integer id);
 
     default BandEventDataDTO fallbackGetBand(Integer id, Throwable throwable) {
         BandEventDataDTO bandEventDataDTO = new BandEventDataDTO();

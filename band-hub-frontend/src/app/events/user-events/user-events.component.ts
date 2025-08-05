@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CalendarComponent} from '../../shared/calendar/calendar.component';
+import {UserEventDTO} from '../../core/models/event.model';
 
 @Component({
   selector: 'app-user-events',
@@ -10,6 +11,13 @@ import {CalendarComponent} from '../../shared/calendar/calendar.component';
   templateUrl: './user-events.component.html',
   styleUrl: './user-events.component.css'
 })
-export class UserEventsComponent {
+export class UserEventsComponent implements OnInit {
+  events: UserEventDTO[] = [];
 
+  constructor() {
+  }
+
+  ngOnInit() {
+
+  }
 }

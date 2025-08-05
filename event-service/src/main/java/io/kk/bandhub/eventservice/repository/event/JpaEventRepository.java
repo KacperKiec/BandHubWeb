@@ -1,4 +1,4 @@
-package io.kk.bandhub.eventservice.repository;
+package io.kk.bandhub.eventservice.repository.event;
 
 import io.kk.bandhub.eventservice.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;

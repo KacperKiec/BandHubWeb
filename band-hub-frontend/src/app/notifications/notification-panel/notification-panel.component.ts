@@ -145,7 +145,7 @@ export class NotificationPanelComponent implements OnInit {
         break;
       }
       case "NEW_EVENT": {
-
+        this.router.navigate(['user/events']);
         break;
       }
       case "NEW_BOOKING": {

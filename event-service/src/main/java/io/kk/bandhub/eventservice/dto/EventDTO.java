@@ -15,6 +15,7 @@ public class EventDTO {
     private String bandName;
     private Integer venueId;
     private String venueName;
+    private Integer ownerId;
 
     private String street;
     private String number;
@@ -27,4 +28,5 @@ public class EventDTO {
     private LocalTime endTime;
     private String description;
     private Double ticketPrice;
+    private Integer followersCount;
 }
