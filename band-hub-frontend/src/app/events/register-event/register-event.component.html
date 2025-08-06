@@ -1,0 +1,15 @@
+<div class="register-container fade-in">
+  <h2>Dodaj wydarzenie📅</h2>
+
+  <app-event-input
+    [userId]="userId"
+    [bookings]="bookings"
+    [userBands]="userBands"
+    [venues]="venues"
+    (outputEvent)="getEvent($event)">
+  </app-event-input>
+
+
+  <button type="submit" class="submit-btn" (click)="submit()">Dodaj wydarzenie</button>
+
+</div>

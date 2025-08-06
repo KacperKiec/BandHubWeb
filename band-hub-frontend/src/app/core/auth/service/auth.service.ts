@@ -12,7 +12,7 @@ export class AuthService {
 
   isLoggedIn$ = this.loggedIn.asObservable();
 
-  constructor(private authApiService: AuthApiService, private router: Router, private zone: NgZone) {
+  constructor(private authApiService: AuthApiService, private router: Router) {
   }
 
   setLoginStatus(status: boolean): void {
@@ -24,10 +24,12 @@ export class AuthService {
       next: (resp) => {
         this.setLoginStatus(resp);
         if (!resp) {
+          localStorage.clear();
           this.router.navigate(['/home']);
         }
       },
       error: () => {
+        localStorage.clear();
         this.setLoginStatus(false);
         this.router.navigate(['/home']);
       }

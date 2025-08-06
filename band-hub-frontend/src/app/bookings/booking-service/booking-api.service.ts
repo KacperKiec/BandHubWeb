@@ -41,6 +41,14 @@ export class BookingApiService {
       );
   }
 
+  getUsableUserBookings(id: number): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.apiURL}/user/${id}/usable`, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
   getOwnerBookings(id: number, page: number = 0, size: number = 10): Observable<Page<Booking>> {
     return this.http.get<Page<Booking>>(`${this.apiURL}/owner/${id}?page=${page}&size=${size}`, {withCredentials: true})
       .pipe(

@@ -22,13 +22,13 @@ public class EventController {
     private final UserEventService userEventService;
 
     @PostMapping
-    ResponseEntity<Void> createEvent(@RequestBody @Valid EventRequestDTO eventDTO) {
-        eventService.createEvent(eventDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    ResponseEntity<UserEventDTO> createEvent(@RequestBody @Valid EventRequestDTO eventDTO) {
+        var result = eventService.createEvent(eventDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping
-    ResponseEntity<EventDTO> updateEvent(@RequestBody @Valid EventUpdateRequestDTO eventDTO) {
+    ResponseEntity<UserEventDTO> updateEvent(@RequestBody @Valid EventUpdateRequestDTO eventDTO) {
         var result = eventService.updateEvent(eventDTO);
         return ResponseEntity.ok(result);
     }

@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +126,11 @@ public class BookingServiceImpl implements BookingService {
         return mapper.toBookingDTO(bookingRepository.findById(bookingId).orElseThrow(
                 () -> new BookingException(BookingError.BOOKING_NOT_FOUND)
         ));
+    }
+
+    public List<BookingDTO> getUsableUserBookings(Integer id) {
+        return bookingRepository.findByTenantIdAndOfferDateGreaterThanEqual(id, LocalDate.now())
+                .stream().map(mapper::toBookingDTO).toList();
     }
 
     public Page<BookingDTO> getUserBookings(Integer tenantId, Pageable pageable) {

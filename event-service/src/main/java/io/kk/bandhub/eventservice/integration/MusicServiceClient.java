@@ -21,7 +21,7 @@ public interface MusicServiceClient {
     BandEventDataDTO getBandReg(@PathVariable Integer id);
 
     @GetMapping("/band/{id}/members")
-    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandReg")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandMembersIds")
     List<Integer> getBandMembersIds(@PathVariable Integer id);
 
     default BandEventDataDTO fallbackGetBand(Integer id, Throwable throwable) {
@@ -40,5 +40,9 @@ public interface MusicServiceClient {
         } else {
             throw new RegistrationException("Registration failed, something went wrong");
         }
+    }
+
+    default List<Integer> fallbackGetBandMembersIds(Integer id, Throwable throwable) {
+        throw new RuntimeException("Something went wrong");
     }
 }

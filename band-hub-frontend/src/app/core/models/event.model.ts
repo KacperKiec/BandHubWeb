@@ -53,6 +53,7 @@ export interface FollowRequest {
 export interface UserEventDTO {
   id: number;
   userId: number;
+  bookingId: number;
   eventId: number;
   eventName: string;
   date: string;

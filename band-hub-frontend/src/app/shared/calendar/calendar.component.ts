@@ -1,10 +1,10 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, EventEmitter,
   Input,
   LOCALE_ID,
-  OnChanges,
+  OnChanges, Output,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -46,34 +46,12 @@ import {DatePipe, NgForOf} from '@angular/common';
 })
 export class CalendarComponent implements OnChanges {
   @Input() userEvents: UserEventDTO[] = [];
+  @Output() getDetails = new EventEmitter<number>();
 
   eventsToDisplay: CalendarEvent[] = [];
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
 
-  events: CalendarEvent[] = [
-    {
-      id: 1,
-      start: new Date(),
-      end: new Date(),
-      title: 'Moje wydarzenie',
-      color: { primary: '#1e90ff', secondary: '#D1E8FF' },
-    },
-    {
-      id: 2,
-      start: new Date(),
-      end: new Date(),
-      title: 'Moje wydarzenie 2',
-      color: { primary: '#1e90ff', secondary: '#D1E8FF' },
-    },
-    {
-      id: 1,
-      start: new Date(),
-      end: new Date(),
-      title: 'Moje wydarzenie3',
-      color: { primary: '#1e90ff', secondary: '#D1E8FF' },
-    },
-  ];
   constructor(private cdr: ChangeDetectorRef) { }
 
 
@@ -118,7 +96,7 @@ export class CalendarComponent implements OnChanges {
       case RelationType.LANDLORD:
         return 'Wydarzenie w lokalu, który wynajmujesz';
       case RelationType.PARTICIPANT:
-        return 'Wydarzenie utworzone przez Ciebie';
+        return 'Wydarzenie, w którym bierzesz czynny udział';
       case RelationType.FOLLOWER:
         return 'Obserwowane wydarzenie';
       default:
@@ -127,6 +105,6 @@ export class CalendarComponent implements OnChanges {
   }
 
   showDetails(id: number) {
-    console.log(id);
+    this.getDetails.emit(id);
   }
 }

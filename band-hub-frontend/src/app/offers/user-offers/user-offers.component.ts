@@ -85,7 +85,6 @@ export class UserOffersComponent implements OnInit, OnChanges {
   turnEditingMode(offer: Offer) {
     this.editingMode = true;
     this.offerToEdit = offer;
-    console.log(this.offerToEdit);
   }
 
   addAnotherOffer() {

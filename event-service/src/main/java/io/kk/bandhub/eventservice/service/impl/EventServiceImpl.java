@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
     private final Mapper mapper;
 
     @Transactional
-    public void createEvent(EventRequestDTO eventDTO) {
+    public UserEventDTO createEvent(EventRequestDTO eventDTO) {
 
         Event event = new Event();
         event.setName(eventDTO.getName());
@@ -58,10 +58,18 @@ public class EventServiceImpl implements EventService {
             checkEventOverlapping(event);
             var dto = buildOwnerEvent(event, eventDTO.getCreatorId());
 
+            var e = eventRepository.save(event);
             saveUserEventsAndSendNotifications(event, dto);
+
+            return mapper.buildUserEventDTO(userEventRepository.findByUserIdAndEventId(eventDTO.getCreatorId(), e.getId()).orElseThrow(
+                    () -> new EventException(EventError.EVENT_NOT_FOUND)
+            ));
+
         } else {
             event.setBookingId(eventDTO.getBookingId());
             var dto = buildEvent(event, eventDTO.getCreatorId());
+
+            var e = eventRepository.save(event);
 
             userEventRepository.save(buildUserEvent(event, dto.getOwnerId(), RelationType.LANDLORD));
             String title = "Nowe wydarzenie";
@@ -73,13 +81,15 @@ public class EventServiceImpl implements EventService {
             rabbitService.sendNotification(notificationRequestDTO);
 
             saveUserEventsAndSendNotifications(event, dto);
-        }
 
-        eventRepository.save(event);
+            return mapper.buildUserEventDTO(userEventRepository.findByUserIdAndEventId(eventDTO.getCreatorId(), e.getId()).orElseThrow(
+                    () -> new EventException(EventError.EVENT_NOT_FOUND)
+            ));
+        }
     }
 
     @Transactional
-    public EventDTO updateEvent(EventUpdateRequestDTO eventDTO) {
+    public UserEventDTO updateEvent(EventUpdateRequestDTO eventDTO) {
         var existingEvent = eventRepository.findById(eventDTO.getId()).orElseThrow(
                 () -> new EventException(EventError.EVENT_NOT_FOUND)
         );
@@ -95,15 +105,20 @@ public class EventServiceImpl implements EventService {
 
         if (eventDTO.getBookingId() == null) {
             checkEventOverlapping(existingEvent);
-            var mappedEvent = buildEvent(existingEvent, eventDTO.getCreatorId());
+            buildEvent(existingEvent, eventDTO.getCreatorId());
 
-            eventRepository.save(existingEvent);
-            return mappedEvent;
+            var event = eventRepository.save(existingEvent);
+            return mapper.buildUserEventDTO(userEventRepository.findByUserIdAndEventId(eventDTO.getCreatorId(), event.getId()).orElseThrow(
+                    () -> new EventException(EventError.EVENT_NOT_FOUND)
+            ));
         } else {
             existingEvent.setBookingId(eventDTO.getBookingId());
-            var mappedEvent = buildEvent(existingEvent, eventDTO.getCreatorId());
-            eventRepository.save(existingEvent);
-            return mappedEvent;
+            buildEvent(existingEvent, eventDTO.getCreatorId());
+
+            var event = eventRepository.save(existingEvent);
+            return mapper.buildUserEventDTO(userEventRepository.findByUserIdAndEventId(eventDTO.getCreatorId(), event.getId()).orElseThrow(
+                    () -> new EventException(EventError.EVENT_NOT_FOUND)
+            ));
         }
     }
 
@@ -217,6 +232,7 @@ public class EventServiceImpl implements EventService {
         VenueDTO venue = VenueDTO.builder()
                 .id(venueEventData.getVenueId())
                 .name(venueEventData.getVenueName())
+                .ownerId(venueEventData.getOwnerId())
                 .street(venueEventData.getStreet())
                 .number(venueEventData.getNumber())
                 .city(venueEventData.getCity())

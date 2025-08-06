@@ -24,6 +24,11 @@
   margin: 0 auto;
 }
 
+.header {
+  text-align: center;
+  margin: 0 auto;
+}
+
 .booking-table {
   display: block;
   width: 100%;

@@ -17,7 +17,7 @@ import {Venue} from '../../core/models/venue.model';
 })
 export class EditOfferFormComponent implements OnInit {
   @Input() userId!: number;
-  @Input() offerTemplate!:Offer;
+  @Input() offerTemplate!: Offer;
   @Input() venues!: Venue[];
   @Output() updated: EventEmitter<OfferUpdateRequest> = new EventEmitter();
 

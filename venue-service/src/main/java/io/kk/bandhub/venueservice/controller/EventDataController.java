@@ -27,6 +27,7 @@ public class EventDataController {
 
         var data = new EventDataDTO();
         data.setVenueId(venue.getId());
+        data.setOwnerId(venue.getOwnerId());
         data.setVenueName(venue.getName());
         data.setTenantId(booking.getTenantId());
         data.setStartTime(booking.getStartTime());

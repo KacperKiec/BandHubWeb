@@ -34,6 +34,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
 app:
   services:
     token-url: http://localhost:8020/oauth2/token
@@ -59,6 +61,6 @@ resilience4j:
         sliding-window-type: count_based
 logging:
   level:
-    #io.github.resilience4j.circuitbreaker: DEBUG
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG

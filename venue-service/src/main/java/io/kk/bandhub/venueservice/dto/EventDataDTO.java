@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Setter
 public class EventDataDTO {
     private Integer venueId;
+    private Integer ownerId;
     private String venueName;
     private Integer tenantId;
     private LocalTime startTime;

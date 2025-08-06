@@ -173,6 +173,7 @@ export class OffersComponent implements OnInit {
     console.log(this.booking);
     this.bookingApiService.createBooking(this.booking).subscribe({
       next: () => {
+        alert('Dokonano rezerwacji');
         this.closeDetails();
         this.updateParamsAndFetchOffers();
       }

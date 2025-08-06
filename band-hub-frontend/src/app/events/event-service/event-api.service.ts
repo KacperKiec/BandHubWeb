@@ -27,16 +27,24 @@ export class EventApiService {
       );
   }
 
-  createEvent(request: EventRequestDTO): Observable<void> {
-    return this.http.post<void>(`${this.apiURL}`, request, {withCredentials: true})
+  getEvent(id: number): Observable<EventDTO> {
+    return this.http.get<EventDTO>(`${this.apiURL}/${id}`)
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      )
+  }
+
+  createEvent(request: EventRequestDTO): Observable<UserEventDTO> {
+    return this.http.post<UserEventDTO>(`${this.apiURL}`, request, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
       );
   }
 
-  updateEvent(request: EventUpdateRequestDTO): Observable<EventDTO> {
-    return this.http.put<EventDTO>(`${this.apiURL}`, request, {withCredentials: true})
+  updateEvent(request: EventUpdateRequestDTO): Observable<UserEventDTO> {
+    return this.http.put<UserEventDTO>(`${this.apiURL}`, request, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

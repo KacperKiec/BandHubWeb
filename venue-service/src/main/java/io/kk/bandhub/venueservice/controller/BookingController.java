@@ -52,6 +52,13 @@ public class BookingController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "/user/{id}/usable")
+    ResponseEntity<List<BookingDTO>> getUserUsableBookings(@PathVariable Integer id, Authentication authentication) {
+        SecurityUtils.verifyAuthorities(authentication, id);
+        var result = bookingService.getUsableUserBookings(id);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/user/{id}")
     ResponseEntity<Page<BookingDTO>> getUserBookings(
             @PathVariable Integer id,

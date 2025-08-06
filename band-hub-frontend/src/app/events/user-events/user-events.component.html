@@ -1,12 +1,49 @@
 <div class="container fade-in">
-  <h2 class="header">Twoje Wydarzenia</h2>
+  <ng-container *ngIf="!showForm && !editingMode">
+    <h2 class="header">Twoje Wydarzenia</h2>
 
-  <div class="calendar-container">
-    <app-calendar></app-calendar>
+    <div class="calendar-container">
+      <app-calendar
+      [userEvents]="events"
+      (getDetails)="showDetails($event)">
+      </app-calendar>
+    </div>
+
+    <div class="add-event-container">
+      <p>Dodaj swoje wydarzenie i opublikuj je w sieci</p>
+      <button (click)="showRegistrationForm()">Dodaj</button>
+    </div>
+  </ng-container>
+
+  <app-register-event
+    *ngIf="showForm"
+    [userId]="userId"
+    [bookings]="bookings"
+    [userBands]="userBands"
+    [venues]="userVenues"
+    (registered)="handleEventRegistration($event)">
+  </app-register-event>
+
+  <app-edit-event-form
+    *ngIf="editingMode">
+  </app-edit-event-form>
+
+  <div class="details-backdrop" *ngIf="isDetailsVisible" (click)="closeDetails()" [@backdropFadeInOut]></div>
+
+  <div class="details" *ngIf="isDetailsVisible" [@detailsFadeInOut]>
+    <div class="details-content">
+      <span class="close" (click)="closeDetails()">&times;</span>
+      <span class="edit" (click)="turnEditingMode(eventDetails)">✏️</span>
+      <h2>{{ eventDetails.name }}</h2>
+      <p>{{ eventDetails.startTime }} - {{ eventDetails.endTime }}</p>
+      <p>{{ eventDetails.date }}</p>
+      <h3>{{ eventDetails.venueName }}</h3>
+      <p>{{ eventDetails.street }} {{ eventDetails.number }}</p>
+      <p>{{ eventDetails.city }}, {{ eventDetails.country }}</p>
+      <h3>{{ eventDetails.bandName }}</h3>
+      <p>Cena biletów: {{ eventDetails.ticketPrice}} PLN</p>
+      <p>{{ eventDetails.description }}</p>
+    </div>
   </div>
 
-  <div class="add-event-container">
-    <p>Dodaj swoje wydarzenie i opublikuj je w sieci</p>
-    <button>Dodaj</button>
-  </div>
 </div>

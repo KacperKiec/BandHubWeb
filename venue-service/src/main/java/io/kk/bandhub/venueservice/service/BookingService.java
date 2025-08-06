@@ -13,6 +13,7 @@ public interface BookingService {
     void deleteBooking(Integer bookingId, String initiator);
     BookingDTO getBooking(Integer bookingId);
     List<BookingDTO> getAllBookings();
+    List<BookingDTO> getUsableUserBookings(Integer id);
     Page<BookingDTO> getUserBookings(Integer tenantId, Pageable pageable);
     Page<BookingDTO> getOwnerBookings(Integer ownerId, Pageable pageable);
     Page<BookingDTO> getBookings(Pageable pageable, Integer tenantId, Integer offerId, OfferStatus status);
