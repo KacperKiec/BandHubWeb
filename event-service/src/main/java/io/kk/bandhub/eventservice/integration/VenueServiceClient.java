@@ -32,7 +32,7 @@ public interface VenueServiceClient {
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenue")
     VenueDTO getVenueById(@PathVariable Integer id);
 
-    @GetMapping(value = "/offers/venue/{id}")
+    @GetMapping(value = "/offer/venue/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetOffers")
     List<OfferDTO> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date);
 

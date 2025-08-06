@@ -34,6 +34,7 @@ public class Mapper {
         dto.setPostalCode(venue.getPostalCode());
         dto.setCountry(venue.getCountry());
         dto.setOwnerId(venue.getOwnerId());
+        dto.setBookingId(event.getBookingId());
 
         dto.setBandId(band.getId());
         dto.setBandName(band.getName());

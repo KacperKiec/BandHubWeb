@@ -16,6 +16,7 @@ public class EventDTO {
     private Integer venueId;
     private String venueName;
     private Integer ownerId;
+    private Integer bookingId;
 
     private String street;
     private String number;

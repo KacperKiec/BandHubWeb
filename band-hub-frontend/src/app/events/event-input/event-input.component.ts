@@ -33,7 +33,7 @@ enum VenueSelectionMode {
     NgSwitchCase
   ],
   templateUrl: './event-input.component.html',
-  styleUrl: './event-input.component.css'
+  styleUrl: './event-input.component.css',
 })
 export class EventInputComponent implements OnInit, OnChanges {
 
@@ -93,7 +93,19 @@ export class EventInputComponent implements OnInit, OnChanges {
     }));
   }
 
+  get isEditMode(): boolean {
+    return !!this.inputEvent;
+  }
+
+  get isBookingEvent(): boolean {
+    return this.event.bookingId !== 0;
+  }
+
   private initEvent() {
+    if (this.isEditMode && this.inputEvent.bookingId === null) {
+      this.venueSelectionMode = VenueSelectionMode.OWNED
+    }
+
     this.event = this.inputEvent ?? {
       creatorId: this.userId,
       name: '',

@@ -15,18 +15,18 @@
 
     <div class="venue-selection-container">
       <div class="selection-tabs">
+        <<button class="tab-button"
+                 [class.active]="venueSelectionMode === 'BOOKING'"
+                 [disabled]="isEditMode && isBookingEvent"
+                 (click)="setVenueMode(VenueSelectionMode.BOOKING)">
+        Z rezerwacji
+      </button>
+
         <button class="tab-button"
-                [class.active]="venueSelectionMode === 'BOOKING'"
-                (click)="setVenueMode(VenueSelectionMode.BOOKING)">
-          <i class="fas fa-calendar-check"></i> <!-- opcjonalna ikona -->
-          Z rezerwacji
-        </button>
-        <button class="tab-button"
-                [disabled]="venues.length === 0"
-                [title]="venues.length === 0 ? 'Nie posiadasz zarejestrowanych lokali' : ''"
                 [class.active]="venueSelectionMode === 'OWNED'"
+                [disabled]="venues.length === 0 || (isEditMode && isBookingEvent)"
+                [title]="venues.length === 0 ? 'Nie posiadasz zarejestrowanych lokali' : ''"
                 (click)="setVenueMode(VenueSelectionMode.OWNED)">
-          <i class="fas fa-building"></i> <!-- opcjonalna ikona -->
           Z moich lokali
         </button>
       </div>
@@ -38,7 +38,8 @@
             <app-carousel-selector
               [elements]="mappedBookings"
               [selectedOptionId]="event.bookingId"
-              (emitElement)="selectBooking($event)">
+              (emitElement)="selectBooking($event)"
+              [disabled]="isEditMode && isBookingEvent">
             </app-carousel-selector>
           </div>
 
@@ -61,7 +62,8 @@
             <app-carousel-selector
               [elements]="venues"
               [selectedOptionId]="event.venueId"
-              (emitElement)="selectVenue($event)">
+              (emitElement)="selectVenue($event)"
+              [disabled]="isEditMode && isBookingEvent">
             </app-carousel-selector>
           </div>
 

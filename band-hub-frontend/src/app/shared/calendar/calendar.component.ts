@@ -64,7 +64,7 @@ export class CalendarComponent implements OnChanges {
           const end = new Date(`${event.date}T${event.endTime}`);
 
           return {
-            id: event.id,
+            id: event.eventId,
             start,
             end,
             title: event.eventName,

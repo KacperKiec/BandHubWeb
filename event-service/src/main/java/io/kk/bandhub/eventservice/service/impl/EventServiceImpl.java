@@ -54,7 +54,7 @@ public class EventServiceImpl implements EventService {
         event.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
         event.setDescription(eventDTO.getDescription());
 
-        if (eventDTO.getBookingId() == null) {
+        if (eventDTO.getBookingId() == null || eventDTO.getBookingId() == 0) {
             checkEventOverlapping(event);
             var dto = buildOwnerEvent(event, eventDTO.getCreatorId());
 
@@ -103,7 +103,7 @@ public class EventServiceImpl implements EventService {
         existingEvent.setDescription(eventDTO.getDescription());
         existingEvent.setTicketPrice(BigDecimal.valueOf(eventDTO.getTicketPrice()));
 
-        if (eventDTO.getBookingId() == null) {
+        if (eventDTO.getBookingId() == null || eventDTO.getBookingId() == 0) {
             checkEventOverlapping(existingEvent);
             buildEvent(existingEvent, eventDTO.getCreatorId());
 
@@ -207,7 +207,7 @@ public class EventServiceImpl implements EventService {
                     !event.getStartTime().isAfter(timeRange.getEndTime());
 
             if (overlaps) {
-                throw new RegistrationException("Event time overlaps with other events or existing offers time bounds");
+                throw new EventException(EventError.EVENT_OUT_OF_BOUNDS);
             }
         }
     }

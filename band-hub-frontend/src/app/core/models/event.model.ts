@@ -5,6 +5,7 @@ export interface EventDTO {
   bandName: string;
   venueId: number;
   venueName: string;
+  bookingId: number;
   street: string;
   number: string;
   city: string;
@@ -16,6 +17,7 @@ export interface EventDTO {
   description: string;
   ticketPrice: number;
   followersCount: number;
+  creatorId: number;
 }
 
 export interface EventRequestDTO {

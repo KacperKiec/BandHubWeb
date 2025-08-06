@@ -41,7 +41,7 @@ export class UserEventsComponent implements OnInit {
   userId!: number;
   events: UserEventDTO[] = [];
   eventDetails!: EventDTO;
-  eventToEDit!: EventDTO;
+  eventToEdit!: EventDTO;
 
   userBands: Band[] = [];
   bookings: Booking[] = [];
@@ -88,7 +88,6 @@ export class UserEventsComponent implements OnInit {
     this.eventApiService.getEvent(id).subscribe(event => {
       if(event) {
         this.eventDetails = event;
-        console.log(event);
       }
     });
     this.isDetailsVisible = true;
@@ -105,13 +104,12 @@ export class UserEventsComponent implements OnInit {
   turnEditingMode(event: EventDTO) {
     this.closeDetails()
     this.editingMode = true;
-    this.eventToEDit = event;
+    this.eventToEdit = event;
   }
 
   handleEventRegistration(event: EventRequestDTO) {
     this.eventApiService.createEvent(event).subscribe(event => {
       if(event) {
-        console.log(event);
         this.events.push(event);
         this.showForm = false;
       }

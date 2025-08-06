@@ -25,6 +25,7 @@ import {NgClass, NgForOf, NgStyle} from '@angular/common';
 export class CarouselSelectorComponent implements OnInit, OnChanges {
   @Input() elements: CarouselElement[] = [];
   @Input() visibleCount: number = 3;
+  @Input() disabled: boolean = false;
   @Output() emitElement = new EventEmitter<number>();
 
   currentIndex: number = 0;

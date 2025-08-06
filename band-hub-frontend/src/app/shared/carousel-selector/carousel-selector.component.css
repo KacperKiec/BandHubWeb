@@ -54,6 +54,17 @@
   box-shadow: 0 0 10px #615D55;
 }
 
+.option.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .nav-button {
   position: absolute;
   top: 50%;

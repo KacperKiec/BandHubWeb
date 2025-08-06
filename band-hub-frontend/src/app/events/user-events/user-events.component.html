@@ -25,7 +25,13 @@
   </app-register-event>
 
   <app-edit-event-form
-    *ngIf="editingMode">
+    *ngIf="editingMode"
+    [userId]="userId"
+    [bookings]="bookings"
+    [userBands]="userBands"
+    [venues]="userVenues"
+    [eventTemplate]="eventToEdit"
+    (updated)="handleEventUpdating($event)">
   </app-edit-event-form>
 
   <div class="details-backdrop" *ngIf="isDetailsVisible" (click)="closeDetails()" [@backdropFadeInOut]></div>
@@ -34,15 +40,16 @@
     <div class="details-content">
       <span class="close" (click)="closeDetails()">&times;</span>
       <span class="edit" (click)="turnEditingMode(eventDetails)">✏️</span>
-      <h2>{{ eventDetails.name }}</h2>
-      <p>{{ eventDetails.startTime }} - {{ eventDetails.endTime }}</p>
-      <p>{{ eventDetails.date }}</p>
-      <h3>{{ eventDetails.venueName }}</h3>
-      <p>{{ eventDetails.street }} {{ eventDetails.number }}</p>
-      <p>{{ eventDetails.city }}, {{ eventDetails.country }}</p>
-      <h3>{{ eventDetails.bandName }}</h3>
-      <p>Cena biletów: {{ eventDetails.ticketPrice}} PLN</p>
-      <p>{{ eventDetails.description }}</p>
+      <h2>{{ eventDetails?.name }}</h2>
+      <p>{{ eventDetails?.startTime }} - {{ eventDetails?.endTime }}</p>
+      <p>{{ eventDetails?.date }}</p>
+      <h3>{{ eventDetails?.venueName }}</h3>
+      <p>{{ eventDetails?.street }} {{ eventDetails?.number }}</p>
+      <p>{{ eventDetails?.city }}, {{ eventDetails?.country }}</p>
+      <h3>{{ eventDetails?.bandName }}</h3>
+      <p>Cena biletów: {{ eventDetails?.ticketPrice}} PLN</p>
+      <p>{{ eventDetails?.description }}</p>
+      <p>Zainteresowani: {{ eventDetails?.followersCount }}</p>
     </div>
   </div>
 

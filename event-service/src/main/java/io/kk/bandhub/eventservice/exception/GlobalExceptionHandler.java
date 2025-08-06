@@ -12,10 +12,10 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EventException.class)
-    public ResponseEntity<ErrorResponse> handleRoleException(final EventException e) {
+    public ResponseEntity<ErrorResponse> handleEventException(final EventException e) {
         if (EventError.EVENT_NOT_FOUND.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
-        } else if (EventError.EVENT_ALREADY_EXISTS.equals(e.getStatus())){
+        } else if (EventError.EVENT_ALREADY_EXISTS.equals(e.getStatus()) || EventError.EVENT_OUT_OF_BOUNDS.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage(), "503"));

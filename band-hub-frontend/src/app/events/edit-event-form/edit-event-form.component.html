@@ -1,0 +1,14 @@
+<form class="container" #updateForm=ngForm (ngSubmit)="submitForm()">
+  <h2>Edytuj wydarzenie📅</h2>
+
+  <app-event-input
+    [userId]="userId"
+    [bookings]="bookings"
+    [userBands]="userBands"
+    [venues]="venues"
+    [inputEvent]="eventTemplate"
+    (outputEvent)="getEvent($event)">
+  </app-event-input>
+
+  <button class="confirm-button">Zapisz</button>
+</form>
