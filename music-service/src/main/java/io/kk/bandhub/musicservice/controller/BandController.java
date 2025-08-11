@@ -43,6 +43,12 @@ public class BandController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping(value = "evt/name")
+    ResponseEntity<BandEventDataDTO> getBandEventByName(@RequestParam String name) {
+        var result = service.getBandEvtByName(name);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping(value = "/all")
     ResponseEntity<Page<BandDTO>> getAllBands(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(service.getAll(pageable));

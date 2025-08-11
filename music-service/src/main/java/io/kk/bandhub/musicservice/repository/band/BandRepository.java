@@ -18,9 +18,10 @@ public interface BandRepository {
     Band save(Band band);
     void deleteBandById(Integer id);
     Optional<Band> findBandById(Integer id);
+    Optional<Band> findBandByName(String name);
     Page<Band> findAll(Pageable pageable);
     Page<Band> findAll(Specification<Band> spec, Pageable pageable);
 
     @Query("SELECT bm.musician.id FROM BandMusician bm WHERE bm.band.id = :bid AND bm.isFounder = true")
-    public Integer getFounderId(@Param("bid") Integer bid);
+    Integer getFounderId(@Param("bid") Integer bid);
 }

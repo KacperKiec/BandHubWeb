@@ -4,6 +4,8 @@ import io.kk.bandhub.eventservice.dto.EventDTO;
 import io.kk.bandhub.eventservice.dto.EventRequestDTO;
 import io.kk.bandhub.eventservice.dto.EventUpdateRequestDTO;
 import io.kk.bandhub.eventservice.dto.UserEventDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,5 +16,5 @@ public interface EventService {
     void deleteEvent(Integer eventId);
     List<EventDTO> getAllEvents();
     EventDTO getEventById(Integer eventId);
-    List<EventDTO> searchEvents(LocalDate date, Integer organizerId, List<String> cities);
+    Page<EventDTO> searchEvents(LocalDate date, String bandName, List<String> cities, Pageable pageable);
 }

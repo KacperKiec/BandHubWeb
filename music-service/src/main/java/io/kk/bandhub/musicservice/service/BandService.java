@@ -9,6 +9,7 @@ import java.util.List;
 public interface BandService {
     BandDTO save(BandRequestDTO bandDTO);
     BandDTO getById(Integer id);
+    BandEventDataDTO getBandEvtByName(String name);
     BandEventDataDTO getBandEvtById(Integer id);
     Page<BandDTO> getAll(Pageable pageable);
     Page<BandDTO> findBandByFilters(String name, List<String> cities, Integer founderId, List<String> genres, Boolean isLookingMembers, Pageable pageable);

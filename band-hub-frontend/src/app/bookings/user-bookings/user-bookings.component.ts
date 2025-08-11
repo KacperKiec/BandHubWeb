@@ -57,8 +57,7 @@ export class UserBookingsComponent implements OnInit {
         this.currentPage = response.page.number;
         this.bookings = [...response.content];
         if (this.bookings.length > 0) this.hasBookings = true;
-      },
-      error: (err) => console.error('Error occurred:', err)
+      }
     });
   }
 }

@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {
   EventDTO,
-  EventRequestDTO,
+  EventRequestDTO, EventSearchingParams,
   EventUpdateRequestDTO,
   FollowRequest,
   UserEventDTO
 } from '../../core/models/event.model';
+import {Page} from '../../core/models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,30 @@ export class EventApiService {
 
   updateEvent(request: EventUpdateRequestDTO): Observable<UserEventDTO> {
     return this.http.put<UserEventDTO>(`${this.apiURL}`, request, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
+  getEvents(eventParams: EventSearchingParams, page: number = 0, size: number = 10): Observable<Page<EventDTO>> {
+    let params = new HttpParams();
+
+    if (eventParams.cities && eventParams.cities.length > 0) {
+      eventParams.cities.forEach(city => {
+        params = params.append('cities', city.toString());
+      });
+    }
+
+    if (eventParams.date) {
+      params = params.set('date', eventParams.date);
+    }
+
+    if (eventParams.bandName) {
+      params = params.set('bandName', eventParams.bandName);
+    }
+
+    return this.http.get<Page<EventDTO>>(`${this.apiURL}/search?page=${page}&size=${size}`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

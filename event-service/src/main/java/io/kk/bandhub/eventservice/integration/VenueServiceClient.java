@@ -24,7 +24,7 @@ public interface VenueServiceClient {
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetDataReg")
     BookingEventDataDTO getVenueEventDataReg(@PathVariable Integer id);
 
-    @GetMapping(value = "/ids")
+    @GetMapping(value = "/venue/ids")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenues")
     List<VenueDTO> getVenuesByIds(@RequestParam List<Integer> ids);
 
@@ -63,11 +63,11 @@ public interface VenueServiceClient {
     }
 
     default List<VenueDTO> fallbackGetVenues(List<Integer> ids, Throwable throwable) {
-        throw new RuntimeException("Something went wrong");
+        return List.of();
     }
 
     default VenueDTO fallbackGetVenue(Integer id, Throwable throwable) {
-        throw new RuntimeException("Something went wrong");
+        return null;
     }
 
     default List<OfferDTO> fallbackGetOffers(Integer id, LocalDate date, Throwable throwable) {

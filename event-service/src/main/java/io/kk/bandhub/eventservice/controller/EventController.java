@@ -5,6 +5,10 @@ import io.kk.bandhub.eventservice.service.EventService;
 import io.kk.bandhub.eventservice.service.UserEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -64,12 +68,13 @@ public class EventController {
     }
 
     @GetMapping(value = "/search")
-    ResponseEntity<List<EventDTO>> searchEvents(
-            @RequestParam(required = false) Integer bandId,
+    ResponseEntity<Page<EventDTO>> searchEvents(
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String bandName,
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) List<String> cities) {
 
-        var result = eventService.searchEvents(date, bandId, cities);
+        var result = eventService.searchEvents(date, bandName, cities, pageable);
         return ResponseEntity.ok(result);
     }
 

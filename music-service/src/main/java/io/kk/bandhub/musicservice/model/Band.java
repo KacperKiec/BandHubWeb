@@ -23,7 +23,7 @@ public class Band {
 
     @Size(max = 30)
     @NotNull
-    @Column(name = "name", nullable = false, length = 30)
+    @Column(name = "name", nullable = false, length = 30, unique = true)
     private String name;
 
     @NotNull

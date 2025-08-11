@@ -34,7 +34,6 @@ export class BandDetailsComponent implements OnInit{
         band.image = 'assets/user.jpg';
       }
       this.band = band;
-      console.log(band);
     });
 
     const rawId = localStorage.getItem('userId');

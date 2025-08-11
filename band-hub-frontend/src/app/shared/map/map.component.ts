@@ -99,7 +99,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
           this.startLng = position.coords.longitude;
         },
         error => {
-          console.error('Błąd pobierania lokalizacji', error);
           this.startLat = 50.060671;
           this.startLng = 19.940817;
         }

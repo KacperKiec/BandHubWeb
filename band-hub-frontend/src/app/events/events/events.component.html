@@ -1,0 +1,72 @@
+<div class="events-panel" role="main" aria-label="Panel wydarzeń">
+  <header class="topbar">
+    <h1 class="title">Wydarzenia muzyczne</h1>
+
+    <div class="controls">
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="Szukaj (zespół)" [(ngModel)]="bandName" (ngModelChange)="onBandNameChange($event)"/>
+      </div>
+
+      <div class="filter">
+        <label for="citySelect">Miasto</label>
+        <app-address-search
+          [placeholderInput]="'Miasto'"
+          [customClass]="'filter-input'"
+          (address)="getCity($event); filterEvents()">
+        </app-address-search>
+      </div>
+
+      <div class="filter">
+        <label for="dateInput">Data</label>
+        <input id="dateInput" type="date" [(ngModel)]="date" (ngModelChange)="filterEvents()"/>
+      </div>
+
+      <div class="filter">
+        <button class="btn-primary" (click)="resetParams()">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="events-grid" aria-live="polite">
+    <article *ngFor="let event of events" class="event-card" tabindex="0">
+
+      <div class="card-body">
+        <h2 id="title-{{event.id}}" class="event-name">{{ event.name }}</h2>
+        <div class="meta">
+          <span class="band">{{ event.bandName }}</span>
+          <span class="date">{{ event.date | date:'dd MMM yyyy' }} • {{ event.startTime }}</span>
+        </div>
+
+        <div class="venue">{{ event.venueName }} — {{ event.city }}</div>
+
+        <p class="desc">{{ event.description }}</p>
+
+        <div class="card-bottom">
+          <div class="price">{{ event.ticketPrice }} PLN</div>
+          <div class="followers">👥 {{ event.followersCount }}</div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn-primary" (click)="viewDetails(event)">Szczegóły</button>
+          <button class="btn-ghost" (click)="toggleFollow(event)">{{ 'Obserwuj' }}</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <div class="page-panel" *ngIf="events.length !== 0">
+    <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
+      <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
+    </button>
+
+    <div class="page-numbers">Strona {{currentPage + 1}} z {{totalPages}}</div>
+
+    <button class="page-button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage + 1 === totalPages">
+      <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
+    </button>
+  </div>
+
+  <p *ngIf="events.length === 0" [style]="'text-align: center'">
+    Brak danych do wyświetlenia
+  </p>
+</div>

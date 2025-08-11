@@ -10,16 +10,14 @@ import io.kk.bandhub.eventservice.integration.VenueServiceClient;
 import io.kk.bandhub.eventservice.model.Event;
 import io.kk.bandhub.eventservice.model.UserEvent;
 import io.kk.bandhub.eventservice.repository.event.EventRepository;
-import io.kk.bandhub.eventservice.repository.event.EventSpecification;
 import io.kk.bandhub.eventservice.repository.user_event.UserEventRepository;
+import io.kk.bandhub.eventservice.service.EventSearchContext;
 import io.kk.bandhub.eventservice.service.EventService;
-import io.kk.bandhub.eventservice.utils.NotificationCreator;
-import io.kk.bandhub.eventservice.utils.NotificationType;
-import io.kk.bandhub.eventservice.utils.RelationType;
-import io.kk.bandhub.eventservice.utils.TimeRange;
+import io.kk.bandhub.eventservice.utils.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,6 +34,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final UserEventRepository userEventRepository;
+    private final EventSearchContext eventSearchContext;
     private final VenueServiceClient venueServiceClient;
     private final MusicServiceClient musicServiceClient;
     private final RabbitService rabbitService;
@@ -137,7 +136,7 @@ public class EventServiceImpl implements EventService {
     public List<EventDTO> getAllEvents() {
         return eventRepository.findAll().stream().map(e -> {
             var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
-            var bandEventData = musicServiceClient.getBand(e.getBandId());
+            var bandEventData = musicServiceClient.getBandById(e.getBandId());
 
             return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
         }).toList();
@@ -149,50 +148,14 @@ public class EventServiceImpl implements EventService {
         );
 
         var venueEventData = venueServiceClient.getVenueById(event.getVenueId());
-        var bandEventData = musicServiceClient.getBand(event.getBandId());
+        var bandEventData = musicServiceClient.getBandById(event.getBandId());
 
         return mapper.buildEventDTO(event, venueEventData, bandEventData, userEventRepository.findAllByEventId(event.getId()).size());
     }
 
-    public List<EventDTO> searchEvents(LocalDate date, Integer bandId, List<String> cities) {
-
-        Specification<Event> spec = EventSpecification.hasDate(date)
-                .and(EventSpecification.hasBandId(bandId));
-
-        var events = eventRepository.findAll(spec);
-
-        if (cities.isEmpty()) {
-            return events.stream().map(e -> {
-                var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
-                var bandEventData = musicServiceClient.getBand(e.getBandId());
-
-                return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
-            }).toList();
-        }
-
-        List<VenueDTO> venues;
-        try {
-            venues = venueServiceClient.getVenuesByIds(events.stream().map(Event::getVenueId).toList());
-        } catch (RuntimeException ex) {
-            return events.stream().map(e -> {
-                var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
-                var bandEventData = musicServiceClient.getBand(e.getBandId());
-
-                return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
-            }).toList();
-        }
-
-        Map<Integer, String> venueIdToCity = venues.stream()
-                .collect(Collectors.toMap(VenueDTO::getId, VenueDTO::getCity));
-
-        return events.stream()
-                .filter(e -> cities.contains(venueIdToCity.get(e.getVenueId())))
-                .map(e -> {
-                    var venueEventData = venueServiceClient.getVenueById(e.getVenueId());
-                    var bandEventData = musicServiceClient.getBand(e.getBandId());
-
-                    return mapper.buildEventDTO(e, venueEventData, bandEventData, userEventRepository.findAllByEventId(e.getId()).size());
-                }).toList();
+    public Page<EventDTO> searchEvents(LocalDate date, String bandName, List<String> cities, Pageable pageable) {
+        var params = new SearchParams(date, bandName, cities);
+        return eventSearchContext.search(params, pageable);
     }
 
     private void checkEventOverlapping(Event event) {

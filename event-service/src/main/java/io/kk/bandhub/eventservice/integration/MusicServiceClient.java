@@ -6,6 +6,7 @@ import io.kk.bandhub.eventservice.exception.RegistrationException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -14,7 +15,11 @@ public interface MusicServiceClient {
 
     @GetMapping("/band/evt/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBand")
-    BandEventDataDTO getBand(@PathVariable Integer id);
+    BandEventDataDTO getBandById(@PathVariable Integer id);
+
+    @GetMapping("/band/evt/name")
+    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandByName")
+    BandEventDataDTO getBandByName(@RequestParam String name);
 
     @GetMapping("/band/evt/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandReg")
@@ -27,6 +32,14 @@ public interface MusicServiceClient {
     default BandEventDataDTO fallbackGetBand(Integer id, Throwable throwable) {
         BandEventDataDTO bandEventDataDTO = new BandEventDataDTO();
         bandEventDataDTO.setId(id);
+        bandEventDataDTO.setFounderId(null);
+        bandEventDataDTO.setName("unknown");
+        return bandEventDataDTO;
+    }
+
+    default BandEventDataDTO fallbackGetBandByName(String name, Throwable throwable) {
+        BandEventDataDTO bandEventDataDTO = new BandEventDataDTO();
+        bandEventDataDTO.setId(null);
         bandEventDataDTO.setFounderId(null);
         bandEventDataDTO.setName("unknown");
         return bandEventDataDTO;

@@ -69,3 +69,9 @@ export enum RelationType {
   PARTICIPANT = "PARTICIPANT",
   FOLLOWER = "FOLLOWER"
 }
+
+export interface EventSearchingParams {
+  cities: String[],
+  date: string | null,
+  bandName :string
+}
