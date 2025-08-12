@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface UserEventService {
     List<UserEventDTO> getUserEvents(Integer userId);
-    void followEvent(FollowRequestDTO followRequest);
+    UserEventDTO followEvent(FollowRequestDTO followRequest);
     void unfollowEvent(FollowRequestDTO followRequest);
 }

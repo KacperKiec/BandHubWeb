@@ -38,12 +38,12 @@ public class EventController {
     }
 
     @PostMapping(value = "/follow")
-    ResponseEntity<Void> followEvent(@RequestBody FollowRequestDTO followRequest) {
-        userEventService.followEvent(followRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    ResponseEntity<UserEventDTO> followEvent(@RequestBody FollowRequestDTO followRequest) {
+        var result = userEventService.followEvent(followRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @PatchMapping(value = "/follow")
+    @PatchMapping(value = "/unfollow")
     ResponseEntity<Void> unfollowEvent(@RequestBody FollowRequestDTO followRequest) {
         userEventService.unfollowEvent(followRequest);
         return ResponseEntity.noContent().build();

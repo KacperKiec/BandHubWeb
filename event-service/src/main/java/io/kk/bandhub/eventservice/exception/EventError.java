@@ -7,7 +7,8 @@ public enum EventError {
     EVENT_NOT_FOUND("Event was not found"),
     EVENT_ALREADY_EXISTS("Event with given parameters already exists"),
     EVENT_BAND_NOT_FOUND("Band with given parameters not found"),
-    EVENT_OUT_OF_BOUNDS("Event time overlaps with other events or existing offers time bounds");
+    EVENT_OUT_OF_BOUNDS("Event time overlaps with other events or existing offers time bounds"),
+    EVENT_ALREADY_FOLLOWED("User is already following this event");
 
     private final String message;
 

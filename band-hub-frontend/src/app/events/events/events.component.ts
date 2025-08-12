@@ -1,11 +1,14 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {EventDTO, EventSearchingParams} from '../../core/models/event.model';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {EventDTO, EventSearchingParams, FollowRequest, UserEventDTO} from '../../core/models/event.model';
+import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {EventApiService} from '../event-service/event-api.service';
 import {AddressSearchComponent} from '../../shared/address-search/address-search.component';
 import {Address} from '../../core/models/location.model';
 import {debounceTime, Subject} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {EventDetailsComponent} from '../event-details/event-details.component';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-events',
@@ -15,13 +18,29 @@ import {debounceTime, Subject} from 'rxjs';
     NgForOf,
     FormsModule,
     NgIf,
-    AddressSearchComponent
+    AddressSearchComponent,
+    NgClass,
+    EventDetailsComponent
   ],
   templateUrl: './events.component.html',
-  styleUrl: './events.component.css'
+  styleUrl: './events.component.css',
+  animations: [
+    trigger('backdropFadeInOut', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition('void <=> *', animate('200ms ease-in-out')),
+    ]),
+    trigger('detailsFadeInOut', [
+      state('void', style({ opacity: 0, transform: 'translate(-50%, -50%) scale(0.9)' })),
+      state('*', style({ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' })),
+      transition('void <=> *', animate('200ms ease-in-out')),
+    ])
+  ]
 })
 export class EventsComponent implements OnInit {
   events: EventDTO[] = [];
+  userEvents: UserEventDTO[] = [];
+  userId!: number;
 
   currentPage = 0;
   pageSize = 9;
@@ -36,7 +55,10 @@ export class EventsComponent implements OnInit {
   bandName: string = '';
   bandNameChanged: Subject<string> = new Subject<string>();
 
-  constructor(private eventApiService: EventApiService, private cdr: ChangeDetectorRef) {
+  eventDetails!: EventDTO;
+  isDetailsVisible = false;
+
+  constructor(private eventApiService: EventApiService, private cdr: ChangeDetectorRef, private route: ActivatedRoute) {
     this.bandNameChanged.pipe(
       debounceTime(500)
     ).subscribe(() => {
@@ -46,7 +68,26 @@ export class EventsComponent implements OnInit {
 
   ngOnInit(): void {
     // this.events = this.getMockEvents(20);
-    this.loadPage(this.currentPage);
+    const rawId = localStorage.getItem('userId');
+    if (rawId) {
+      this.userId = JSON.parse(rawId);
+    }
+
+    this.eventApiService.getUserEvents(this.userId).subscribe(events => {
+      if (events) {
+        this.userEvents = events;
+      }
+    });
+
+    this.route.queryParams.subscribe(params => {
+      if (params['bandName']) {
+        this.bandName = params['bandName'];
+        this.params.bandName = params['bandName'];
+        this.filterEvents();
+      } else {
+        this.loadPage(this.currentPage);
+      }
+    });
   }
 
   onBandNameChange(newValue: string) {
@@ -96,13 +137,44 @@ export class EventsComponent implements OnInit {
   }
 
   viewDetails(event: EventDTO): void {
-    console.log('view', event.id);
-    // router.navigate(['/events', event.id]) itd.
+    this.isDetailsVisible = true;
+    this.eventDetails = event;
   }
 
-  toggleFollow(event: EventDTO): void {
-    console.log('toggle follow', event.id);
-    // wywołaj endpoint follow/unfollow i zaktualizuj followersCount
+  closeDetails() {
+    this.isDetailsVisible = false;
+  }
+
+  followEvent(event: EventDTO) {
+    let fr: FollowRequest = {
+      userId: this.userId,
+      eventId: event.id
+    };
+
+    this.eventApiService.followEvent(fr).subscribe(userEvent => {
+      if (userEvent) {
+        this.userEvents.push(userEvent);
+        event.followersCount++;
+      }
+    });
+  }
+
+  unfollowEvent(event: EventDTO) {
+    let fr: FollowRequest = {
+      userId: this.userId,
+      eventId: event.id
+    };
+
+    this.eventApiService.unfollowEvent(fr).subscribe({
+      next: () => {
+        this.userEvents = this.userEvents.filter(e => e.eventId !== event.id);
+        event.followersCount--;
+      }
+    });
+  }
+
+  isEventFollowed(eventId: number) {
+    return this.userEvents.some(event => event.eventId === eventId);
   }
 
   private getMockEvents(n: number): EventDTO[] {

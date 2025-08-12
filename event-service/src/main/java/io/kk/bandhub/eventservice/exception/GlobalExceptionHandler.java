@@ -17,6 +17,8 @@ public class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), "404"));
         } else if (EventError.EVENT_ALREADY_EXISTS.equals(e.getStatus()) || EventError.EVENT_OUT_OF_BOUNDS.equals(e.getStatus())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage(), "409"));
+        } else if (EventError.EVENT_ALREADY_FOLLOWED.equals(e.getStatus())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), "400"));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage(), "503"));
         }

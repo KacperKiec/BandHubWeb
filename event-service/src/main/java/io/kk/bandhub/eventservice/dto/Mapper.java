@@ -45,6 +45,7 @@ public class Mapper {
         dto.setDescription(event.getDescription());
         dto.setTicketPrice(event.getTicketPrice().doubleValue());
         dto.setFollowersCount(followersCount);
+        dto.setCreatorId(band.getFounderId());
 
         return dto;
     }

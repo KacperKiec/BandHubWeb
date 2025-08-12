@@ -48,7 +48,12 @@
 
         <div class="card-actions">
           <button class="btn-primary" (click)="viewDetails(event)">Szczegóły</button>
-          <button class="btn-ghost" (click)="toggleFollow(event)">{{ 'Obserwuj' }}</button>
+          <button
+            [ngClass]="isEventFollowed(event.id) ? 'btn-primary' : 'btn-ghost'"
+            (click)="isEventFollowed(event.id) ? unfollowEvent(event) : followEvent(event)">
+            {{ isEventFollowed(event.id) ? 'Przestań obserwować' : 'Obserwuj' }}
+          </button>
+
         </div>
       </div>
     </article>
@@ -69,4 +74,14 @@
   <p *ngIf="events.length === 0" [style]="'text-align: center'">
     Brak danych do wyświetlenia
   </p>
+
+  <div class="details-backdrop" *ngIf="isDetailsVisible" (click)="closeDetails()" [@backdropFadeInOut]></div>
+
+  <app-event-details
+    *ngIf="isDetailsVisible && eventDetails"
+    [@detailsFadeInOut]
+    [userId]="userId"
+    [eventDetails]="eventDetails"
+    (closeDetailsEvent)="closeDetails()">
+  </app-event-details>
 </div>

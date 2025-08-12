@@ -30,4 +30,5 @@ public class EventDTO {
     private String description;
     private Double ticketPrice;
     private Integer followersCount;
+    private Integer creatorId;
 }

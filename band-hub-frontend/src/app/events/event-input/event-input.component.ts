@@ -89,7 +89,7 @@ export class EventInputComponent implements OnInit, OnChanges {
   get mappedBookings(): CarouselElement[] {
     return this.bookings.map(booking => ({
       id: booking.id,
-      name: `${booking.venueName} (${booking.bookingDate})`
+      name: `${booking.venueName} (${booking.bookedDate})`
     }));
   }
 

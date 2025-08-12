@@ -50,8 +50,8 @@ export class BandDetailsComponent implements OnInit{
     this.router.navigate(['/musicians', id]);
   }
 
-  goToBandEvents() {
-    console.log("band events");
+  goToBandEvents(bandName: string) {
+    this.router.navigate(['/events'], {queryParams: { bandName }});
   }
 
   isUserInBand(): boolean {

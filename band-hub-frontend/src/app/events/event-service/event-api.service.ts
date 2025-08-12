@@ -84,8 +84,8 @@ export class EventApiService {
       );
   }
 
-  followEvent(request: FollowRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiURL}/follow`, request, {withCredentials: true})
+  followEvent(request: FollowRequest): Observable<UserEventDTO> {
+    return this.http.post<UserEventDTO>(`${this.apiURL}/follow`, request, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

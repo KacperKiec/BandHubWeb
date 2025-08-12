@@ -12,6 +12,7 @@ import {MusicianApiService} from '../../musicians/musician-service/musician-api.
 import {VenueApiService} from '../../venues/venue-service/venue-api.service';
 import {Venue} from '../../core/models/venue.model';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {EventDetailsComponent} from '../event-details/event-details.component';
 
 @Component({
   selector: 'app-user-events',
@@ -20,7 +21,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     CalendarComponent,
     NgIf,
     RegisterEventComponent,
-    EditEventFormComponent
+    EditEventFormComponent,
+    EventDetailsComponent
   ],
   templateUrl: './user-events.component.html',
   styleUrl: './user-events.component.css',
@@ -88,6 +90,7 @@ export class UserEventsComponent implements OnInit {
     this.eventApiService.getEvent(id).subscribe(event => {
       if(event) {
         this.eventDetails = event;
+        console.log(this.eventDetails);
       }
     });
     this.isDetailsVisible = true;

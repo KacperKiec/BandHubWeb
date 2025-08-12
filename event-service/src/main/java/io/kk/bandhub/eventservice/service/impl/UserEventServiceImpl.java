@@ -27,7 +27,14 @@ public class UserEventServiceImpl implements UserEventService {
                 .stream().map(mapper::buildUserEventDTO).toList();
     }
 
-    public void followEvent(FollowRequestDTO followRequest) {
+    public UserEventDTO followEvent(FollowRequestDTO followRequest) {
+
+        var existingFollowing = userEventRepository.findByUserIdAndEventId(followRequest.getUserId(), followRequest.getEventId());
+
+        if (existingFollowing.isPresent()) {
+            throw new EventException(EventError.EVENT_ALREADY_FOLLOWED);
+        }
+
         UserEvent userEvent = new UserEvent();
         userEvent.setUserId(followRequest.getUserId());
 
@@ -37,7 +44,7 @@ public class UserEventServiceImpl implements UserEventService {
 
         userEvent.setEvent(ue);
         userEvent.setRelation(RelationType.FOLLOWER);
-        userEventRepository.save(userEvent);
+        return mapper.buildUserEventDTO(userEventRepository.save(userEvent));
     }
 
     public void unfollowEvent(FollowRequestDTO followRequest) {
