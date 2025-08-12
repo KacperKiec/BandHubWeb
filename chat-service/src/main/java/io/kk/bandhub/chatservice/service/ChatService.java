@@ -1,20 +1,12 @@
 package io.kk.bandhub.chatservice.service;
 
-import io.kk.bandhub.chatservice.model.Message;
-import io.kk.bandhub.chatservice.repository.MessageRepository;
-import org.springframework.stereotype.Service;
+import io.kk.bandhub.chatservice.dto.ChatDTO;
+import org.springframework.data.domain.Pageable;
 
-@Service
-public class ChatService {
+import java.util.List;
+import java.util.Set;
 
-    private final MessageRepository messageRepository;
-
-    public ChatService(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
-    }
-
-    public Message sendMessage(Message message) {
-        System.out.println("Zapisuje wiadomosc: " + message.getContent());
-        return messageRepository.save(message);
-    }
+public interface ChatService {
+    void createChat(Set<Integer> participants);
+    List<ChatDTO> getUserChats(Integer userId, Pageable pageable);
 }

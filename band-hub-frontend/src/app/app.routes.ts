@@ -16,6 +16,7 @@ import {OffersComponent} from './offers/offers/offers.component';
 import {UserBookingsComponent} from './bookings/user-bookings/user-bookings.component';
 import {UserEventsComponent} from './events/user-events/user-events.component';
 import {EventsComponent} from './events/events/events.component';
+import {ChatComponent} from './chat/chat/chat.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,5 +36,6 @@ export const routes: Routes = [
   { path: 'offers', component: OffersComponent },
   { path: 'user/bookings', component: UserBookingsComponent},
   { path: 'user/events', component: UserEventsComponent },
-  { path: 'events', component: EventsComponent }
+  { path: 'events', component: EventsComponent },
+  { path: 'chat', component: ChatComponent }
 ]

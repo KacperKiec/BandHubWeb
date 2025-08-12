@@ -3,12 +3,55 @@ spring:
     name: chat-service
   data:
     mongodb:
-      uri: mongodb://dev:dev@host.docker.internal:27017/chat_db?authSource=admin
+      uri: mongodb://dev:dev@localhost:27017/chat_db?authSource=admin
       database: chat_db
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: dev
+    password: dev
+    virtual-host: /
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/key/jwks.json
+          jws-algorithms: RS256
+          issuer-uri: http://localhost:8020
 
 server:
   port: 8040
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+app:
+  services:
+    token-url: http://localhost:8020/oauth2/token
+  oauth2:
+    client-id: oidc-client
+    client-secret: secret
+    scope: read
+  rabbit:
+    queue: "notification-queue"
+    exchange: "notification-exchange"
+    routing-key: "add.notification"
+resilience4j:
+  circuitbreaker:
+    instances:
+      CircuitBreakerService:
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state:
+          seconds: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: count_based
 logging:
   level:
-    org.springframework.web: DEBUG
-    org.springframework.messaging: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.oauth2.jwt: DEBUG

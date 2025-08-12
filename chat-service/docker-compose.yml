@@ -5,6 +5,10 @@ services:
       - "27017:27017"
     volumes:
       - chat_db_vol:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: dev
+      MONGO_INITDB_DATABASE: chat_db
     networks:
       - chat-network
 

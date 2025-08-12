@@ -1,37 +1,35 @@
 package io.kk.bandhub.chatservice.controller;
 
-import io.kk.bandhub.chatservice.model.Message;
+import io.kk.bandhub.chatservice.dto.ChatDTO;
 import io.kk.bandhub.chatservice.service.ChatService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Controller;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
-@Controller
+import java.util.List;
+import java.util.Set;
+
+@RestController
+@RequestMapping("/chat")
+@RequiredArgsConstructor
 public class ChatController {
 
     private final ChatService chatService;
 
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
+    @PostMapping()
+    ResponseEntity<Void> createChat(@RequestBody Set<Integer> participants) {
+        chatService.createChat(participants);
+        return ResponseEntity.ok().build();
     }
 
-    @MessageMapping("/public")
-    @SendTo("/topic/public")
-    public Message sendMessage(@Payload Message message) {
-        log.info("Message{}", message.toString());
-        chatService.sendMessage(message);
-        return message;
-    }
-
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public Message addUser(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) {
-        log.info("Something happening: {}", message);
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
-        return message;
+    @GetMapping(value = "/user/{id}")
+    ResponseEntity<List<ChatDTO>> getUserChats(
+            @PathVariable Integer id,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        var result = chatService.getUserChats(id, pageable);
+        return ResponseEntity.ok(result);
     }
 }

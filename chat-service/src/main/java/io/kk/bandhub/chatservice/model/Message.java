@@ -21,12 +21,16 @@ public class Message {
     private String id;
 
     @NotNull
+    @Field(name = "chat_id")
+    private String chatId;
+
+    @NotNull
     @Field(name = "sender_id")
-    private Integer sender;
+    private Integer senderId;
 
     @NotNull
     @Field(name = "receiver_id")
-    private Integer receiver;
+    private Integer receiverId;
 
     @NotNull
     @Field(name = "content")
@@ -39,4 +43,8 @@ public class Message {
     @NotNull
     @Field(name = "is_received")
     private Boolean isReceived;
+
+    @NotNull
+    @Field(name = "is_read")
+    private Boolean isRead;
 }

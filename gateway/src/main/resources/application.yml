@@ -44,6 +44,12 @@ spring:
             - Path=/notification/**, /ws/notifications/**
           metadata:
             websocket: true
+        - id: chat-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/chat/**, /ws/chat/**
+          metadata:
+            websocket: true
 #      discovery:
 #        locator:
 #          enabled: true
