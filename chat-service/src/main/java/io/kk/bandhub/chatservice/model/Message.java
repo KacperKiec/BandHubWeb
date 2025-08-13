@@ -41,8 +41,8 @@ public class Message {
     private Date timestamp;
 
     @NotNull
-    @Field(name = "is_received")
-    private Boolean isReceived;
+    @Field(name = "is_sent")
+    private Boolean isSent;
 
     @NotNull
     @Field(name = "is_read")

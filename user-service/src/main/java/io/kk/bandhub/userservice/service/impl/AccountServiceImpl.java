@@ -188,6 +188,11 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll(spec, pageable).map(mapper::toAccountDTO);
     }
 
+    public Page<AccountResponseDTO> findByNames(String firstName, String lastName, Pageable pageable) {
+        var accounts = accountRepository.findAccountsByFirstNameContainingOrLastNameContaining(firstName, lastName, pageable);
+        return accounts.map(mapper::toAccountDTO);
+    }
+
     @Transactional
     public void addRole(Integer id, RoleDTO roleDTO) {
         var existingAccount = accountRepository.findAccountById(id).orElseThrow(

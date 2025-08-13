@@ -12,5 +12,5 @@ public record MessageDTO(
         Integer receiverId,
         String content,
         Date timestamp,
-        Boolean isReceived,
+        Boolean isSent,
         Boolean isRead) { }

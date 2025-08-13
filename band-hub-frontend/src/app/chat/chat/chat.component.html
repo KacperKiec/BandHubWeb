@@ -1,9 +1,9 @@
 <div class="chat-container" *ngIf="userId">
   <aside class="sidebar">
     <div class="search-users">
-      <input type="text" placeholder="Szukaj użytkowników..." [(ngModel)]="searchText" />
-      <ul *ngIf="searchText">
-        <li *ngFor="let user of filteredUsers">{{ user }}</li>
+      <input type="text" placeholder="Szukaj użytkowników..." [(ngModel)]="searchText" (ngModelChange)="filterUsers()"/>
+      <ul *ngIf="searchText" (scroll)="loadMoreUsers($event)">
+        <li *ngFor="let user of users" (click)="selectUser(user)">{{ user.firstName }} {{ user.lastName }}</li>
       </ul>
     </div>
 
@@ -12,7 +12,7 @@
       <li
         *ngFor="let chat of chats"
         (click)="selectChat(chat)"
-        [class.active]="chat.id === selectedChatId"
+        [class.active]="chat.id === selectedChat?.id"
       >
         <div class="chat-name">{{ chat.receiverFirstName }} {{ chat.receiverLastName }}</div>
       </li>
@@ -20,28 +20,36 @@
   </aside>
 
   <main class="chat-main">
-    <header class="chat-header">
-      <h3>
-        {{ findChat() }}
-      </h3>
-    </header>
+    <ng-container *ngIf="selectedChat">
+      <header class="chat-header">
+        <h3>
+          {{ selectedChat.receiverFirstName }} {{ selectedChat.receiverLastName}}
+        </h3>
+      </header>
 
-    <section class="chat-messages">
-      <div
-        *ngFor="let msg of messages"
-        [class.message-me]="isMessageFromCurrentUser(msg)"
-        [class.message-other]="!isMessageFromCurrentUser(msg)"
-        class="message"
-      >
-        <p>{{ msg.content }}</p>
-        <span class="time">{{ msg.timestamp | date:'shortTime' }}</span>
+      <section class="chat-messages" #messagesContainer (scroll)="loadMoreMessages($event)">
+        <div
+          *ngFor="let msg of messages"
+          [class.message-me]="isMessageFromCurrentUser(msg)"
+          [class.message-other]="!isMessageFromCurrentUser(msg)"
+          class="message"
+        >
+          <p>{{ msg.content }}</p>
+          <span class="time">{{ msg.timestamp | date:'shortTime' }}</span>
+        </div>
+      </section>
+
+      <footer class="chat-input">
+        <input type="text" placeholder="Napisz wiadomość..." [(ngModel)]="messageContent"/>
+        <button (click)="sendMessage()">Wyślij</button>
+      </footer>
+    </ng-container>
+
+    <ng-container *ngIf="!selectedChat">
+      <div class="alert-info" style="cursor: default">
+        <p>Wyszukaj użytkownika i rozpocznij z nim rozmowę!</p>
       </div>
-    </section>
-
-    <footer class="chat-input">
-      <input type="text" placeholder="Napisz wiadomość..." disabled />
-      <button disabled>Wyślij</button>
-    </footer>
+    </ng-container>
   </main>
 </div>
 

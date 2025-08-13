@@ -42,6 +42,4 @@ export class NotificationService {
       //console.log('Disconnected from WebSocket');
     }
   }
-
-
 }

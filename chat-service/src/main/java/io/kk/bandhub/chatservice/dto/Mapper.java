@@ -16,7 +16,7 @@ public class Mapper {
                 .receiverId(message.getReceiverId())
                 .content(message.getContent())
                 .timestamp(message.getTimestamp())
-                .isReceived(message.getIsReceived())
+                .isSent(message.getIsSent())
                 .isRead(message.getIsRead())
                 .build();
     }

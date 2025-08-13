@@ -2,18 +2,23 @@ package io.kk.bandhub.chatservice.service.impl;
 
 import io.kk.bandhub.chatservice.dto.ChatDTO;
 import io.kk.bandhub.chatservice.dto.Mapper;
+import io.kk.bandhub.chatservice.dto.MessageDTO;
 import io.kk.bandhub.chatservice.exception.ChatError;
 import io.kk.bandhub.chatservice.exception.ChatException;
 import io.kk.bandhub.chatservice.integration.AccountServiceClient;
 import io.kk.bandhub.chatservice.model.Chat;
+import io.kk.bandhub.chatservice.model.Message;
 import io.kk.bandhub.chatservice.repository.ChatRepository;
 import io.kk.bandhub.chatservice.repository.MessageRepository;
 import io.kk.bandhub.chatservice.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,10 +31,10 @@ public class ChatServiceImpl implements ChatService {
     private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
 
-    public void createChat(Set<Integer> participants) {
+    public String createChat(Set<Integer> participants) {
         Chat chat = new Chat();
         chat.setParticipants(participants);
-        chatRepository.save(chat);
+        return chatRepository.save(chat).getId();
     }
 
     public List<ChatDTO> getUserChats(Integer userId, Pageable pageable) {
@@ -38,7 +43,15 @@ public class ChatServiceImpl implements ChatService {
         List<ChatDTO> dtos = new ArrayList<>();
 
         chats.forEach(chat -> {
-            var messages = messageRepository.findMessagesByChatId(chat.getId(), pageable);
+            Page<Message> page = messageRepository.findMessagesByChatId(chat.getId(), pageable);
+
+            var content = page.getContent()
+                    .stream()
+                    .sorted(Comparator.comparing(Message::getId))
+                    .toList();
+
+            var messages = new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+
             var account = accountServiceClient.getAccount(chat.getParticipants()
                     .stream().filter(id -> !id.equals(userId)).findFirst().orElseThrow(
                             () -> new ChatException(ChatError.CHAT_NOT_FOUND)
@@ -47,5 +60,18 @@ public class ChatServiceImpl implements ChatService {
         });
 
         return dtos;
+    }
+
+    public Page<MessageDTO> getChatMessages(String chatId, Pageable pageable) {
+        Page<Message> page = messageRepository.findMessagesByChatId(chatId, pageable);
+
+        List<MessageDTO> content = page.getContent()
+                .stream()
+                .sorted(Comparator.comparing(Message::getId))
+                .map(mapper::toMessageDTO)
+                .toList();
+
+        return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+
     }
 }

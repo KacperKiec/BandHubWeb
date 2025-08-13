@@ -1,9 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {ChatDTO, MessageDTO} from '../../core/models/chat.model';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChatDTO, MessageDTO, MessageRequest} from '../../core/models/chat.model';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ChatApiService} from '../chat-service/chat-api.service';
+import {UserApiService} from '../../user/user-service/user-api.service';
+import {AccountResponse} from '../../core/models/account.model';
+import {Page, PageInfo} from '../../core/models/pagination.model';
+import {ChatService} from '../chat-socket-service/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -20,62 +24,26 @@ import {ChatApiService} from '../chat-service/chat-api.service';
 export class ChatComponent implements OnInit {
   userId!: number;
   chats: ChatDTO[] = [];
+  messages: MessageDTO[] = [];
 
-  currentChat: ChatDTO | null = null;
-  currentPage: number = 0;
-  totalPages: number = 0;
-  pageSize: number = 10;
+  selectedChat: ChatDTO | null = null;
+  messageCurrentPage: number = 0;
+  messageTotalPages: number = 0;
+  messagePageSize: number = 10;
   hasChats: boolean = false;
 
-
-  currentUserId = 1;  // załóżmy, że to ID zalogowanego użytkownika
-
-  mockChats = [
-    { id: 2, userName: 'Anna Kowalska' },
-    { id: 3, userName: 'Piotr Nowak' },
-    { id: 4, userName: 'Marta Wiśniewska' }
-  ];
-
-  users = ['Anna Kowalska', 'Piotr Nowak', 'Marta Wiśniewska', 'Jan Kowal', 'Katarzyna Zielińska'];
-
-  selectedChatId = '2'; // ID aktualnie wybranego rozmówcy
-
-  messages: MessageDTO[] = [
-    {
-      id: 'm1',
-      chatId: '1',
-      senderId: 2,
-      receiverId: 1,
-      content: 'Cześć, jak się masz?',
-      timestamp: new Date('2025-08-12T10:00:00'),
-      isReceived: true,
-      isRead: true
-    },
-    {
-      id: 'm2',
-      chatId: '2',
-      senderId: 1,
-      receiverId: 2,
-      content: 'Wszystko dobrze, dzięki! A u Ciebie?',
-      timestamp: new Date('2025-08-12T10:02:00'),
-      isReceived: false,
-      isRead: true
-    },
-    {
-      id: 'm3',
-      chatId: '3',
-      senderId: 2,
-      receiverId: 1,
-      content: 'Też dobrze, dzięki za pytanie!',
-      timestamp: new Date('2025-08-12T10:05:00'),
-      isReceived: true,
-      isRead: false
-    }
-  ];
+  users: AccountResponse[] = [];
+  userCurrentPage: number = 0;
+  userTotalPages: number = 0;
+  userPageSize: number = 5;
 
   searchText = '';
+  messageContent = '';
 
-  constructor(private router: Router, private chatApiService: ChatApiService) {
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+
+
+  constructor(private router: Router, private chatApiService: ChatApiService, private userApiService: UserApiService, private chatSocketService: ChatService) {
   }
 
   ngOnInit() {
@@ -84,35 +52,194 @@ export class ChatComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    this.chatApiService.getUserChats(this.userId).subscribe(chats => {
+    this.chatApiService.getUserChats(this.userId, this.messageCurrentPage, this.messagePageSize).subscribe(chats => {
       if (chats) {
         if (this.chats.length > 0) this.hasChats = true;
         this.chats = [...chats];
       }
     });
-  }
 
-  get filteredUsers() {
-    return this.users.filter(u => u.toLowerCase().includes(this.searchText.toLowerCase()));
-  }
+    this.chatSocketService.messages$.subscribe(message => {
+      this.messages = [...this.messages, message];
 
-  selectChat(chat: ChatDTO) {
-    this.currentChat = chat
-    this.totalPages = chat.messages.page.totalPages;
-    this.currentPage = chat.messages.page.number;
-    this.pageSize = chat.messages.page.size;
-    this.messages = [...chat.messages.content];
+      if (message.senderId === this.userId) {
+        this.scrollToBottom();
+      }
+    });
   }
 
   isMessageFromCurrentUser(msg: MessageDTO): boolean {
-    return msg.senderId === this.currentUserId;
-  }
-
-  findChat() {
-    // return this.mockChats.find(c => c.id === this.selectedChatId)?.userName || 'Wybierz czat'
+    return msg.senderId === this.userId;
   }
 
   goToLogin() {
     this.router.navigate(['/auth/login']);
+  }
+
+  selectUser(receiver: AccountResponse) {
+    let chat = this.chats.find(chat => chat.receiverId === receiver.id);
+    if (chat) {
+      this.selectChat(chat);
+    } else {
+      this.startChat(receiver);
+      this.searchText = '';
+    }
+  }
+
+  selectChat(chat: ChatDTO) {
+    this.selectedChat = chat
+    this.messageTotalPages = chat.messages.page.totalPages;
+    this.messageCurrentPage = chat.messages.page.number;
+    this.messagePageSize = chat.messages.page.size;
+    this.messages = [...chat.messages.content];
+
+    setTimeout(() => this.scrollToBottom(), 0);
+  }
+
+  startChat(receiver: AccountResponse) {
+    this.chatApiService.createChat([this.userId, receiver.id]).subscribe(id => {
+      if (id) {
+
+        const pageInfo: PageInfo = {
+          totalPages: 0,
+          totalElements: 0,
+          size: 0,
+          number: 0
+        }
+
+        const page: Page<MessageDTO> = {
+          content: [],
+          page: pageInfo
+        }
+
+        const dto: ChatDTO = {
+          id: id,
+          messages: page,
+          receiverFirstName: receiver.firstName,
+          receiverLastName: receiver.lastName,
+          receiverId: receiver.id
+        }
+
+        this.chats.push(dto);
+        this.selectChat(dto);
+      }
+    });
+  }
+
+  filterUsers() {
+    this.userCurrentPage = 0;
+    this.loadUsersFromApi();
+  }
+
+  loadMoreMessages(event: Event) {
+    const target = event.target as HTMLElement;
+
+    const reachedTop = target.scrollTop === 0;
+
+    if (reachedTop) {
+
+      const prevScrollHeight = target.scrollHeight;
+
+      this.messageCurrentPage++;
+      this.chatApiService.getChatMessages(this.selectedChat!.id, this.messageCurrentPage, this.messagePageSize).subscribe(response => {
+        if (response) {
+          this.messageTotalPages = response.page.totalPages;
+          this.messageCurrentPage = response.page.number;
+          this.messagePageSize = response.page.size;
+
+          const older = [...response.content].reverse();
+          this.messages = [...older, ...this.messages];
+
+          setTimeout(() => {
+            const newScrollHeight = target.scrollHeight;
+            target.scrollTop = newScrollHeight - prevScrollHeight * 2;
+          }, 0);
+        }
+      });
+    }
+  }
+
+  loadMoreUsers(event: Event) {
+    const target = event.target as HTMLElement;
+
+    const reachedTop =
+      Math.ceil(target.scrollTop + target.clientHeight) >= target.scrollHeight;
+
+    if (reachedTop) {
+      this.userCurrentPage++;
+
+      this.loadUsersFromApi();
+    }
+  }
+
+  private loadUsersFromApi() {
+    let temp = this.searchText.split(' ');
+    if (temp.length > 1) {
+
+      this.userApiService.getUsersByName(temp[0], temp[1], this.userCurrentPage, this.userPageSize).subscribe(response => {
+        if (response) {
+          this.users = [...response.content];
+          this.userTotalPages = response.page.totalPages;
+          this.userCurrentPage = response.page.number;
+          this.userPageSize = response.page.size;
+        }
+      });
+
+    } else {
+
+      this.userApiService.getUsersByName(temp[0], temp[0], this.userCurrentPage, this.userPageSize).subscribe(response => {
+        if (response) {
+          this.users = [...response.content];
+          this.userTotalPages = response.page.totalPages;
+          this.userCurrentPage = response.page.number;
+          this.userPageSize = response.page.size;
+        }
+      });
+
+    }
+  }
+
+  sendMessage() {
+    if (this.messageContent && this.selectedChat) {
+      const message: MessageRequest = {
+        chatId: this.selectedChat?.id,
+        senderId: this.userId,
+        receiverId: this.selectedChat?.receiverId,
+        content: this.messageContent,
+        timestamp: new Date(),
+        isReceived: false,
+        isRead: false
+      }
+
+      this.chatSocketService.sendMessage(message);
+      this.messageContent = '';
+
+      this.messages.push({
+        id: '0',
+        chatId: message.chatId,
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        content: message.content,
+        timestamp: message.timestamp,
+        isReceived: false,
+        isRead: false
+      });
+
+      setTimeout(() => this.scrollToBottom(), 0);
+
+    } else return
+  }
+
+  private scrollToBottom(): void {
+    try {
+      setTimeout(() => {
+        if (this.messagesContainer) {
+          this.messagesContainer.nativeElement.scrollTop =
+            this.messagesContainer.nativeElement.scrollHeight;
+        }
+      }, 100);
+    } catch (err) {
+      console.error('Scroll error:', err);
+    }
   }
 }

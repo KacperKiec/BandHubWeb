@@ -17,4 +17,5 @@ public interface AccountRepository {
     Page<Account> findAll(Pageable pageable);
     List<Account> findAll(Specification<Account> spec);
     Page<Account> findAll(Specification<Account> spec, Pageable pageable);
+    Page<Account> findAccountsByFirstNameContainingOrLastNameContaining(String firstName, String lastName, Pageable pageable);
 }

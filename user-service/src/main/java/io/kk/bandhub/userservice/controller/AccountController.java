@@ -159,4 +159,13 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
+    @GetMapping(value = "/name")
+    public ResponseEntity<Page<AccountResponseDTO>> findByName(
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        var result = accountService.findByNames(firstName, lastName, pageable);
+        return ResponseEntity.ok(result);
+    }
 }

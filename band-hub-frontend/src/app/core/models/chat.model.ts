@@ -11,6 +11,16 @@ export interface MessageDTO {
   isRead: boolean;
 }
 
+export interface MessageRequest {
+  chatId: string;
+  senderId: number;
+  receiverId: number;
+  content: string;
+  timestamp: Date;
+  isReceived: boolean;
+  isRead: boolean;
+}
+
 export interface ChatDTO {
   id: string;
   messages: Page<MessageDTO>;
