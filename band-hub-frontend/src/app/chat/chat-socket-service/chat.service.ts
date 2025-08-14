@@ -7,11 +7,16 @@ import {Client, Message} from '@stomp/stompjs';
   providedIn: 'root'
 })
 export class ChatService {
-  private client: Client;
+  private client: Client | null = null;
   private messagesSubject = new BehaviorSubject<any>([]);
   messages$ = this.messagesSubject.asObservable();
 
   constructor() {
+  }
+
+  connect() {
+    if (this.client && this.client.active) return;
+
     this.client = new Client({
       brokerURL: '',
       connectHeaders: {},
@@ -23,7 +28,7 @@ export class ChatService {
     this.client.onConnect = () => {
       const userId = localStorage.getItem('userId');
       if(userId) {
-        this.client.subscribe(`/topic/user/${userId}`, (message: Message) => {
+        this.client!.subscribe(`/topic/user/${userId}`, (message: Message) => {
           const msg = JSON.parse(message.body);
           console.log(msg);
           this.messagesSubject.next(msg);
@@ -34,8 +39,14 @@ export class ChatService {
     this.client.activate();
   }
 
+  disconnect() {
+    if (this.client && this.client.active) {
+      this.client.deactivate();
+    }
+  }
+
   sendMessage(message: any) {
-    this.client.publish({
+    this.client!.publish({
       destination: '/app/chat.send',
       body: JSON.stringify(message)
     });

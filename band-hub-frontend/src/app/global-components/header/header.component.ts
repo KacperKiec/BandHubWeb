@@ -7,6 +7,7 @@ import {NotificationService} from '../../notifications/notification-socket-servi
 import {Subscription} from 'rxjs';
 import {NotificationPanelComponent} from '../../notifications/notification-panel/notification-panel.component';
 import {NotificationApiService} from '../../notifications/notification-service/notification-api.service';
+import {ChatService} from '../../chat/chat-socket-service/chat.service';
 
 @Component({
   selector: 'app-header',
@@ -34,7 +35,7 @@ export class HeaderComponent implements OnInit {
 
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService, private notificationApiService: NotificationApiService) {
+  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService, private notificationApiService: NotificationApiService, private chatSocketService: ChatService) {
   }
 
   ngOnInit() {
@@ -48,6 +49,7 @@ export class HeaderComponent implements OnInit {
 
       if(status) {
         this.notificationService.connect();
+        this.chatSocketService.connect();
       }
     });
 
@@ -134,6 +136,7 @@ export class HeaderComponent implements OnInit {
     this.authApiService.logout().subscribe(() => {
       this.authService.setLoginStatus(false);
       this.notificationService.disconnect();
+      this.chatSocketService.disconnect();
       this.showDropdown = false;
       this.router.navigate(['/']);
     });

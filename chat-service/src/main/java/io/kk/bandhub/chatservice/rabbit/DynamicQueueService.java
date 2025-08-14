@@ -15,7 +15,7 @@ public class DynamicQueueService {
     private final RabbitAdmin rabbitAdmin;
     private final DirectExchange exchange;
 
-    public String createUserQueue(Integer userId) throws Exception {
+    public String createUserQueue(Integer userId) {
         String queueName = "user." + userId;
 
         Queue queue = new Queue(queueName, false);
@@ -27,7 +27,7 @@ public class DynamicQueueService {
         return queueName;
     }
 
-    public void deleteUserQueue(Integer userId) throws Exception {
+    public void deleteUserQueue(Integer userId) {
         String queueName = "user." + userId;
         rabbitAdmin.deleteQueue(queueName);
     }

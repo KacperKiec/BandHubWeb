@@ -16,6 +16,7 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -37,20 +38,17 @@ public class WebSocketEventListener {
             String userId = jwtAuth.getToken().getClaim("userId").toString();
             Integer uid = Integer.valueOf(userId);
 
-            try {
-                var queue = dynamicQueueService.createUserQueue(uid);
-                dynamicListenerService.startListening(queue, uid);
+            log.info("User {} has been connected", uid);
+            var queue = dynamicQueueService.createUserQueue(uid);
+            dynamicListenerService.startListening(queue, uid);
 
-                userStatusService.setOnline(uid, headerAccessor.getSessionId());
+            userStatusService.setOnline(uid, headerAccessor.getSessionId());
 
-                List<Message> pendingMessages = chatService.getPendingMessages(uid);
+            List<Message> pendingMessages = chatService.getPendingMessages(uid);
 
-                for (Message msg : pendingMessages) {
-                    rabbitService.sendMessage(msg);
-                    chatService.markAsSent(msg);
-                }
-            } catch (Exception e) {
-                log.error("Error while creating user queue", e);
+            for (Message msg : pendingMessages) {
+                rabbitService.sendMessage(msg);
+                chatService.markAsSent(msg);
             }
         }
     }
@@ -66,12 +64,9 @@ public class WebSocketEventListener {
             Integer uid = Integer.valueOf(userId);
             userStatusService.setOffline(uid);
 
-            try {
-                dynamicListenerService.stopListening(uid);
-                dynamicQueueService.deleteUserQueue(uid);
-            } catch (Exception e) {
-                log.error("Error while deleting user queue", e);
-            }
+            log.info("User {} has been disconnected", uid);
+            dynamicListenerService.stopListening(uid, 5, TimeUnit.SECONDS);
+//            dynamicQueueService.deleteUserQueue(uid);
         }
     }
 }
