@@ -15,13 +15,37 @@ public class RabbitAdminConfig {
     @Value("${app.rabbit.exchange}")
     private String exchangeName;
 
+    @Value("${app.rabbit.notifications.queue}")
+    private String notificationQueue;
+
+    @Value("${app.rabbit.notifications.exchange}")
+    private String notificationExchange;
+
+    @Value("${app.rabbit.notifications.routing-key}")
+    private String notificationRoutingKey;
+
+    @Bean
+    public Queue notificationQueue() {
+        return new Queue(notificationQueue, true);
+    }
+
+    @Bean
+    public DirectExchange notificationExchange() {
+        return new DirectExchange(notificationExchange);
+    }
+
+    @Bean
+    public Binding notificationBinding(Queue notificationQueue, DirectExchange notificationExchange) {
+        return BindingBuilder.bind(notificationQueue).to(notificationExchange).with(notificationRoutingKey);
+    }
+
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 
     @Bean
-    public DirectExchange directExchange() {
+    public DirectExchange chatExchange() {
         return new DirectExchange(exchangeName);
     }
 

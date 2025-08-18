@@ -12,4 +12,5 @@ public interface ChatService {
     String createChat(Set<Integer> participants);
     List<ChatDTO> getUserChats(Integer userId, Pageable pageable);
     Page<MessageDTO> getChatMessages(String chatId, Pageable pageable);
+    void markMessagesAsRead(Set<String> msgIds);
 }

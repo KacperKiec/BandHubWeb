@@ -5,6 +5,8 @@ import io.kk.bandhub.chatservice.dto.Mapper;
 import io.kk.bandhub.chatservice.dto.MessageDTO;
 import io.kk.bandhub.chatservice.exception.ChatError;
 import io.kk.bandhub.chatservice.exception.ChatException;
+import io.kk.bandhub.chatservice.exception.MessageError;
+import io.kk.bandhub.chatservice.exception.MessageException;
 import io.kk.bandhub.chatservice.integration.AccountServiceClient;
 import io.kk.bandhub.chatservice.model.Chat;
 import io.kk.bandhub.chatservice.model.Message;
@@ -74,4 +76,14 @@ public class ChatServiceImpl implements ChatService {
         return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
 
     }
+
+    public void markMessagesAsRead(Set<String> msgIds) {
+        msgIds.forEach(msgId -> {
+            var msg = messageRepository.findById(msgId)
+                    .orElseThrow(() -> new MessageException(MessageError.MESSAGE_NOT_FOUND));
+            msg.setIsRead(true);
+            messageRepository.save(msg);
+        });
+    }
+
 }

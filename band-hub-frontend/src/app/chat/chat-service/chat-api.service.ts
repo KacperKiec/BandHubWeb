@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {ChatDTO, MessageDTO} from '../../core/models/chat.model';
@@ -36,5 +36,16 @@ export class ChatApiService {
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
       )
+  }
+
+  markMessagesAsRead(msgIds: string[]): Observable<void> {
+    let params = new HttpParams();
+    msgIds.forEach(id => params = params.append('msgIds', id));
+
+    return this.http.patch<void>(`${this.apiURL}/read`, null, { params, withCredentials: true })
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
   }
 }

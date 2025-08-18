@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class DynamicQueueService {
 
     private final RabbitAdmin rabbitAdmin;
-    private final DirectExchange exchange;
+    private final DirectExchange chatExchange;
 
     public String createUserQueue(Integer userId) {
         String queueName = "user." + userId;
@@ -21,7 +21,7 @@ public class DynamicQueueService {
         Queue queue = new Queue(queueName, false);
         rabbitAdmin.declareQueue(queue);
 
-        Binding binding = BindingBuilder.bind(queue).to(exchange).with(queueName);
+        Binding binding = BindingBuilder.bind(queue).to(chatExchange).with(queueName);
         rabbitAdmin.declareBinding(binding);
 
         return queueName;

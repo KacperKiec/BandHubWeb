@@ -141,7 +141,7 @@ export class NotificationPanelComponent implements OnInit {
         break;
       }
       case "NEW_MESSAGE": {
-
+        this.router.navigate(['chat']);
         break;
       }
       case "NEW_EVENT": {

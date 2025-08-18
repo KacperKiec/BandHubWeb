@@ -80,8 +80,8 @@ export class MusicianDetailsComponent implements OnInit{
     this.router.navigate(['/bands', id]);
   }
 
-  startChat(id: number) {
-
+  startChat(musician: Musician) {
+    this.router.navigate(['/chat'], { queryParams: { receiverFirstName: musician.firstName, receiverLastName: musician.lastName  }});
   }
 
   openInvitationPanel() {

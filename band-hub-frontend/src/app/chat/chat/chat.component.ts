@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ChatDTO, MessageDTO, MessageRequest} from '../../core/models/chat.model';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ChatApiService} from '../chat-service/chat-api.service';
 import {UserApiService} from '../../user/user-service/user-api.service';
 import {AccountResponse} from '../../core/models/account.model';
@@ -39,11 +39,12 @@ export class ChatComponent implements OnInit {
 
   searchText = '';
   messageContent = '';
+  isLoadingOlder = false;
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
 
-  constructor(private router: Router, private chatApiService: ChatApiService, private userApiService: UserApiService, private chatSocketService: ChatService) {
+  constructor(private router: Router, private route: ActivatedRoute, private chatApiService: ChatApiService, private userApiService: UserApiService, private chatSocketService: ChatService) {
   }
 
   ngOnInit() {
@@ -51,6 +52,13 @@ export class ChatComponent implements OnInit {
     if (rawId) {
       this.userId = JSON.parse(rawId);
     }
+
+    this.route.queryParams.subscribe(params => {
+      if (params['receiverFirstName'] && params['receiverLastName']) {
+        this.searchText = params['receiverFirstName'].concat(' ').concat(params['receiverLastName']);
+        this.filterUsers();
+      }
+    });
 
     this.chatApiService.getUserChats(this.userId, this.messageCurrentPage, this.messagePageSize).subscribe(chats => {
       if (chats) {
@@ -62,10 +70,12 @@ export class ChatComponent implements OnInit {
     this.chatSocketService.messages$.subscribe(message => {
       this.messages = [...this.messages, message];
 
-      if (message.senderId === this.userId) {
-        this.scrollToBottom();
-      }
+      this.scrollToBottom();
     });
+  }
+
+  hasUnreadMessages(chat: ChatDTO): boolean {
+    return chat.messages.content.some(msg => msg.receiverId === this.userId && !msg.isRead);
   }
 
   isMessageFromCurrentUser(msg: MessageDTO): boolean {
@@ -92,6 +102,8 @@ export class ChatComponent implements OnInit {
     this.messageCurrentPage = chat.messages.page.number;
     this.messagePageSize = chat.messages.page.size;
     this.messages = [...chat.messages.content];
+
+    this.markMessages();
 
     setTimeout(() => this.scrollToBottom(), 0);
   }
@@ -131,32 +143,71 @@ export class ChatComponent implements OnInit {
     this.loadUsersFromApi();
   }
 
+  trackByMsg(index: number, msg: MessageDTO) {
+    return msg.id || (msg.timestamp ? new Date(msg.timestamp).getTime() : index);
+  }
+
   loadMoreMessages(event: Event) {
-    const target = event.target as HTMLElement;
+    const el = event.target as HTMLElement;
 
-    const reachedTop = target.scrollTop === 0;
+    const reachedTop = el.scrollTop <= 0;
 
-    if (reachedTop) {
+    const noMorePages = this.messageCurrentPage >= this.messageTotalPages - 1;
 
-      const prevScrollHeight = target.scrollHeight;
+    if (!reachedTop || this.isLoadingOlder || noMorePages || !this.selectedChat) return;
 
-      this.messageCurrentPage++;
-      this.chatApiService.getChatMessages(this.selectedChat!.id, this.messageCurrentPage, this.messagePageSize).subscribe(response => {
-        if (response) {
+    this.isLoadingOlder = true;
+
+    const distanceFromBottom = el.scrollHeight - el.scrollTop;
+
+    const prevBehavior = el.style.scrollBehavior;
+    el.style.scrollBehavior = 'auto';
+
+    const nextPage = this.messageCurrentPage + 1;
+
+    this.chatApiService
+      .getChatMessages(this.selectedChat.id, nextPage, this.messagePageSize)
+      .subscribe({
+        next: (response) => {
+          if (!response) { this.isLoadingOlder = false; el.style.scrollBehavior = prevBehavior; return; }
+
           this.messageTotalPages = response.page.totalPages;
           this.messageCurrentPage = response.page.number;
           this.messagePageSize = response.page.size;
 
-          const older = [...response.content].reverse();
+          const older = [...response.content];
           this.messages = [...older, ...this.messages];
 
-          setTimeout(() => {
-            const newScrollHeight = target.scrollHeight;
-            target.scrollTop = newScrollHeight - prevScrollHeight * 2;
-          }, 0);
+          this.markMessages();
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              el.scrollTop = el.scrollHeight - distanceFromBottom;
+              el.style.scrollBehavior = prevBehavior;
+              this.isLoadingOlder = false;
+            });
+          });
+        },
+        error: () => {
+          this.isLoadingOlder = false;
+          el.style.scrollBehavior = prevBehavior;
         }
       });
-    }
+  }
+
+  markMessages() {
+    const temp = this.messages.filter(msg => msg.receiverId === this.userId && !msg.isRead).map(msg => msg.id);
+
+    if (temp.length === 0) return;
+
+    this.chatApiService.markMessagesAsRead(temp).subscribe({
+      next: () => {
+        this.messages.forEach(msg => msg.isRead = true);
+      },
+      error: () => {
+        this.messages.forEach(msg => msg.isRead = false);
+      }
+    });
   }
 
   loadMoreUsers(event: Event) {

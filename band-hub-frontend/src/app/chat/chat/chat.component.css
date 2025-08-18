@@ -98,6 +98,22 @@
   font-weight: 600;
 }
 
+.chat-list li.unread {
+  font-weight: 700;
+  position: relative;
+}
+
+.chat-list li.unread::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #FF4C4C;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+}
+
 .chat-main {
   flex-grow: 1;
   display: flex;
@@ -116,7 +132,8 @@
 
 .chat-messages {
   flex-grow: 1;
-  overflow-y: scroll;
+  height: 100%;
+  overflow-y: auto;
   padding-right: 1rem;
   display: flex;
   flex-direction: column;

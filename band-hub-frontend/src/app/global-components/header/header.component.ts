@@ -29,6 +29,7 @@ export class HeaderComponent implements OnInit {
 
   private subscription: Subscription = new Subscription();
   notifications: boolean[] = [];
+  hasNewMessages: boolean = false;
 
   @ViewChild('dropdownMenu') dropdownRef!: ElementRef;
   @ViewChild('notificationPanel', { read: ElementRef, static: false }) panelRef!: ElementRef;

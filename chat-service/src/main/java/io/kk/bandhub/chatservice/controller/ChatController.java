@@ -44,4 +44,10 @@ public class ChatController {
         var result = chatService.getChatMessages(chatId, pageable);
         return ResponseEntity.ok(result);
     }
+
+    @PatchMapping(value = "/read")
+    ResponseEntity<Void> markMessagesAsRead(@RequestParam Set<String> msgIds) {
+        chatService.markMessagesAsRead(msgIds);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 }

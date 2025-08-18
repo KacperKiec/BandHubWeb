@@ -13,6 +13,7 @@
         *ngFor="let chat of chats"
         (click)="selectChat(chat)"
         [class.active]="chat.id === selectedChat?.id"
+        [class.unread]="hasUnreadMessages(chat)"
       >
         <div class="chat-name">{{ chat.receiverFirstName }} {{ chat.receiverLastName }}</div>
       </li>
@@ -29,18 +30,18 @@
 
       <section class="chat-messages" #messagesContainer (scroll)="loadMoreMessages($event)">
         <div
-          *ngFor="let msg of messages"
+          *ngFor="let msg of messages;  trackBy: trackByMsg"
           [class.message-me]="isMessageFromCurrentUser(msg)"
           [class.message-other]="!isMessageFromCurrentUser(msg)"
           class="message"
         >
           <p>{{ msg.content }}</p>
-          <span class="time">{{ msg.timestamp | date:'shortTime' }}</span>
+          <span class="time">{{ msg.timestamp | date:'medium' }}</span>
         </div>
       </section>
 
       <footer class="chat-input">
-        <input type="text" placeholder="Napisz wiadomość..." [(ngModel)]="messageContent"/>
+        <input type="text" placeholder="Napisz wiadomość..." [(ngModel)]="messageContent" (keydown.enter)="sendMessage()"/>
         <button (click)="sendMessage()">Wyślij</button>
       </footer>
     </ng-container>
