@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,11 +58,8 @@ public class BandJoiningController {
 
     @GetMapping(value = "/user/invitations")
     ResponseEntity<List<BandInvitationDTO>> getUserInvitations(Authentication auth) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) auth;
-        Jwt jwt = jwtAuth.getToken();
-        Long userIdFromToken = jwt.getClaim("userId");
-        System.out.println("token uzytkownika:" + userIdFromToken);
-        return ResponseEntity.ok(invitationService.getMusicianInvitations(userIdFromToken.intValue()));
+        var uid = SecurityUtils.getUserIdFromAuthentication(auth);
+        return ResponseEntity.ok(invitationService.getMusicianInvitations(uid.intValue()));
     }
 
     @GetMapping(value = "/{id}/requests")

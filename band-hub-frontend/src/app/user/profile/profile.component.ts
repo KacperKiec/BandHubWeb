@@ -49,11 +49,10 @@ export class ProfileComponent implements OnInit {
   }
 
   initData() {
-    console.log('initing data');
     this.userApiService.getCurrentUser().subscribe({
       next: user => {
         this.profile = user;
-        this.musicianApiService.getMusicianById(this.profile.id).subscribe(musician => {
+        this.musicianApiService.getMusician().subscribe(musician => {
           if (musician) {
             this.isMusician = true;
             this.musician = musician;

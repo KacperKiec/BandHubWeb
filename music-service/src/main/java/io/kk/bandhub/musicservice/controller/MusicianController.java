@@ -39,6 +39,12 @@ public class MusicianController {
         return ResponseEntity.ok(service.getById(id));
     }
 
+    @GetMapping(value = "/me")
+    ResponseEntity<MusicianDTO> getMusicianByUserId(Authentication authentication) {
+        var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
+        return ResponseEntity.ok(service.getById(uid.intValue()));
+    }
+
     @GetMapping(value = "/{id}/bands")
     ResponseEntity<List<BandDTO>> getMusicianBands(@PathVariable int id) {
         return ResponseEntity.ok(service.getMusicianBands(id));

@@ -68,6 +68,7 @@ export class ChatComponent implements OnInit {
     });
 
     this.chatSocketService.messages$.subscribe(message => {
+      if (this.selectedChat?.id !== message.chatId) return;
       this.messages = [...this.messages, message];
 
       this.scrollToBottom();

@@ -23,6 +23,13 @@ export class MusicianApiService {
       );
   }
 
+  getMusician() {
+    return this.http.get<Musician>(`${this.apiURL}/me`, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+      )
+  }
+
   getMusicianById(id: number): Observable<Musician> {
     return this.http.get<Musician>(`${this.apiURL}/${id}`)
       .pipe(

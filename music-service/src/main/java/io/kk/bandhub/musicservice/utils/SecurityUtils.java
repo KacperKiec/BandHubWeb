@@ -8,12 +8,17 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 public class SecurityUtils {
 
     public static void verifyAuthorities(Authentication authentication, Integer userId) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
-        Long userIdFromToken = jwt.getClaim("userId");
 
-        if (!userIdFromToken.equals(userId.longValue())) {
+        var uid = getUserIdFromAuthentication(authentication);
+
+        if (!uid.equals(userId.longValue())) {
             throw new AccessException("You can only edit data that belongs to you.");
         }
+    }
+
+    public static Long getUserIdFromAuthentication(Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        return jwt.getClaim("userId");
     }
 }
