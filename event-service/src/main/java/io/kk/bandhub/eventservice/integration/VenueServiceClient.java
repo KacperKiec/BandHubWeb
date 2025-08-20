@@ -16,23 +16,23 @@ import java.util.List;
 @FeignClient(name = "VENUE-SERVICE")
 public interface VenueServiceClient {
 
-    @GetMapping("/event-data/{id}")
+    @GetMapping("/event-data/internal/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetData")
     BookingEventDataDTO getVenueEventData(@PathVariable Integer id);
 
-    @GetMapping("/event-data/{id}")
+    @GetMapping("/event-data/internal/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetDataReg")
     BookingEventDataDTO getVenueEventDataReg(@PathVariable Integer id);
 
-    @GetMapping(value = "/venue/ids")
+    @GetMapping(value = "/venue/internal/ids")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenues")
     List<VenueDTO> getVenuesByIds(@RequestParam List<Integer> ids);
 
-    @GetMapping(value = "/venue/{id}")
+    @GetMapping(value = "/venue/internal/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenue")
     VenueDTO getVenueById(@PathVariable Integer id);
 
-    @GetMapping(value = "/offer/venue/{id}")
+    @GetMapping(value = "/offer/internal/venue/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetOffers")
     List<OfferDTO> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date);
 

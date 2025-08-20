@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/event-data")
+@RequestMapping("/event-data/internal")
 @RequiredArgsConstructor
-public class EventDataController {
+public class InternalEventDataController {
     private final BookingRepository bookingRepository;
 
     @GetMapping(value = "/{id}")

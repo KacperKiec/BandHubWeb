@@ -5,7 +5,6 @@ import io.kk.bandhub.venueservice.dto.OfferRequestDTO;
 import io.kk.bandhub.venueservice.dto.OfferUpdateRequestDTO;
 import io.kk.bandhub.venueservice.service.OfferService;
 import io.kk.bandhub.venueservice.service.VenueService;
-import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -61,26 +59,6 @@ public class OfferController {
     @GetMapping(value = "/all")
     ResponseEntity<List<OfferDTO>> getAllOffers() {
         var result = offerService.getAllOffers();
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/venue/{id}")
-    ResponseEntity<List<OfferDTO>> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date) {
-        var result = offerService.getNotCanceledOffersByVenueAndDate(id, date);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/search")
-    ResponseEntity<List<OfferDTO>> searchOffers(
-            @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) OfferStatus status,
-            @RequestParam(required = false) LocalDate date,
-            @RequestParam(required = false) Double minLatitude,
-            @RequestParam(required = false) Double maxLatitude,
-            @RequestParam(required = false) Double minLongitude,
-            @RequestParam(required = false) Double maxLongitude) {
-
-        var result = offerService.searchOffers(cities, status, date, minLatitude, maxLatitude, minLongitude, maxLongitude);
         return ResponseEntity.ok(result);
     }
 }

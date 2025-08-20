@@ -73,11 +73,13 @@ export class EventsComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
-    this.eventApiService.getUserEvents(this.userId).subscribe(events => {
-      if (events) {
-        this.userEvents = events;
-      }
-    });
+    if (this.userId) {
+      this.eventApiService.getUserEvents(this.userId).subscribe(events => {
+        if (events) {
+          this.userEvents = events;
+        }
+      });
+    }
 
     this.route.queryParams.subscribe(params => {
       if (params['bandName']) {

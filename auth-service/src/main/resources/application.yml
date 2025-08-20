@@ -32,7 +32,7 @@ eureka:
     prefer-ip-address: true
 app:
   services:
-    account-url: http://localhost:9000/account/auth?email=
+    account-url: http://localhost:9000/account/internal/auth?email=
     token-url: http://localhost:8020/oauth2/token
   oauth2:
     client-id: oidc-client

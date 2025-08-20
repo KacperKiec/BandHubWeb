@@ -13,19 +13,19 @@ import java.util.List;
 @FeignClient(name = "MUSIC-SERVICE")
 public interface MusicServiceClient {
 
-    @GetMapping("/band/evt/{id}")
+    @GetMapping("/band/internal/evt/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBand")
     BandEventDataDTO getBandById(@PathVariable Integer id);
 
-    @GetMapping("/band/evt/name")
+    @GetMapping("/band/internal/evt/name")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandByName")
     BandEventDataDTO getBandByName(@RequestParam String name);
 
-    @GetMapping("/band/evt/{id}")
+    @GetMapping("/band/internal/evt/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandReg")
     BandEventDataDTO getBandReg(@PathVariable Integer id);
 
-    @GetMapping("/band/{id}/members")
+    @GetMapping("/band/internal/{id}/members")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetBandMembersIds")
     List<Integer> getBandMembersIds(@PathVariable Integer id);
 

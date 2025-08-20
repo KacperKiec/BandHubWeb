@@ -27,10 +27,19 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @PostMapping
-    public ResponseEntity<Void> addAccount(@RequestBody @Valid AccountRequestDTO accountRequestDTO) {
-        accountService.save(accountRequestDTO);
-        return ResponseEntity.ok().build();
+    @PutMapping
+    public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO, Authentication authentication) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(accountUpdateDTO.getId().longValue())) {
+            throw new AccountException(AccountError.ACCESS_DENIED);
+        }
+
+        var result = accountService.update(accountUpdateDTO);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping(value = "/password")
@@ -53,39 +62,6 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
-        accountService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping
-    public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO, Authentication authentication) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
-
-        Long userIdFromToken = jwt.getClaim("userId");
-
-        if (!userIdFromToken.equals(accountUpdateDTO.getId().longValue())) {
-            throw new AccountException(AccountError.ACCESS_DENIED);
-        }
-
-        var result = accountService.update(accountUpdateDTO);
-        return ResponseEntity.ok(result);
-    }
-
-    @PatchMapping(value = "/role/{id}")
-    public ResponseEntity<Void> addRole(@RequestBody RoleDTO roleDTO, @PathVariable Integer id) {
-        accountService.addRole(id, roleDTO);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping(value = "/role/{id}")
-    public ResponseEntity<Void> deleteRole(@RequestBody RoleDTO roleDTO, @PathVariable Integer id) {
-        accountService.removeRole(id, roleDTO);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping(value = "/current")
     public ResponseEntity<AccountResponseDTO> getCurrentAccount(Authentication authentication) {
         String email;
@@ -98,16 +74,32 @@ public class AccountController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/auth")
-    public ResponseEntity<AccountAuthDTO> getAccountToAuth(@RequestParam String email) {
-        var result = accountService.findToAuth(email);
+    @GetMapping(value = "/name")
+    public ResponseEntity<Page<AccountResponseDTO>> findByName(
+            @RequestParam String firstName,
+            @RequestParam String lastName,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
+        var result = accountService.findByNames(firstName, lastName, pageable);
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable Integer id) {
-        var result = accountService.findById(id);
-        return ResponseEntity.ok(result);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
+        accountService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/role/{id}")
+    public ResponseEntity<Void> addRole(@RequestBody RoleDTO roleDTO, @PathVariable Integer id) {
+        accountService.addRole(id, roleDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/role/{id}")
+    public ResponseEntity<Void> deleteRole(@RequestBody RoleDTO roleDTO, @PathVariable Integer id) {
+        accountService.removeRole(id, roleDTO);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/email")
@@ -126,46 +118,5 @@ public class AccountController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable ) {
 
         return ResponseEntity.ok(accountService.findAll(pageable));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<AccountResponseDTO>> findAllWithSpec(
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) Integer minAge,
-            @RequestParam(required = false) Integer maxAge,
-            @RequestParam(required = false) Boolean gender,
-            @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) List<String> roles) {
-
-        var accounts = accountService.findAllWithSpec(email, firstName, lastName, minAge, maxAge, gender, cities, roles);
-        return ResponseEntity.ok(accounts);
-    }
-
-    @GetMapping("/search/paged")
-    public ResponseEntity<Page<AccountResponseDTO>> findAllWithSpecPaged(
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) Integer minAge,
-            @RequestParam(required = false) Integer maxAge,
-            @RequestParam(required = false) Boolean gender,
-            @RequestParam(required = false) List<String> cities,
-            @RequestParam(required = false) List<String> roles,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        var accounts = accountService.findAllWithSpec(email, firstName, lastName, minAge, maxAge, gender, cities, roles, pageable);
-        return ResponseEntity.ok(accounts);
-    }
-
-    @GetMapping(value = "/name")
-    public ResponseEntity<Page<AccountResponseDTO>> findByName(
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-        var result = accountService.findByNames(firstName, lastName, pageable);
-        return ResponseEntity.ok(result);
     }
 }

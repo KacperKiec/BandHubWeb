@@ -29,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(registry -> registry
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)

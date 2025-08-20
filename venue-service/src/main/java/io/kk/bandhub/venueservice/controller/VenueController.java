@@ -52,11 +52,6 @@ public class VenueController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/{id}")
-    ResponseEntity<VenueDTO> getVenue(@PathVariable int id) {
-        return ResponseEntity.ok(venueService.findById(id));
-    }
-
     @GetMapping(value = "/all")
     ResponseEntity<List<VenueDTO>> getAllVenues() {
         return ResponseEntity.ok(venueService.findAll());
@@ -72,12 +67,6 @@ public class VenueController {
             @RequestParam(required = false) List<String> cities) {
 
         var result = venueService.findAll(pageable, name, maxCapacity, minCapacity, ownerId, cities);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/ids")
-    ResponseEntity<List<VenueDTO>> getVenuesByIds(@RequestParam List<Integer> ids) {
-        var result = venueService.getVenuesByIds(ids);
         return ResponseEntity.ok(result);
     }
 }

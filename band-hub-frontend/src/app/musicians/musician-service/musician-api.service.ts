@@ -16,7 +16,7 @@ export class MusicianApiService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
   getMusicians(page: number = 0, size: number = 10): Observable<Page<Musician>> {
-    return this.http.get<Page<Musician>>(`${this.apiURL}/all?page=${page}&size=${size}`)
+    return this.http.get<Page<Musician>>(`${this.apiURL}/public/all?page=${page}&size=${size}`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -31,7 +31,7 @@ export class MusicianApiService {
   }
 
   getMusicianById(id: number): Observable<Musician> {
-    return this.http.get<Musician>(`${this.apiURL}/${id}`)
+    return this.http.get<Musician>(`${this.apiURL}/public/${id}`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -39,7 +39,7 @@ export class MusicianApiService {
   }
 
   getMusicianBands(id: number): Observable<Band[]> {
-    return this.http.get<Band[]>(`${this.apiURL}/${id}/bands`)
+    return this.http.get<Band[]>(`${this.apiURL}/public/${id}/bands`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -59,7 +59,7 @@ export class MusicianApiService {
       }
     }
 
-    return this.http.get<Page<Musician>>(`${this.apiURL}/search?page=${page}&size=${size}`, {params})
+    return this.http.get<Page<Musician>>(`${this.apiURL}/public/search?page=${page}&size=${size}`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

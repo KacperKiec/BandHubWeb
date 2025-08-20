@@ -28,7 +28,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
-                        .anyRequest().permitAll())
+                        .requestMatchers("/booking/**").authenticated()
+                        .requestMatchers("/offer/public/**").permitAll()
+                        .requestMatchers("/offer/**").authenticated()
+                        .requestMatchers("/venue/**").authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)

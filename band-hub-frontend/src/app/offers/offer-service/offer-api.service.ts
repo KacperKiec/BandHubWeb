@@ -78,7 +78,7 @@ export class OfferApiService {
       });
     }
 
-    return this.http.get<Offer[]>(`${this.apiURL}/search`, {params})
+    return this.http.get<Offer[]>(`${this.apiURL}/public/search`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @FeignClient(name = "ACCOUNT-SERVICE")
 public interface AccountServiceClient {
 
-    @GetMapping("/account/{id}")
+    @GetMapping("/account/internal/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetAccount")
     AccountDTO getAccount(@PathVariable Integer id);
 
-    @GetMapping("/account/{id}")
+    @GetMapping("/account/internal/{id}")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetAccountInRegistration")
     AccountDTO getAccountInRegistration(@PathVariable Integer id);
 

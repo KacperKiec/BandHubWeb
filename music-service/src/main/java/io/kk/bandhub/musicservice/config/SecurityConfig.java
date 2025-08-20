@@ -31,8 +31,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/musician/**").permitAll()
-                .requestMatchers("/band/**").permitAll()
+                .requestMatchers("/musician/public/**").permitAll()
+                .requestMatchers("/musician/**").authenticated()
+                .requestMatchers("/band/public/**").permitAll()
+                .requestMatchers("/band/**").authenticated()
                 .requestMatchers("/genre/**").permitAll()
                 .requestMatchers("/instrument/**").permitAll()
                 .anyRequest().authenticated())

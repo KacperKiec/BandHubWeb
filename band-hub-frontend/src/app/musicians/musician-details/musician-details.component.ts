@@ -49,15 +49,17 @@ export class MusicianDetailsComponent implements OnInit{
       this.userId = JSON.parse(rawId);
     }
 
-    this.musicianApiService.getMusicianBands(this.userId).subscribe(bands => {
-      if(bands) {
-        bands.forEach(band => {
-          if(band.founderId === this.userId && !this.musicianBands.find(musicianBand => musicianBand.id === band.id)) {
-            this.bandsToInvite.push(band);
-          }
-        })
-      }
-    });
+    if (this.userId) {
+      this.musicianApiService.getMusicianBands(this.userId).subscribe(bands => {
+        if (bands) {
+          bands.forEach(band => {
+            if (band.founderId === this.userId && !this.musicianBands.find(musicianBand => musicianBand.id === band.id)) {
+              this.bandsToInvite.push(band);
+            }
+          })
+        }
+      });
+    }
   }
 
   @HostListener('document:click', ['$event'])

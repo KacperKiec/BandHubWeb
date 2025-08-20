@@ -49,6 +49,7 @@
         <div class="card-actions">
           <button class="btn-primary" (click)="viewDetails(event)">Szczegóły</button>
           <button
+            *ngIf="userId"
             [ngClass]="isEventFollowed(event.id) ? 'btn-primary' : 'btn-ghost'"
             (click)="isEventFollowed(event.id) ? unfollowEvent(event) : followEvent(event)">
             {{ isEventFollowed(event.id) ? 'Przestań obserwować' : 'Obserwuj' }}

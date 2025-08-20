@@ -41,9 +41,11 @@ export class BandDetailsComponent implements OnInit{
       this.userId = JSON.parse(rawId);
     }
 
-    this.musicianApiService.getMusicianById(this.userId).subscribe(musician => {
-      this.isUserMusician = !!musician;
-    });
+    if (this.userId) {
+      this.musicianApiService.getMusicianById(this.userId).subscribe(musician => {
+        this.isUserMusician = !!musician;
+      });
+    }
   }
 
   getMusicianDetails(id: number) {

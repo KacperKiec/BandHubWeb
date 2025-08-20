@@ -28,13 +28,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
-                        .anyRequest().permitAll())
+                        .requestMatchers("/event/public/**").permitAll()
+                        .requestMatchers("/event/**").authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                .addFilterBefore(new JwtCookieAuthenticationFilter(jwtDecoder), BasicAuthenticationFilter.class);;
+                .addFilterBefore(new JwtCookieAuthenticationFilter(jwtDecoder), BasicAuthenticationFilter.class);
         return http.build();
     }
 

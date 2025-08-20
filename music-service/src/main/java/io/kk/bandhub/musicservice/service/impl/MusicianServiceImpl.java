@@ -172,14 +172,14 @@ public class MusicianServiceImpl implements MusicianService {
             return musicianResult;
         }
 
-        Page<AccountDTO> accountResult;
+        List<AccountDTO> accountResult;
         try {
             accountResult = accountServiceClient.getAccountsWithParams(firstName, lastName, minAge, maxAge, cities);
         } catch (Exception e) {
             return musicianResult;
         }
 
-        Map<Integer, AccountDTO> accountMap = accountResult.getContent().stream()
+        Map<Integer, AccountDTO> accountMap = accountResult.stream()
                 .collect(Collectors.toMap(AccountDTO::getId, account -> account));
 
         List<MusicianDTO> enrichedMusicians = musicianResult.getContent().stream()

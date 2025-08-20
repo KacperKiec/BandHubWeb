@@ -16,6 +16,7 @@ export class EventDetailsComponent {
   @Input() eventDetails!: EventDTO;
   @Output() closeDetailsEvent = new EventEmitter<void>();
   @Output() turnEditingModeEvent = new EventEmitter<EventDTO>();
+  @Output() deleteEventOutput = new EventEmitter<number>();
 
   closeDetails() {
     this.closeDetailsEvent.emit();
@@ -23,5 +24,9 @@ export class EventDetailsComponent {
 
   turnEditingMode(event: EventDTO) {
     this.turnEditingModeEvent.emit(event);
+  }
+
+  deleteEvent(id: number) {
+    this.deleteEventOutput.emit(id);
   }
 }

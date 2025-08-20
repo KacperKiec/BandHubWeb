@@ -127,4 +127,13 @@ export class UserEventsComponent implements OnInit {
       }
     });
   }
+
+  handleEventDeleting(eventId: number) {
+    this.eventApiService.deleteEvent(eventId).subscribe({
+      next: () => {
+        this.closeDetails();
+        this.events = this.events.filter(e => e.eventId !== eventId);
+      }
+    });
+  }
 }

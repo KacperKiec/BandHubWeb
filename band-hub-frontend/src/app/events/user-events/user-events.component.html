@@ -42,7 +42,8 @@
     [userId]="userId"
     [eventDetails]="eventDetails"
     (closeDetailsEvent)="closeDetails()"
-    (turnEditingModeEvent)="turnEditingMode($event)">
+    (turnEditingModeEvent)="turnEditingMode($event)"
+    (deleteEventOutput)="handleEventDeleting($event)">
   </app-event-details>
 
 </div>

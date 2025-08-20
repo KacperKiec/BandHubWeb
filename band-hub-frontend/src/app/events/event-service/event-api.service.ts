@@ -21,7 +21,7 @@ export class EventApiService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
   getUserEvents(id: number): Observable<UserEventDTO[]> {
-    return this.http.get<UserEventDTO[]>(`${this.apiURL}/user/${id}`)
+    return this.http.get<UserEventDTO[]>(`${this.apiURL}/user/${id}`, { withCredentials: true })
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -29,7 +29,7 @@ export class EventApiService {
   }
 
   getEvent(id: number): Observable<EventDTO> {
-    return this.http.get<EventDTO>(`${this.apiURL}/${id}`)
+    return this.http.get<EventDTO>(`${this.apiURL}/public/${id}`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -69,7 +69,7 @@ export class EventApiService {
       params = params.set('bandName', eventParams.bandName);
     }
 
-    return this.http.get<Page<EventDTO>>(`${this.apiURL}/search?page=${page}&size=${size}`, {params})
+    return this.http.get<Page<EventDTO>>(`${this.apiURL}/public/search?page=${page}&size=${size}`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

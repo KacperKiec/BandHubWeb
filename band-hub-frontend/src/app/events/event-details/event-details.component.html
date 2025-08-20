@@ -2,6 +2,7 @@
   <div class="details-content">
     <span class="close" (click)="closeDetails()">&times;</span>
     <span class="edit" *ngIf="userId === eventDetails.creatorId" (click)="turnEditingMode(eventDetails)">✏️</span>
+    <span class="delete" *ngIf="userId === eventDetails.creatorId" (click)="deleteEvent(eventDetails.id)">❌️</span>
     <h2>{{ eventDetails.name }}</h2>
     <p>{{ eventDetails.startTime }} - {{ eventDetails.endTime }}</p>
     <p>{{ eventDetails.date }}</p>

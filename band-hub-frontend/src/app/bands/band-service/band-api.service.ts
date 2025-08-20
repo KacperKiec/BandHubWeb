@@ -15,7 +15,7 @@ export class BandApiService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
   getBands(page: number = 0, size: number = 10): Observable<Page<Band>> {
-    return this.http.get<Page<Band>>(`${this.apiURL}/all?page=${page}&size=${size}`)
+    return this.http.get<Page<Band>>(`${this.apiURL}/public/all?page=${page}&size=${size}`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -23,7 +23,7 @@ export class BandApiService {
   }
 
   getBandById(id: number): Observable<Band> {
-    return this.http.get<Band>(`${this.apiURL}/${id}`)
+    return this.http.get<Band>(`${this.apiURL}/public/${id}`)
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
@@ -43,7 +43,7 @@ export class BandApiService {
       }
     }
 
-    return this.http.get<Page<Band>>(`${this.apiURL}/search?page=${page}&size=${size}`, {params})
+    return this.http.get<Page<Band>>(`${this.apiURL}/public/search?page=${page}&size=${size}`, {params})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
