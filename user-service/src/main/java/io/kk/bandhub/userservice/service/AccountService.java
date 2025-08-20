@@ -10,9 +10,6 @@ public interface AccountService {
     void save(AccountRequestDTO accountRequestDTO);
     void delete(Integer id);
     AccountResponseDTO update(AccountUpdateDTO accountUpdateDTO);
-    AccountAuthDTO findToAuth(String email);
-    Boolean validatePassword(Integer userId, String password);
-    void changePassword(Integer userId, String password);
     AccountResponseDTO findById(Integer id);
     AccountResponseDTO findByEmail(String email);
     List<AccountResponseDTO> findAll();

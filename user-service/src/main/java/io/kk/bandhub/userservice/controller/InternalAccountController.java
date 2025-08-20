@@ -1,10 +1,9 @@
 package io.kk.bandhub.userservice.controller;
 
 import io.kk.bandhub.userservice.dto.AccountAuthDTO;
-import io.kk.bandhub.userservice.dto.AccountRequestDTO;
 import io.kk.bandhub.userservice.dto.AccountResponseDTO;
 import io.kk.bandhub.userservice.service.AccountService;
-import jakarta.validation.Valid;
+import io.kk.bandhub.userservice.service.AuthAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,16 +20,11 @@ import java.util.List;
 public class InternalAccountController {
 
     private final AccountService accountService;
-
-    @PostMapping
-    public ResponseEntity<Void> addAccount(@RequestBody @Valid AccountRequestDTO accountRequestDTO) {
-        accountService.save(accountRequestDTO);
-        return ResponseEntity.ok().build();
-    }
+    private final AuthAccountService authAccountService;
 
     @GetMapping(value = "/auth")
     public ResponseEntity<AccountAuthDTO> getAccountToAuth(@RequestParam String email) {
-        var result = accountService.findToAuth(email);
+        var result = authAccountService.findToAuth(email);
         return ResponseEntity.ok(result);
     }
 

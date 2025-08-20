@@ -34,7 +34,7 @@ export class EditProfileComponent implements OnInit {
       if(acc) {
         this.profile = acc;
       }
-      this.musicianApiService.getMusicianById(this.profile.id).subscribe(musician => {
+      this.musicianApiService.getMusician().subscribe(musician => {
         if(musician) {
           this.isMusician = true;
           this.musician = musician;

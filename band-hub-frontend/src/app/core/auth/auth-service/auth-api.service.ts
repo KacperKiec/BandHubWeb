@@ -14,12 +14,20 @@ export class AuthApiService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
   registerAccount(account: AccountRegisterRequest): Observable<void> {
-    const url = `${this.apiURL}/account`;
+    const url = `${this.apiURL}/account/public`;
 
     return this.http.post<void>(url, account)
       .pipe(
         catchError((error) =>
           this.errorHandler.handleError(error))
+      );
+  }
+
+  remindPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiURL}/account/public/remind`, { email })
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
       );
   }
 

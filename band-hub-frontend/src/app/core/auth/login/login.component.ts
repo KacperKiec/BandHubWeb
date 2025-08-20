@@ -21,26 +21,22 @@ export class LoginComponent {
   }
 
   confirmLogin() {
-    console.log('Loging In')
     this.authApiService.login(this.email, this.password).subscribe({
       next: () => {
         this.authService.setLoginStatus(true);
         this.router.navigate(['/']);
       },
       error: (err) => {
-        console.log('Login failed', err);
         alert(err);
       }
     });
   }
 
   remindPassword() {
-    console.log('Remind Password')
     this.router.navigate(['/auth/remind'])
   }
 
   register() {
-    console.log('Registering')
     this.router.navigate(['/auth/register'])
   }
 }

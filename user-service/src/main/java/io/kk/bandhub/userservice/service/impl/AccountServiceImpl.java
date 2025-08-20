@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,37 +79,6 @@ public class AccountServiceImpl implements AccountService {
         existingAccount.setCity(accountUpdateDTO.getCity());
         existingAccount.setCountry(accountUpdateDTO.getCountry());
         return mapper.toAccountDTO(accountRepository.save(existingAccount));
-    }
-
-    public AccountAuthDTO findToAuth(String email) {
-        var existingAccount = accountRepository.findAccountByEmail(email).orElseThrow(
-                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
-        );
-
-
-        return AccountAuthDTO.builder()
-                        .id(existingAccount.getId())
-                        .email(existingAccount.getEmail())
-                        .password(existingAccount.getPassword())
-                        .roles(existingAccount.getAccountRoles().stream().map(AccountRole::getRole).map(mapper::toRoleDTO).collect(Collectors.toSet()))
-                        .build();
-    }
-
-    public Boolean validatePassword(Integer userId, String password) {
-        var account = accountRepository.findAccountById(userId).orElseThrow(
-                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
-        );
-
-        return passwordEncoder.matches(password, account.getPassword());
-    }
-
-    public void changePassword(Integer userId, String password) {
-        var account = accountRepository.findAccountById(userId).orElseThrow(
-                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
-        );
-
-        account.setPassword(passwordEncoder.encode(password));
-        accountRepository.save(account);
     }
 
     public AccountResponseDTO findById(Integer id) {

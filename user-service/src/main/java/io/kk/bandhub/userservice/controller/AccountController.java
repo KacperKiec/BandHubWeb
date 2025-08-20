@@ -1,9 +1,12 @@
 package io.kk.bandhub.userservice.controller;
 
-import io.kk.bandhub.userservice.dto.*;
+import io.kk.bandhub.userservice.dto.AccountResponseDTO;
+import io.kk.bandhub.userservice.dto.AccountUpdateDTO;
+import io.kk.bandhub.userservice.dto.RoleDTO;
 import io.kk.bandhub.userservice.exception.AccountError;
 import io.kk.bandhub.userservice.exception.AccountException;
 import io.kk.bandhub.userservice.service.AccountService;
+import io.kk.bandhub.userservice.service.AuthAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,7 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AuthAccountService authAccountService;
 
     @PutMapping
     public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO, Authentication authentication) {
@@ -49,7 +53,7 @@ public class AccountController {
 
         Long userIdFromToken = jwt.getClaim("userId");
 
-        return ResponseEntity.ok(accountService.validatePassword(userIdFromToken.intValue(), password));
+        return ResponseEntity.ok(authAccountService.validatePassword(userIdFromToken.intValue(), password));
     }
 
     @PatchMapping(value = "/password")
@@ -58,7 +62,7 @@ public class AccountController {
         Jwt jwt = jwtAuth.getToken();
 
         Long userIdFromToken = jwt.getClaim("userId");
-        accountService.changePassword(userIdFromToken.intValue(), password);
+        authAccountService.changePassword(userIdFromToken.intValue(), password);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
