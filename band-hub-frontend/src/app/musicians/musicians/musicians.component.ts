@@ -6,6 +6,7 @@ import {MusicianApiService} from '../musician-service/musician-api.service';
 import {Router} from '@angular/router';
 import {Musician} from '../../core/models/musician.model';
 import {MusicAttributesApiService} from '../../shared/music-attributes-service/music-attributes-api.service';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-musicians',
@@ -66,21 +67,15 @@ export class MusiciansComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.musicAttributesApiService.getGenres().subscribe(genres => {
-      if (genres) {
-        this.genres = genres.map(g => g.name);
-      }
+    forkJoin({
+      genres: this.musicAttributesApiService.getGenres(),
+      instruments: this.musicAttributesApiService.getInstruments()
+    }).subscribe(({ genres, instruments }) => {
+      this.genres = genres?.map(g => g.name) ?? [];
+      this.instruments = instruments?.map(i => i.name) ?? [];
+      this.buildFilters();
+      this.loadPage(this.currentPage);
     });
-
-    this.musicAttributesApiService.getInstruments().subscribe(instruments => {
-      if (instruments) {
-        this.instruments = instruments.map(i => i.name);
-      }
-    });
-
-    this.buildFilters()
-
-    this.loadPage(this.currentPage);
   }
 
   loadPage(page: number) {

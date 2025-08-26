@@ -53,6 +53,13 @@ export class SearchBarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['filters'] && this.filters) {
       this.filters.sort((a, b) => b.type.localeCompare(a.type));
+
+      this.filterValue = new Array<string>(this.filters.length);
+      this.rangeValues = this.filters.map(f =>
+        f.type === 'range'
+          ? { min: +(f.options?.[0] ?? 0), max: +(f.options?.[1] ?? 99) }
+          : { min: 0, max: 0 }
+      );
     }
   }
 
