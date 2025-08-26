@@ -8,8 +8,8 @@ import io.kk.bandhub.userservice.model.AccountRole;
 import io.kk.bandhub.userservice.repository.AccountRepository;
 import io.kk.bandhub.userservice.service.AuthAccountService;
 import io.kk.bandhub.userservice.service.EmailService;
+import io.kk.bandhub.userservice.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +24,10 @@ public class AuthAccountServiceImpl implements AuthAccountService {
     private final EmailService emailService;
     private final Mapper mapper;
 
-    @Value("${app.emergency-password}")
-    private String emergencyPassword;
-
     public AccountAuthDTO findToAuth(String email) {
         var existingAccount = accountRepository.findAccountByEmail(email).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
-
 
         return AccountAuthDTO.builder()
                 .id(existingAccount.getId())
@@ -63,23 +59,38 @@ public class AuthAccountServiceImpl implements AuthAccountService {
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
         );
 
-        account.setPassword(passwordEncoder.encode(this.emergencyPassword));
+        var password = PasswordGenerator.generateRandomString(12);
+
+        account.setPassword(passwordEncoder.encode(password));
         accountRepository.save(account);
 
         String subject = "Hasło tymczasowe";
         String emailContent = """
-            Cześć %s,
-        
-            Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w serwisie BandHubWeb.
-            Twoje tymczasowe hasło to:
-        
-                %s
-        
-            Zaloguj się przy jego użyciu i jak najszybciej ustaw nowe, bezpieczne hasło.
-            
-            Pozdrawiamy,
-            Zespół BandHubWeb
-            """.formatted(account.getFirstName(), this.emergencyPassword);
+        <!DOCTYPE html>
+        <html lang="pl">
+        <head>
+            <meta charset="UTF-8">
+            <title>Reset Hasła</title>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f7; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                h2 { color: #333; }
+                .password { background: #f0f0f0; padding: 8px 12px; border-radius: 5px; font-family: monospace; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Hasło tymczasowe</h2>
+                <p>Cześć <strong>%s</strong>,</p>
+                <p>Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta w serwisie BandHubWeb.<br>
+                   Twoje tymczasowe hasło to:</p>
+                <p class="password">%s</p>
+                <p>Zaloguj się przy jego użyciu i jak najszybciej ustaw nowe, bezpieczne hasło.</p>
+                <p>Pozdrawiamy,<br>Zespół BandHubWeb</p>
+            </div>
+        </body>
+        </html>
+        """.formatted(account.getFirstName(), password);
 
         this.emailService.sendEmail(email, subject, emailContent);
 

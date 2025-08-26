@@ -147,6 +147,13 @@ export class EventsComponent implements OnInit {
     this.isDetailsVisible = false;
   }
 
+  getTicketPrice(event: EventDTO) {
+    if (event.ticketPrice === 0) {
+      return 'Wstęp wolny';
+    }
+    return event.ticketPrice + ' PLN';
+  }
+
   followEvent(event: EventDTO) {
     let fr: FollowRequest = {
       userId: this.userId,

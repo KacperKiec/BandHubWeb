@@ -22,6 +22,13 @@ export class EventDetailsComponent {
     this.closeDetailsEvent.emit();
   }
 
+  getTicketPrice(event: EventDTO) {
+    if (event.ticketPrice === 0) {
+      return 'Wstęp wolny';
+    }
+    return event.ticketPrice + ' PLN';
+  }
+
   turnEditingMode(event: EventDTO) {
     this.turnEditingModeEvent.emit(event);
   }

@@ -18,7 +18,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    public void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
@@ -26,7 +26,7 @@ public class EmailService {
             helper.setFrom(new InternetAddress(from, "BandHubWeb"));
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(text, false);
+            helper.setText(content, true);
 
             mailSender.send(mimeMessage);
         } catch (Exception e) {

@@ -33,8 +33,6 @@ spring:
           auth: true
           starttls:
             enable: true
-app:
-  emergency-password: pass12345678
 server:
   port: 8090
 eureka:

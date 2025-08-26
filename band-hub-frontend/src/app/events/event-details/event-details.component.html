@@ -10,7 +10,7 @@
     <p>{{ eventDetails.street }} {{ eventDetails.number }}</p>
     <p>{{ eventDetails.city }}, {{ eventDetails.country }}</p>
     <h3>{{ eventDetails.bandName }}</h3>
-    <p>Cena biletów: {{ eventDetails.ticketPrice}} PLN</p>
+    <p>Cena biletów: {{ getTicketPrice(eventDetails) }}</p>
     <p>{{ eventDetails.description }}</p>
     <p>Zainteresowani: {{ eventDetails.followersCount }}</p>
   </div>

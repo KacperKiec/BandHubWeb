@@ -42,7 +42,7 @@
         <p class="desc">{{ event.description }}</p>
 
         <div class="card-bottom">
-          <div class="price">{{ event.ticketPrice }} PLN</div>
+          <div class="price">{{ getTicketPrice(event) }}</div>
           <div class="followers">👥 {{ event.followersCount }}</div>
         </div>
 
