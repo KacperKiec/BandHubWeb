@@ -58,6 +58,10 @@ public class Account {
     @Column(name = "country", length = 50)
     private String country;
 
+    @Size(max = 255)
+    @Column(name = "image_url")
+    private String imageURL;
+
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountRole> accountRoles = new HashSet<>();
 

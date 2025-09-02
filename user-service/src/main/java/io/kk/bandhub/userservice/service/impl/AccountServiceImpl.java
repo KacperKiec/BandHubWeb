@@ -81,6 +81,15 @@ public class AccountServiceImpl implements AccountService {
         return mapper.toAccountDTO(accountRepository.save(existingAccount));
     }
 
+    public void setImageURL(Integer userId, String url) {
+        var existingAccount = accountRepository.findAccountById(userId).orElseThrow(
+                () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)
+        );
+
+        existingAccount.setImageURL(url);
+        accountRepository.save(existingAccount);
+    }
+
     public AccountResponseDTO findById(Integer id) {
         var existingAccount = accountRepository.findAccountById(id).orElseThrow(
                 () -> new AccountException(AccountError.ACCOUNT_NOT_FOUND)

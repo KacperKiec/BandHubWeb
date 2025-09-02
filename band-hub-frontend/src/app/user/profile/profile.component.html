@@ -6,7 +6,16 @@
 
   <div class="user-details-container fade-in" *ngIf="profile">
     <div class="header">
-      <img [src]="profile.image ?? '/assets/user.jpg'" alt="Profile pic" class="profile-pic">
+      <div class="profile-pic-container">
+        <img [src]="profile.imageURL || '/assets/user.jpg'" alt="Profile pic" class="profile-pic">
+
+        <div class="overlay" (click)="onEditImageClick()">
+          <p>📷 Zmień zdjęcie</p>
+        </div>
+
+        <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden>
+      </div>
+
       <div class="basic-info">
         <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
         <p class="location">📍 {{ profile.city }}, {{ profile.country }}</p>

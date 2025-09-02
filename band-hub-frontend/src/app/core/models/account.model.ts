@@ -18,7 +18,7 @@ export interface AccountResponse {
   gender: boolean
   city: string,
   country: string,
-  image?: string
+  imageURL?: string
 }
 
 export interface AccountUpdateRequest {

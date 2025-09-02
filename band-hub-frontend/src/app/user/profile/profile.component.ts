@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserApiService} from '../user-service/user-api.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
@@ -7,6 +7,7 @@ import {RegisterMusicianComponent} from '../../musicians/register-musician/regis
 import {AccountResponse} from '../../core/models/account.model';
 import {Musician, MusicianRequest} from '../../core/models/musician.model';
 import {Band} from '../../core/models/band.model';
+import {ImageApiService} from '../../shared/image-service/image-api.service';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,9 @@ export class ProfileComponent implements OnInit {
   isMusician: boolean = false;
   showForm: boolean = false;
 
-  constructor(private userApiService: UserApiService, private musicianApiService: MusicianApiService, private router: Router) {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  constructor(private userApiService: UserApiService, private musicianApiService: MusicianApiService, private router: Router, private imageApiService: ImageApiService) {
   }
 
   ngOnInit() {
@@ -52,6 +55,7 @@ export class ProfileComponent implements OnInit {
     this.userApiService.getCurrentUser().subscribe({
       next: user => {
         this.profile = user;
+
         this.musicianApiService.getMusician().subscribe(musician => {
           if (musician) {
             this.isMusician = true;
@@ -63,9 +67,6 @@ export class ProfileComponent implements OnInit {
             });
           } else this.isMusician = false;
         });
-      },
-      error: err => {
-        console.error('Nie można pobrać danych użytkownika', err);
       }
     });
   }
@@ -86,5 +87,25 @@ export class ProfileComponent implements OnInit {
 
   getBandDetails(id: number) {
     this.router.navigate(['/bands', id]);
+  }
+
+  onEditImageClick() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.imageApiService.saveImage(file).subscribe(imageURL => {
+        if (imageURL) {
+          this.userApiService.updateImage(imageURL.url).subscribe({
+            next: () => {
+              this.initData();
+            }
+          });
+        }
+      });
+    }
   }
 }

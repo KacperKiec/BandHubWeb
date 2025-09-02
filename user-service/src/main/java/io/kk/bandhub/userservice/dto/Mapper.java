@@ -24,6 +24,7 @@ public class Mapper {
         accountResponseDTO.setBirthDate(account.getBirthDate());
         accountResponseDTO.setCity(account.getCity());
         accountResponseDTO.setCountry(account.getCountry());
+        accountResponseDTO.setImageURL(account.getImageURL());
 
         return accountResponseDTO;
     }

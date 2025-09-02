@@ -7,6 +7,7 @@ import io.kk.bandhub.userservice.exception.AccountError;
 import io.kk.bandhub.userservice.exception.AccountException;
 import io.kk.bandhub.userservice.service.AccountService;
 import io.kk.bandhub.userservice.service.AuthAccountService;
+import io.kk.bandhub.userservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,12 +17,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/account")
@@ -33,36 +33,31 @@ public class AccountController {
 
     @PutMapping
     public ResponseEntity<AccountResponseDTO> updateAccount(@RequestBody @Valid AccountUpdateDTO accountUpdateDTO, Authentication authentication) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
-
-        Long userIdFromToken = jwt.getClaim("userId");
-
-        if (!userIdFromToken.equals(accountUpdateDTO.getId().longValue())) {
-            throw new AccountException(AccountError.ACCESS_DENIED);
-        }
+        SecurityUtils.verifyAuthorities(authentication, accountUpdateDTO.getId());
 
         var result = accountService.update(accountUpdateDTO);
         return ResponseEntity.ok(result);
     }
 
+    @PatchMapping(value = "/image")
+    public ResponseEntity<Void> updateImage(@RequestBody Map<String, String> imageURL, Authentication authentication) {
+        var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
+        accountService.setImageURL(uid.intValue(), imageURL.get("url"));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+
     @PostMapping(value = "/password")
     public ResponseEntity<Boolean> validatePassword(@RequestBody String password, Authentication authentication) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
+        var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
 
-        Long userIdFromToken = jwt.getClaim("userId");
-
-        return ResponseEntity.ok(authAccountService.validatePassword(userIdFromToken.intValue(), password));
+        return ResponseEntity.ok(authAccountService.validatePassword(uid.intValue(), password));
     }
 
     @PatchMapping(value = "/password")
     public ResponseEntity<Void> changePassword(@RequestBody String password, Authentication authentication) {
-        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
-        Jwt jwt = jwtAuth.getToken();
+        var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
 
-        Long userIdFromToken = jwt.getClaim("userId");
-        authAccountService.changePassword(userIdFromToken.intValue(), password);
+        authAccountService.changePassword(uid.intValue(), password);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

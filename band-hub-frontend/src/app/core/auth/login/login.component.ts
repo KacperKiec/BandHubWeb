@@ -25,9 +25,6 @@ export class LoginComponent {
       next: () => {
         this.authService.setLoginStatus(true);
         this.router.navigate(['/']);
-      },
-      error: (err) => {
-        alert(err);
       }
     });
   }

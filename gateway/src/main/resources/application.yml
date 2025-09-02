@@ -50,6 +50,10 @@ spring:
             - Path=/chat/**, /ws/chat/**
           metadata:
             websocket: true
+        - id: image-service
+          uri: lb://IMAGE-SERVICE
+          predicates:
+            - Path=/image/**
 #      discovery:
 #        locator:
 #          enabled: true

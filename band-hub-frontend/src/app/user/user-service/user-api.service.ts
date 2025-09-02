@@ -53,4 +53,12 @@ export class UserApiService {
         catchError(error => this.errorHandler.handleError(error))
       )
   }
+
+  updateImage(url: string): Observable<void> {
+    return this.http.patch<void>(`${this.apiURL}/image`, { url }, { withCredentials: true })
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
 }

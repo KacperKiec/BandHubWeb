@@ -45,4 +45,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleEmailException(EmailException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage(), "503"));
     }
+
+    @ExceptionHandler(AccessException.class)
+    public ResponseEntity<ErrorResponse> handleAccessException(AccessException e) {
+        ErrorResponse errorResponse = new ErrorResponse("401", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 }
