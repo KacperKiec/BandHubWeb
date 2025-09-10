@@ -13,7 +13,7 @@ export interface Musician {
   isLookingBand: boolean;
   genres: Genre[];
   instruments: Instrument[];
-  image?: string;
+  imageURL?: string;
 }
 
 export interface MusicianRequest {

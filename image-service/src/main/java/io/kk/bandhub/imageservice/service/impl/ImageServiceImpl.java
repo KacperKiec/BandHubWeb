@@ -16,13 +16,23 @@ public class ImageServiceImpl implements ImageService {
 
     private final CloudinaryService cloudinaryService;
 
-    public String save(MultipartFile file, Integer uid) {
+    public String save(MultipartFile file, Integer uid, String oldURL) {
         try {
+            if (oldURL != null && !oldURL.isEmpty()) {
+                var publicId = getResourceCloudinaryId(oldURL);
+                cloudinaryService.deleteFile(publicId);
+            }
+
             var filename = uid.toString() + "_" + LocalDateTime.now();
 
             return cloudinaryService.uploadFile(file, filename);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cannot save image", e);
         }
+    }
+
+    private String getResourceCloudinaryId(String url) {
+        var temp = url.split("/");
+        return temp[temp.length - 2] + "/" + temp[temp.length - 1];
     }
 }

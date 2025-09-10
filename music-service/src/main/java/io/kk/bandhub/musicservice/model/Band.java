@@ -42,6 +42,10 @@ public class Band {
     @Column(name = "bio", length = 400)
     private String bio;
 
+    @Size(max = 255)
+    @Column(name = "image_url")
+    private String imageURL;
+
     @OneToMany(mappedBy = "band", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BandMusician> bandMusicians = new HashSet<>();
 

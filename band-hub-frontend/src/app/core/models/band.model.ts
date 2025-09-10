@@ -11,7 +11,7 @@ export interface Band {
   musicians: Musician[];
   genres: Genre[];
   founderId: number;
-  image?: string;
+  imageURL?: string;
 }
 
 export interface BandRequest {

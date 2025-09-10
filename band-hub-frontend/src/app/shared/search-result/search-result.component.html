@@ -2,7 +2,7 @@
   <div class="result-container">
     <div class="results-grid">
       <div class="result-element" *ngFor="let result of results" (click)="goToDetails(result.id)">
-        <img [src]="result.image" alt="Profile pic" class="pic">
+        <img [src]="result.image || '/assets/user.jpg'" alt="Profile pic" class="pic">
 
         <label [innerText]="result.name" class="name-label"></label>
 

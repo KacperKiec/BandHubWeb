@@ -1,0 +1,1 @@
+ALTER TABLE band ADD COLUMN image_url VARCHAR(255);

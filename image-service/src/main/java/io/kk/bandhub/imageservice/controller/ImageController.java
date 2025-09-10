@@ -19,9 +19,12 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<Map<String, String>> saveImage(@RequestParam("file") MultipartFile file, Authentication authentication) {
+    ResponseEntity<Map<String, String>> saveImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam String oldURL,
+            Authentication authentication) {
         var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
-        var result = imageService.save(file, uid.intValue());
+        var result = imageService.save(file, uid.intValue(), oldURL);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("url", result));
     }
 }

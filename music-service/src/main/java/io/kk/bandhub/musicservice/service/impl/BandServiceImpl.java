@@ -1,6 +1,7 @@
 package io.kk.bandhub.musicservice.service.impl;
 
 import io.kk.bandhub.musicservice.dto.*;
+import io.kk.bandhub.musicservice.exception.AccessException;
 import io.kk.bandhub.musicservice.exception.band.BandError;
 import io.kk.bandhub.musicservice.exception.band.BandException;
 import io.kk.bandhub.musicservice.exception.genre.GenreError;
@@ -152,6 +153,19 @@ public class BandServiceImpl implements BandService {
         }
 
         return mapper.toBandDTO(bandRepository.save(band));
+    }
+
+    public void setImageURL(Integer bandId, Integer userId, String url) {
+        var existingBand = bandRepository.findBandById(bandId).orElseThrow(
+                () -> new BandException(BandError.BAND_NOT_FOUND)
+        );
+
+        if (!bandRepository.getFounderId(bandId).equals(userId)) {
+            throw new AccessException("You can only edit data that belongs to you.");
+        }
+
+        existingBand.setImageURL(url);
+        bandRepository.save(existingBand);
     }
 
     public void addMusicianToBand(BandMembershipRequestDTO dto) {

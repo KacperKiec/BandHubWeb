@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BandApiService} from '../band-service/band-api.service';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
@@ -6,6 +6,7 @@ import {Band} from '../../core/models/band.model';
 import {MusicianApiService} from '../../musicians/musician-service/musician-api.service';
 import {InvitationApiService} from '../../invitations/invitation-service/invitation-api.service';
 import {Instrument} from '../../core/models/instrument.model';
+import {ImageApiService} from '../../shared/image-service/image-api.service';
 
 @Component({
   selector: 'app-band-details',
@@ -24,22 +25,32 @@ export class BandDetailsComponent implements OnInit{
   userId!: number;
   isUserMusician: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private bandApiService: BandApiService, private musicianApiService: MusicianApiService, private invitationApiService: InvitationApiService) {}
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private bandApiService: BandApiService,
+              private musicianApiService: MusicianApiService,
+              private invitationApiService: InvitationApiService,
+              private imageApiService: ImageApiService) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.bandApiService.getBandById(id).subscribe(band => {
-      if (!band.image) {
-        band.image = 'assets/user.jpg';
-      }
-      this.band = band;
-    });
-
     const rawId = localStorage.getItem('userId');
     if (rawId) {
       this.userId = JSON.parse(rawId);
     }
+
+    this.initData();
+  }
+
+  initData() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.bandApiService.getBandById(id).subscribe(band => {
+      if (band) {
+        this.band = band;
+      }
+    });
 
     if (this.userId) {
       this.musicianApiService.getMusicianById(this.userId).subscribe(musician => {
@@ -83,4 +94,23 @@ export class BandDetailsComponent implements OnInit{
     return ' - ' + names.slice(0, 3).join(', ') + ', ...';
   }
 
+  onEditImageClick() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.imageApiService.saveImage(file, this.band.imageURL || '').subscribe(imageURL => {
+        if (imageURL) {
+          this.bandApiService.updateImage(imageURL.url).subscribe({
+            next: () => {
+              this.initData();
+            }
+          });
+        }
+      });
+    }
+  }
 }

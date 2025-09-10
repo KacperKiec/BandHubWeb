@@ -32,4 +32,5 @@ public class BandDTO {
     private Set<MusicianDTO> musicians = new HashSet<>();
     private Set<GenreDTO> genres = new HashSet<>();
     private Integer founderId;
+    private String imageURL;
 }

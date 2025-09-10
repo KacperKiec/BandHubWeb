@@ -34,15 +34,16 @@ export class MusicianDetailsComponent implements OnInit{
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.musicianApiService.getMusicianById(id).subscribe(musician => {
-      if(!musician.image) {
-        musician.image = 'assets/user.jpg'
+      if(musician) {
+        this.musician = musician;
       }
-      this.musician = musician;
     });
 
     this.musicianApiService.getMusicianBands(id).subscribe(bands => {
-      this.musicianBands = bands;
-    })
+      if (bands) {
+        this.musicianBands = bands;
+      }
+    });
 
     const rawId = localStorage.getItem('userId');
     if (rawId) {

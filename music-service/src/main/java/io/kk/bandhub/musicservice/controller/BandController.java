@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * Controller class provides communication with client
  * */
@@ -36,6 +38,13 @@ public class BandController {
         SecurityUtils.verifyAuthorities(authentication, founderId);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateBand(bandUpdateRequestDTO));
+    }
+
+    @PatchMapping(value = "/{id}/image")
+    public ResponseEntity<Void> updateImage(@RequestBody Map<String, String> imageURL, @PathVariable Integer id, Authentication authentication) {
+        var uid = SecurityUtils.getUserIdFromAuthentication(authentication);
+        service.setImageURL(id, uid.intValue(), imageURL.get("url"));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @PatchMapping(value = "/leave")

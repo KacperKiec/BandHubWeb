@@ -1,7 +1,15 @@
 <div class="wrapper">
   <div class="band-details-container fade-in">
     <div class="header">
-      <img [src]="band.image" alt="Profile pic" class="profile-pic">
+      <div class="band-pic-container">
+        <img [src]="band.imageURL || '/assets/user.jpg'" alt="Profile pic" class="band-pic">
+
+        <div class="overlay" (click)="onEditImageClick()" *ngIf="band.founderId === userId">
+          <p>📷 Zmień zdjęcie</p>
+        </div>
+
+        <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden *ngIf="band.founderId === userId">
+      </div>
       <div class="basic-info">
         <h1>{{band.name}}</h1>
         <p class="location">📍 {{ band.city }}, {{ band.country }}</p>

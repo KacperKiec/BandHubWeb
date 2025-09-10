@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.imageApiService.saveImage(file).subscribe(imageURL => {
+      this.imageApiService.saveImage(file, this.profile.imageURL || '').subscribe(imageURL => {
         if (imageURL) {
           this.userApiService.updateImage(imageURL.url).subscribe({
             next: () => {

@@ -12,9 +12,10 @@ export class ImageApiService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
-  saveImage(image: File): Observable<{url: string}> {
+  saveImage(image: File, oldURL: string): Observable<{url: string}> {
     const formData = new FormData();
     formData.append('file', image);
+    formData.append('oldURL', oldURL);
 
     return this.http.post<{url: string}>(this.apiURL, formData, { withCredentials: true })
       .pipe(

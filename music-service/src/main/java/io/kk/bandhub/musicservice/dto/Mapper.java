@@ -3,20 +3,17 @@ package io.kk.bandhub.musicservice.dto;
 import io.kk.bandhub.musicservice.model.*;
 import io.kk.bandhub.musicservice.repository.band.BandRepository;
 import io.kk.bandhub.musicservice.integration.AccountServiceClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class Mapper {
 
     private final AccountServiceClient accountServiceClient;
     private final BandRepository bandRepository;
-
-    public Mapper(AccountServiceClient accountServiceClient, BandRepository bandRepository) {
-        this.accountServiceClient = accountServiceClient;
-        this.bandRepository = bandRepository;
-    }
 
     public GenreDTO toGenreDTO(Genre genre) {
         GenreDTO genreDTO = new GenreDTO();
@@ -41,6 +38,7 @@ public class Mapper {
         dto.setBio(band.getBio());
         dto.setLookingMembers(band.getIsLookingMembers());
         dto.setFounderId(bandRepository.getFounderId(band.getId()));
+        dto.setImageURL(band.getImageURL());
 
         var genres = band.getBandGenres().stream().map(BandGenre::getGenre).map(this::toGenreDTO).collect(Collectors.toSet());
         dto.setGenres(genres);
@@ -126,6 +124,7 @@ public class Mapper {
             dto.setGender(account.getGender() != null ? (account.getGender() ? "Male" : "Female") : null);
             dto.setCity(account.getCity());
             dto.setCountry(account.getCountry());
+            dto.setImageURL(account.getImageURL());
         }
 
         return dto;

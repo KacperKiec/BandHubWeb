@@ -15,4 +15,5 @@ public class AccountDTO {
     private Boolean gender;
     private String city;
     private String country;
+    private String imageURL;
 }
