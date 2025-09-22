@@ -82,8 +82,8 @@ export class BandApiService {
       );
   }
 
-  updateImage(url: string): Observable<void> {
-    return this.http.patch<void>(`${this.apiURL}/image`, { url }, { withCredentials: true })
+  updateImage(url: string, bandId: number): Observable<void> {
+    return this.http.patch<void>(`${this.apiURL}/${bandId}/image`, { url }, { withCredentials: true })
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

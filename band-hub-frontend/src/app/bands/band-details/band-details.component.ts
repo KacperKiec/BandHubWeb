@@ -104,7 +104,7 @@ export class BandDetailsComponent implements OnInit{
       const file = input.files[0];
       this.imageApiService.saveImage(file, this.band.imageURL || '').subscribe(imageURL => {
         if (imageURL) {
-          this.bandApiService.updateImage(imageURL.url).subscribe({
+          this.bandApiService.updateImage(imageURL.url, this.band.id).subscribe({
             next: () => {
               this.initData();
             }

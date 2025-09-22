@@ -33,6 +33,10 @@ public class ImageServiceImpl implements ImageService {
 
     private String getResourceCloudinaryId(String url) {
         var temp = url.split("/");
-        return temp[temp.length - 2] + "/" + temp[temp.length - 1];
+        String filename = temp[temp.length - 1];
+        int dot = filename.lastIndexOf('.');
+        if (dot != -1) {
+             return filename.substring(0, dot);
+        } return filename;
     }
 }
