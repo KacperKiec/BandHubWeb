@@ -19,6 +19,9 @@ public class JwtService {
     private final RSAPrivateKey privateKey;
     private final String port;
 
+    @Value("${app.address}")
+    private String appAddress;
+
     public JwtService(RSAPrivateKey privateKey, @Value("${server.port}") String port) {
         this.privateKey = privateKey;
         this.port = port;
@@ -45,7 +48,7 @@ public class JwtService {
                 .setExpiration(expiration)
                 .claim("roles", roles)
                 .claim("userId", userId)
-                .setIssuer("http://localhost:8020")
+                .setIssuer(appAddress)
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }

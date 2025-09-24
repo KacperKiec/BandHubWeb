@@ -9,3 +9,7 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+logging:
+  level:
+    org.springframework.cloud.netflix.ribbon: DEBUG
+    com.netflix.loadbalancer: DEBUG

@@ -2,12 +2,14 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import SockJS from 'sockjs-client';
 import {Client, Message} from '@stomp/stompjs';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   private client: Client | null = null;
+  private apiUrl = environment.apiUrl;
   private messagesSubject = new BehaviorSubject<any>([]);
   messages$ = this.messagesSubject.asObservable();
 
@@ -22,7 +24,7 @@ export class ChatService {
       connectHeaders: {},
       debug: (str) => console.log(str),
       reconnectDelay: 5000,
-      webSocketFactory: () => new SockJS('http://localhost:9000/ws/chat')
+      webSocketFactory: () => new SockJS(`${this.apiUrl}/ws/chat`)
     });
 
     this.client.onConnect = () => {

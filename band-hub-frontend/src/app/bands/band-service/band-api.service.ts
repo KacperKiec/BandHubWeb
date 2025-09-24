@@ -4,13 +4,14 @@ import {ErrorHandlerService} from '../../core/error-handler-service/error-handle
 import {catchError, Observable, tap} from 'rxjs';
 import {Page} from '../../core/models/pagination.model';
 import {Band, BandMembershipRequest, BandRequest, BandUpdateRequest} from '../../core/models/band.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BandApiService {
 
-  private apiURL = 'http://localhost:9000/band'
+  private apiURL = environment.apiUrl + '/band'
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

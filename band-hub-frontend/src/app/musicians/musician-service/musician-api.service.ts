@@ -5,13 +5,14 @@ import {ErrorHandlerService} from '../../core/error-handler-service/error-handle
 import {Musician, MusicianRequest} from '../../core/models/musician.model';
 import {Page} from '../../core/models/pagination.model';
 import {Band} from '../../core/models/band.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicianApiService {
 
-  private apiURL = 'http://localhost:9000/musician'
+  private apiURL = environment.apiUrl + '/musician'
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

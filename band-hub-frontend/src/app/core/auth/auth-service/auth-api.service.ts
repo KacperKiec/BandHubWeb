@@ -3,13 +3,14 @@ import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../../error-handler-service/error-handler.service';
 import {catchError, Observable, of, retry, tap} from 'rxjs';
 import {AccountRegisterRequest} from '../../models/account.model';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthApiService {
 
-  private apiURL = 'http://localhost:9000'
+  private apiURL = environment.apiUrl
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

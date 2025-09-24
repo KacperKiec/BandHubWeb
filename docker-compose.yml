@@ -1,0 +1,302 @@
+services:
+
+  frontend:
+    build: ./band-hub-frontend
+    container_name: frontend
+    ports:
+      - "4202:80"
+    networks:
+      - bandhub-network
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - bandhub-network
+
+  account-service:
+    build: ./user-service
+    container_name: account-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/user_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - user-db
+    networks:
+      - bandhub-network
+    ports:
+      - "8090:8090"
+
+  music-service:
+    build: ./music-service
+    container_name: music-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://music-db:5432/music_db
+      - SPRING_DATASOURCE_USERNAME=music
+      - SPRING_DATASOURCE_PASSWORD=music
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - music-db
+      - rabbitmq
+    networks:
+      - bandhub-network
+    ports:
+      - "8080:8080"
+
+  event-service:
+    build: ./event-service
+    container_name: event-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://event-db:5432/event_db
+      - SPRING_DATASOURCE_USERNAME=event
+      - SPRING_DATASOURCE_PASSWORD=event
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - event-db
+      - rabbitmq
+    networks:
+      - bandhub-network
+    ports:
+      - "8060:8060"
+
+  venue-service:
+    build: ./venue-service
+    container_name: venue-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://venue-db:5432/venue_db
+      - SPRING_DATASOURCE_USERNAME=venue
+      - SPRING_DATASOURCE_PASSWORD=venue
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - user-db
+      - rabbitmq
+    networks:
+      - bandhub-network
+    ports:
+      - "8070:8070"
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://notification-db:5432/notification_db
+      - SPRING_DATASOURCE_USERNAME=notif
+      - SPRING_DATASOURCE_PASSWORD=notif
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - notification-db
+      - rabbitmq
+    networks:
+      - bandhub-network
+    ports:
+      - "8030:8030"
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    environment:
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - APP_SERVICES_ACCOUNTURL=http://gateway-service:9000/account/internal/auth?email=
+      - APP_ADDRESS=http://auth-service:8020
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+    networks:
+      - bandhub-network
+    ports:
+      - "8020:8020"
+
+  image-service:
+    build: ./image-service
+    container_name: image-service
+    environment:
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+    networks:
+      - bandhub-network
+    ports:
+      - "8050:8050"
+
+  chat-service:
+    build: ./chat-service
+    container_name: chat-service
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://dev:dev@chat-db:27017/chat_db?authSource=admin
+      - SPRING_DATA_MONGODB_DATABASE=chat_db
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+      - chat-db
+      - rabbitmq
+    networks:
+      - bandhub-network
+    ports:
+      - "8040:8040"
+
+  gateway-service:
+    build: ./gateway
+    container_name: gateway-service
+    environment:
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://gateway-service:9000/key/jwks.json
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://auth-service:8020
+      - APP_SERVICES_TOKENURL=http://auth-service:8020/oauth2/token
+      - FRONTEND_URL=http://localhost:4202
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+    depends_on:
+      - eureka-server
+    networks:
+      - bandhub-network
+    ports:
+      - "9000:9000"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-service
+    ports:
+      - "5672:5672"   # AMQP dla aplikacji
+      - "15672:15672" # Panel administracyjny
+    environment:
+      RABBITMQ_DEFAULT_USER: dev
+      RABBITMQ_DEFAULT_PASS: dev
+    networks:
+      - bandhub-network
+
+  # Bazy danych
+  user-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+    ports:
+      - "5432:5432"
+    networks:
+      - bandhub-network
+    volumes:
+      - user_db_vol:/var/lib/postgresql/data
+
+  music-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: music_db
+      POSTGRES_USER: music
+      POSTGRES_PASSWORD: music
+    ports:
+      - "5433:5432"
+    networks:
+      - bandhub-network
+    volumes:
+      - music_db_vol:/var/lib/postgresql/data
+
+  event-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: event_db
+      POSTGRES_USER: event
+      POSTGRES_PASSWORD: event
+    ports:
+      - "5434:5432"
+    networks:
+      - bandhub-network
+    volumes:
+      - event_db_vol:/var/lib/postgresql/data
+
+  venue-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: venue_db
+      POSTGRES_USER: venue
+      POSTGRES_PASSWORD: venue
+    ports:
+      - "5435:5432"
+    networks:
+      - bandhub-network
+    volumes:
+      - venue_db_vol:/var/lib/postgresql/data
+
+  notification-db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: notification_db
+      POSTGRES_USER: notif
+      POSTGRES_PASSWORD: notif
+    ports:
+      - "5436:5432"
+    networks:
+      - bandhub-network
+    volumes:
+      - notification_db_vol:/var/lib/postgresql/data
+
+  chat-db:
+    image: mongo:8
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: dev
+      MONGO_INITDB_DATABASE: chat_db
+    ports:
+      - "27017:27017"
+    networks:
+      - bandhub-network
+    volumes:
+      - chat_db_vol:/data/db
+
+networks:
+  bandhub-network:
+    driver: bridge
+
+volumes:
+  user_db_vol:
+  music_db_vol:
+  event_db_vol:
+  venue_db_vol:
+  notification_db_vol:
+  chat_db_vol:

@@ -9,13 +9,14 @@ import {
   BandJoinRequest,
   BandJoinUpdateRequest
 } from '../../core/models/invitation.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvitationApiService {
 
-  private apiURL = 'http://localhost:9000/band/joining'
+  private apiURL = environment.apiUrl + '/band/joining'
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

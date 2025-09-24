@@ -4,13 +4,14 @@ import {ErrorHandlerService} from '../../core/error-handler-service/error-handle
 import {catchError, Observable, tap} from 'rxjs';
 import {ChatDTO, MessageDTO} from '../../core/models/chat.model';
 import {Page} from '../../core/models/pagination.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatApiService {
 
-  private apiURL = 'http://localhost:9000/chat'
+  private apiURL = environment.apiUrl + '/chat'
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

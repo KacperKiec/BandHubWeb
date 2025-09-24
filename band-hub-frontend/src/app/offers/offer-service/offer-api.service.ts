@@ -3,13 +3,14 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {Offer, OfferRequest, OfferSearchingParams, OfferUpdateRequest} from '../../core/models/offer.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OfferApiService {
 
-  private apiURL = 'http://localhost:9000/offer';
+  private apiURL = environment.apiUrl + '/offer';
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

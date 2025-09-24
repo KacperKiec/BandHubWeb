@@ -4,13 +4,14 @@ import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {AccountResponse, AccountUpdateRequest} from '../../core/models/account.model';
 import {Page} from '../../core/models/pagination.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserApiService {
 
-  private apiURL = 'http://localhost:9000/account';
+  private apiURL = environment.apiUrl + '/account';
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

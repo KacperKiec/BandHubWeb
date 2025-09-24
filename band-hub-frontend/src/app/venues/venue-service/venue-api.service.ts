@@ -3,13 +3,14 @@ import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, tap} from 'rxjs';
 import {Venue, VenueRequest, VenueUpdateRequest} from '../../core/models/venue.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VenueApiService {
 
-  private apiURL = 'http://localhost:9000/venue';
+  private apiURL = environment.apiUrl + '/venue';
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

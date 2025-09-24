@@ -10,13 +10,14 @@ import {
   UserEventDTO
 } from '../../core/models/event.model';
 import {Page} from '../../core/models/pagination.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventApiService {
 
-  private apiURL = 'http://localhost:9000/event'
+  private apiURL = environment.apiUrl + '/event'
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 

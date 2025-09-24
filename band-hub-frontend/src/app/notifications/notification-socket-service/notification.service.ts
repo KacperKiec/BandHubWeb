@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import {Stomp} from '@stomp/stompjs';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
   private stompClient: any;
+  private apiUrl = environment.apiUrl;
   private notificationSubject = new BehaviorSubject<any>(null);
   public notifications$ = this.notificationSubject.asObservable();
   private isConnected = false;
@@ -15,7 +17,7 @@ export class NotificationService {
   public connect(): void {
     if (this.isConnected) return;
 
-    const socket = new SockJS('http://localhost:9000/ws/notifications');
+    const socket = new SockJS(`${this.apiUrl}/ws/notifications`);
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, () => {

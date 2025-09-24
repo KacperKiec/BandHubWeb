@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
 
     this.subscription = this.notificationService.notifications$.subscribe(
       (notification) => {
-        if (notification) this.notifications.push(notification);
+        if (notification) this.notifications = [...this.notifications, notification];
       }
     );
     this.initNotifications();
@@ -92,10 +92,8 @@ export class HeaderComponent implements OnInit {
 
     this.notifications = [];
     this.notificationApiService.getUnreadUserNotifications(this.userId).subscribe(notifications => {
-      if (notifications) {
-        for (let notification of notifications) {
-          this.notifications.push(true);
-        }
+      if (notifications && notifications.length > 0) {
+        this.notifications = notifications.map(() => true);
       }
     });
   }

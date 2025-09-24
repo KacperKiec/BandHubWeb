@@ -4,12 +4,13 @@ import {ErrorHandlerService} from '../../core/error-handler-service/error-handle
 import {catchError, Observable} from 'rxjs';
 import {Notification} from '../../core/models/notification.model';
 import {Page} from '../../core/models/pagination.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationApiService {
-  private apiURL = 'http://localhost:9000/notification';
+  private apiURL = environment.apiUrl + '/notification';
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) {}
 

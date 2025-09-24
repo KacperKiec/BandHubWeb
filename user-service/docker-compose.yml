@@ -12,6 +12,20 @@ services:
     networks:
       - user-network
 
+  account-service:
+    build: .
+    container_name: account-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user
+    ports:
+      - "8090:8090"
+    networks:
+      - user-network
+
 volumes:
   user_db_vol:
 

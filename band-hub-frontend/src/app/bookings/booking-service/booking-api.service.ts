@@ -4,13 +4,14 @@ import {ErrorHandlerService} from '../../core/error-handler-service/error-handle
 import {Booking, BookingRequest} from '../../core/models/booking.model';
 import {catchError, Observable, tap} from 'rxjs';
 import {Page} from '../../core/models/pagination.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingApiService {
 
-  private apiURL = 'http://localhost:9000/booking';
+  private apiURL = environment.apiUrl + '/booking';
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
