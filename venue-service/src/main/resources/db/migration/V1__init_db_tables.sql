@@ -1,4 +1,4 @@
-CREATE TABLE venue (
+CREATE TABLE IF NOT EXISTS venue (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER NOT NULL,
     name varchar(40) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE venue (
     country VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE offer (
+CREATE TABLE IF NOT EXISTS offer (
     id SERIAL PRIMARY KEY,
     venue_id INTEGER NOT NULL,
     price_per_hour DECIMAL(10, 2) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE offer (
     FOREIGN KEY (venue_id) REFERENCES venue(id) ON DELETE CASCADE
 );
 
-CREATE TABLE booking (
+CREATE TABLE IF NOT EXISTS booking (
     id SERIAL PRIMARY KEY,
     tenant_id INTEGER NOT NULL,
     offer_id INTEGER NOT NULL,

@@ -1,10 +1,10 @@
-CREATE TABLE musician (
+CREATE TABLE IF NOT EXISTS musician (
     id SERIAL PRIMARY KEY,
     is_looking_band boolean NOT NULL ,
     bio varchar(255)
 );
 
-CREATE TABLE band (
+CREATE TABLE IF NOT EXISTS band (
     id SERIAL PRIMARY KEY,
     name varchar(30) NOT NULL,
     is_looking_members boolean NOT NULL,
@@ -12,17 +12,17 @@ CREATE TABLE band (
     bio varchar(400)
 );
 
-CREATE TABLE genre (
+CREATE TABLE IF NOT EXISTS genre (
     id SERIAL PRIMARY KEY,
     name varchar(40) NOT NULL
 );
 
-CREATE TABLE instrument (
+CREATE TABLE IF NOT EXISTS instrument (
     id SERIAL PRIMARY KEY,
     name varchar(40) NOT NULL
 );
 
-CREATE TABLE musician_instrument (
+CREATE TABLE IF NOT EXISTS musician_instrument (
     musician_id INTEGER,
     instrument_id INTEGER,
     PRIMARY KEY (musician_id, instrument_id),
@@ -30,7 +30,7 @@ CREATE TABLE musician_instrument (
     FOREIGN KEY (instrument_id) REFERENCES instrument(id) ON DELETE CASCADE
 );
 
-CREATE TABLE musician_genre (
+CREATE TABLE IF NOT EXISTS musician_genre (
     musician_id INTEGER,
     genre_id INTEGER,
     PRIMARY KEY (musician_id, genre_id),
@@ -38,7 +38,7 @@ CREATE TABLE musician_genre (
     FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE CASCADE
 );
 
-CREATE TABLE band_genre (
+CREATE TABLE IF NOT EXISTS band_genre (
     band_id INTEGER,
     genre_id INTEGER,
     PRIMARY KEY (band_id, genre_id),
@@ -46,7 +46,7 @@ CREATE TABLE band_genre (
     FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE CASCADE
 );
 
-CREATE TABLE band_musician (
+CREATE TABLE IF NOT EXISTS band_musician (
     band_id INTEGER,
     musician_id INTEGER,
     join_date DATE,

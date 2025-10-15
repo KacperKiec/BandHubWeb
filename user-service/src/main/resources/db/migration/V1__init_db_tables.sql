@@ -1,4 +1,4 @@
-CREATE TABLE account (
+CREATE TABLE IF NOT EXISTS account (
     id SERIAL PRIMARY KEY,
     email varchar(50) UNIQUE NOT NULL,
     password varchar(150) NOT NULL,
@@ -9,12 +9,12 @@ CREATE TABLE account (
     city varchar(50)
 );
 
-CREATE TABLE role (
+CREATE TABLE IF NOT EXISTS role (
     id SERIAL PRIMARY KEY,
     name varchar(50) UNIQUE NOT NULL
 );
 
-CREATE TABLE account_role (
+CREATE TABLE IF NOT EXISTS account_role (
     account_id INTEGER NOT NULL,
     role_id INTEGER NOT NULL,
     PRIMARY KEY (account_id, role_id),

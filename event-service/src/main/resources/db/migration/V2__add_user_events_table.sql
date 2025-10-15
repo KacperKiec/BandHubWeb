@@ -1,4 +1,4 @@
-CREATE TABLE user_events (
+CREATE TABLE IF NOT EXISTS user_events (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     event_id INTEGER NOT NULL,

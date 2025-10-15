@@ -1,4 +1,4 @@
-CREATE TABLE band_invitations (
+CREATE TABLE IF NOT EXISTS band_invitations (
     id SERIAL PRIMARY KEY,
     band_id INTEGER NOT NULL,
     invited_musician_id INTEGER NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE band_invitations (
     CONSTRAINT fk_invited FOREIGN KEY (invited_musician_id) REFERENCES musician(id) ON DELETE CASCADE
 );
 
-CREATE TABLE band_join_requests (
+CREATE TABLE IF NOT EXISTS band_join_requests (
     id SERIAL PRIMARY KEY,
     band_id INTEGER NOT NULL,
     applicant_id INTEGER NOT NULL,

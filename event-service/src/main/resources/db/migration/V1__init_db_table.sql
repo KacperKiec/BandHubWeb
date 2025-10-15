@@ -1,4 +1,4 @@
-CREATE TABLE event (
+CREATE TABLE IF NOT EXISTS event (
     id SERIAL PRIMARY KEY,
     name varchar(255) NOT NULL,
     band_id INTEGER NOT NULL,
