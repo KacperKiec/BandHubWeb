@@ -15,12 +15,12 @@
 
     <div class="venue-selection-container">
       <div class="selection-tabs">
-        <<button class="tab-button"
+        <button class="tab-button"
                  [class.active]="venueSelectionMode === 'BOOKING'"
                  [disabled]="isEditMode && isBookingEvent"
                  (click)="setVenueMode(VenueSelectionMode.BOOKING)">
         Z rezerwacji
-      </button>
+        </button>
 
         <button class="tab-button"
                 [class.active]="venueSelectionMode === 'OWNED'"
@@ -33,27 +33,34 @@
 
       <div class="venue-content" [ngSwitch]="venueSelectionMode">
         <div *ngSwitchCase="'BOOKING'" class="fade-in">
-          <label>Wybierz rezerwację</label>
-          <div class="carousel-container">
-            <app-carousel-selector
-              [elements]="mappedBookings"
-              [selectedOptionId]="event.bookingId"
-              (emitElement)="selectBooking($event)"
-              [disabled]="isEditMode && isBookingEvent">
-            </app-carousel-selector>
-          </div>
+          <ng-container *ngIf="bookings.length !== 0">
+            <label>Wybierz rezerwację</label>
+            <div class="carousel-container">
+              <app-carousel-selector
+                [elements]="mappedBookings"
+                [selectedOptionId]="event.bookingId"
+                (emitElement)="selectBooking($event)"
+                [disabled]="isEditMode && isBookingEvent">
+              </app-carousel-selector>
+            </div>
 
-          <label>Czas dostępności</label>
-          <div class="time-input-container">
-            <div class="time-input">
-              <p>Początek</p>
-              <input class="input" type="time" [(ngModel)]="event.startTime" name="startTime" (ngModelChange)="emit()">
+            <label>Czas dostępności</label>
+            <div class="time-input-container">
+              <div class="time-input">
+                <p>Początek</p>
+                <input class="input" type="time" [(ngModel)]="event.startTime" name="startTime" (ngModelChange)="emit()">
+              </div>
+              <div class="time-input">
+                <p>Koniec</p>
+                <input class="input" type="time" [(ngModel)]="event.endTime" name="endTime" (ngModelChange)="emit()">
+              </div>
             </div>
-            <div class="time-input">
-              <p>Koniec</p>
-              <input class="input" type="time" [(ngModel)]="event.endTime" name="endTime" (ngModelChange)="emit()">
-            </div>
-          </div>
+          </ng-container>
+
+          <ng-container *ngIf="bookings.length === 0">
+            <label>Nie posiadasz żadnych rezerwacji.</label>
+          </ng-container>
+
         </div>
 
         <div *ngSwitchCase="'OWNED'" class="fade-in">

@@ -14,7 +14,7 @@ import {Booking} from '../../core/models/booking.model';
 import {Band} from '../../core/models/band.model';
 import {CarouselSelectorComponent} from '../../shared/carousel-selector/carousel-selector.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {CarouselElement} from '../../core/models/shared.model';
 
 enum VenueSelectionMode {
@@ -30,7 +30,8 @@ enum VenueSelectionMode {
     FormsModule,
     ReactiveFormsModule,
     NgSwitch,
-    NgSwitchCase
+    NgSwitchCase,
+    NgIf
   ],
   templateUrl: './event-input.component.html',
   styleUrl: './event-input.component.css',
@@ -54,6 +55,7 @@ export class EventInputComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initEvent();
+    console.log('Rezerwacje uzytkownika: ' + this.bookings);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -63,6 +65,7 @@ export class EventInputComponent implements OnInit, OnChanges {
 
     if (changes['bookings'] || changes['userBands'] || changes['venues']) {
       this.cdr.detectChanges();
+      console.log('Rezerwacje uzytkownika: ' + this.bookings);
     }
   }
 
