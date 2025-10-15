@@ -1,1 +1,1 @@
-ALTER TABLE band ADD COLUMN country varchar(50);
+ALTER TABLE band ADD COLUMN IF NOT EXISTS country varchar(50);
