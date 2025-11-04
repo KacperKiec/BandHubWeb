@@ -2,7 +2,9 @@
   <div class="nav-button">
     <img id="menu" (click)="openMenu()" ngSrc="/icons8-menu-64-light.png" height="32" width="32" alt="Toggle Button">
   </div>
-  <div class="title" routerLink="/home">TYTUL</div>
+  <div class="title" routerLink="/home">
+    <img id="logo" src="assets/logo.png" alt="Logo"/>
+  </div>
   <div class="right-section">
     <div class="bell-container" *ngIf="isUserLoggedIn">
       <img class="bell" ngSrc="/icons8-bell-48.png" height="30" width="30" alt="Notification Icon" (click)="toggleNotificationPanel($event)">
