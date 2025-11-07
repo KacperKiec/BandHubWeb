@@ -29,7 +29,7 @@
         <p>Status: {{ getOfferStatus(offer.status) }}</p>
 
         <div *ngFor="let range of offer.availableRanges" class="time-range-item">
-          <button (click)="prepareBooking(offer, range)">
+          <button (click)="prepareBooking(offer, range)" title="Przygotuj rezerwację">
             {{ getShortTime(range.startTime) }} - {{ getShortTime(range.endTime) }}
           </button>
         </div>
@@ -39,8 +39,12 @@
       <div class="reservation-wrapper" *ngIf="booking">
         <p>Wybrane godziny rezerwacji</p>
         <div class="reservation-time-ranges" title="Edytuj godziny rezerwacji w podanych ramach czasowych.">
-          <input type="time" [(ngModel)]="booking.startTime">
-          <input type="time" [(ngModel)]="booking.endTime">
+          <select class="input" name="startTime" [(ngModel)]="booking.startTime">
+            <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+          </select>
+          <select class="input" name="endTime" [(ngModel)]="booking.endTime">
+            <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+          </select>
         </div>
 
         <button class="confirm-button"

@@ -6,11 +6,14 @@
 
     <label>Zespół wydarzenia</label>
     <div class="carousel-container">
-      <app-carousel-selector
+      <app-carousel-selector *ngIf="userBands.length > 0"
         [elements]="userBands"
         [selectedOptionId]="event.bandId"
         (emitElement)="selectBand($event)">
       </app-carousel-selector>
+
+      <p *ngIf="userBands.length === 0" class="info">Nie jesteś właścicielem żadnego zespołu. Tylko właściciel może dodawać wydarzenia.</p>
+
     </div>
 
     <div class="venue-selection-container">
@@ -48,11 +51,15 @@
             <div class="time-input-container">
               <div class="time-input">
                 <p>Początek</p>
-                <input class="input" type="time" [(ngModel)]="event.startTime" name="startTime" (ngModelChange)="emit()">
+                <select class="input" name="startTime" [(ngModel)]="event.startTime" (ngModelChange)="emit()">
+                  <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+                </select>
               </div>
               <div class="time-input">
                 <p>Koniec</p>
-                <input class="input" type="time" [(ngModel)]="event.endTime" name="endTime" (ngModelChange)="emit()">
+                <select class="input" name="endTime" [(ngModel)]="event.endTime" (ngModelChange)="emit()">
+                  <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+                </select>
               </div>
             </div>
           </ng-container>

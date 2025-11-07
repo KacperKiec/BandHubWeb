@@ -86,4 +86,9 @@ public class ChatServiceImpl implements ChatService {
         });
     }
 
+    public List<MessageDTO> getUnreadMessages(Integer userId) {
+        return messageRepository.findMessagesByReceiverIdAndIsRead(userId, false)
+                .stream().map(mapper::toMessageDTO).toList();
+    }
+
 }

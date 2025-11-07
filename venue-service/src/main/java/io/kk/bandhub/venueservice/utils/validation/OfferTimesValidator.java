@@ -1,4 +1,4 @@
-package io.kk.bandhub.venueservice.utils;
+package io.kk.bandhub.venueservice.utils.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -20,13 +20,7 @@ public class OfferTimesValidator implements ConstraintValidator<ValidOfferTimes,
             valid = false;
         }
 
-        if (dto.getStartTime() != null && dto.getEndTime() != null &&
-                dto.getStartTime().isAfter(dto.getEndTime())) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Start time must not be after end time.")
-                    .addPropertyNode("startTime").addConstraintViolation();
-            valid = false;
-        }
+        valid = ValidUtils.isTimeValid(dto, context, valid);
 
         return valid;
     }

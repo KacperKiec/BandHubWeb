@@ -49,4 +49,12 @@ export class ChatApiService {
         catchError(error => this.errorHandler.handleError(error))
       );
   }
+
+  checkUnreadMessages(userId: number): Observable<MessageDTO[]> {
+    return this.http.get<MessageDTO[]>(`${this.apiURL}/user/${userId}/unread`, {withCredentials: true})
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
 }

@@ -24,7 +24,7 @@ export class LoginComponent {
     this.authApiService.login(this.email, this.password).subscribe({
       next: () => {
         this.authService.setLoginStatus(true);
-        this.router.navigate(['/']);
+        window.location.href = '/';
       }
     });
   }

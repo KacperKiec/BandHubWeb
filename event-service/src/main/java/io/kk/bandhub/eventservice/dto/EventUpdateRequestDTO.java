@@ -1,5 +1,7 @@
 package io.kk.bandhub.eventservice.dto;
 
+import io.kk.bandhub.eventservice.utils.validation.EventTimeValidatable;
+import io.kk.bandhub.eventservice.utils.validation.ValidEventTimes;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -10,7 +12,8 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class EventUpdateRequestDTO {
+@ValidEventTimes
+public class EventUpdateRequestDTO implements EventTimeValidatable {
     @NotNull
     private Integer id;
 

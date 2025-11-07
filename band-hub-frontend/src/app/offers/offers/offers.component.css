@@ -13,6 +13,8 @@
   height: 100%;
   margin: 0 2rem;
   border: 2px solid #615D55;
+  border-radius: 25px;
+  overflow: hidden;
   transition: width 0.3s ease;
   z-index: 10;
 }
@@ -126,8 +128,16 @@ app-date-picker {
   justify-content: center;
 }
 
-.reservation-time-ranges input {
+.reservation-time-ranges select {
   margin: 0 0.5rem;
+  text-align: center;
+}
+
+select.input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
 .close-button {

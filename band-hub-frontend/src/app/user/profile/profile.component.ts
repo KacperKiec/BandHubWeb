@@ -37,10 +37,13 @@ export class ProfileComponent implements OnInit {
     this.initData();
   }
 
-  calculateAge(birthday: Date): number {
+  calculateAge(birthday: Date): string {
     const birth = new Date(birthday);
     const ageDifMs = Date.now() - birth.getTime();
-    return Math.floor(ageDifMs / (1000 * 60 * 60 * 24 * 365.25));
+    const age =  Math.floor(ageDifMs / (1000 * 60 * 60 * 24 * 365.25));
+    let temp = age % 10;
+    if ([0, 1, 5, 6, 7, 8, 9].includes(temp) || age < 20) return age + " lat";
+    else return age + " lata";
   }
 
   showRegistrationForm() {

@@ -62,6 +62,7 @@ export class OffersComponent implements OnInit {
   };
   params!: OfferSearchingParams;
 
+  timeOptions: string[] = [];
   selectedOffers: Offer[] = [];
   booking!:BookingRequest;
   canSubmit: boolean = true;
@@ -71,6 +72,7 @@ export class OffersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.timeOptions = this.generateTimeOptions();
     const rawId = localStorage.getItem('userId');
     if (rawId) {
       this.userId = JSON.parse(rawId);
@@ -178,5 +180,17 @@ export class OffersComponent implements OnInit {
         this.updateParamsAndFetchOffers();
       }
     });
+  }
+
+  private generateTimeOptions(): string[] {
+    const options: string[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 30) {
+        const hh = String(h).padStart(2, '0');
+        const mm = String(m).padStart(2, '0');
+        options.push(`${hh}:${mm}`);
+      }
+    }
+    return options;
   }
 }

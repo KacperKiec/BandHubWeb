@@ -34,16 +34,7 @@ export class OfferInputComponent implements OnInit, OnChanges {
 
   offer!: OfferRequest;
 
-  venues2 = [
-    { id: 1, name: 'Studio A' },
-    { id: 2, name: 'Sala prób B' },
-    { id: 3, name: 'Rock Spot C' },
-    { id: 4, name: 'Jazz Room D' },
-    { id: 4, name: 'Jazz Room D' },
-    { id: 4, name: 'Jazz Room D' },
-    { id: 4, name: 'Jazz Room D' },
-  ];
-
+  timeOptions: string[] = [];
   statuses: OfferStatus[] = [];
   statusLabels: Record<OfferStatus, string> = {
     [OfferStatus.ACTIVE]: 'Aktywna',
@@ -58,6 +49,7 @@ export class OfferInputComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.timeOptions = this.generateTimeOptions();
     this.initOffer();
   }
 
@@ -78,6 +70,18 @@ export class OfferInputComponent implements OnInit, OnChanges {
   selectVenue(venueId: number) {
     this.offer.venueId = venueId;
     this.emit();
+  }
+
+  private generateTimeOptions(): string[] {
+    const options: string[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 30) {
+        const hh = String(h).padStart(2, '0');
+        const mm = String(m).padStart(2, '0');
+        options.push(`${hh}:${mm}`);
+      }
+    }
+    return options;
   }
 
   private initOffer() {

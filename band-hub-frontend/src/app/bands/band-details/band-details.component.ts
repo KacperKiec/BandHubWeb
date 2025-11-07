@@ -76,7 +76,7 @@ export class BandDetailsComponent implements OnInit{
   sendRequest() {
     this.invitationApiService.sendRequest({bandId: this.band.id, musicianId: this.userId}).subscribe({
       next: data => {
-        alert("Wysłano zgłoszenie.");
+        alert("Wysłano zgłoszenie do zespołu.");
       }
     });
   }

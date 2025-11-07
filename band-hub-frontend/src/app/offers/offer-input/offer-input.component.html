@@ -19,11 +19,15 @@
     <div class="time-input-container">
       <div class="time-input">
         <p>Początek</p>
-        <input class="input" type="time" [(ngModel)]="offer.startTime" name="startTime" (ngModelChange)="emit()">
+        <select class="input" name="startTime" [(ngModel)]="offer.startTime" (ngModelChange)="emit()">
+          <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+        </select>
       </div>
       <div class="time-input">
         <p>Koniec</p>
-        <input class="input" type="time" [(ngModel)]="offer.endTime" name="endTime" (ngModelChange)="emit()">
+        <select class="input" name="endTime" [(ngModel)]="offer.endTime" (ngModelChange)="emit()">
+          <option *ngFor="let t of timeOptions" [value]="t">{{ t }}</option>
+        </select>
       </div>
     </div>
 

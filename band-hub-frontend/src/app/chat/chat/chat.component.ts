@@ -72,6 +72,7 @@ export class ChatComponent implements OnInit {
       this.messages = [...this.messages, message];
 
       this.scrollToBottom();
+      this.markMessages();
     });
   }
 
@@ -204,6 +205,7 @@ export class ChatComponent implements OnInit {
     this.chatApiService.markMessagesAsRead(temp).subscribe({
       next: () => {
         this.messages.forEach(msg => msg.isRead = true);
+        this.chatSocketService.notifyReadStatusChanged();
       },
       error: () => {
         this.messages.forEach(msg => msg.isRead = false);
@@ -254,9 +256,9 @@ export class ChatComponent implements OnInit {
   sendMessage() {
     if (this.messageContent && this.selectedChat) {
       const message: MessageRequest = {
-        chatId: this.selectedChat?.id,
+        chatId: this.selectedChat.id,
         senderId: this.userId,
-        receiverId: this.selectedChat?.receiverId,
+        receiverId: this.selectedChat.receiverId,
         content: this.messageContent,
         timestamp: new Date(),
         isReceived: false,

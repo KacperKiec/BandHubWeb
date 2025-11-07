@@ -2,6 +2,8 @@ package io.kk.bandhub.eventservice.integration;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.kk.bandhub.eventservice.dto.BandEventDataDTO;
+import io.kk.bandhub.eventservice.exception.EventError;
+import io.kk.bandhub.eventservice.exception.EventException;
 import io.kk.bandhub.eventservice.exception.RegistrationException;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +47,11 @@ public interface MusicServiceClient {
         return bandEventDataDTO;
     }
 
-    default BandEventDataDTO fallbackGetBandReg(Throwable throwable) {
+    default BandEventDataDTO fallbackGetBandReg(Integer id, Throwable throwable) {
         if (throwable instanceof feign.FeignException.ServiceUnavailable) {
             throw new RegistrationException("Registration failed because of service unavailability");
         } else if (throwable instanceof feign.FeignException.NotFound) {
-            throw new RegistrationException("Registration failed because of bad data (user does not exist)");
+            throw new EventException(EventError.EVENT_BAND_NOT_FOUND);
         } else {
             throw new RegistrationException("Registration failed, something went wrong");
         }

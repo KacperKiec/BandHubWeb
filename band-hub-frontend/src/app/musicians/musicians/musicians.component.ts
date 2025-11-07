@@ -24,7 +24,7 @@ export class MusiciansComponent implements OnInit {
 
   filters: {label: string, type: string, options?: string[]}[] = [];
   placeholderText = 'Imie i Nazwisko';
-  musiciansToDisplay: SearchDisplayItem[];
+  musiciansToDisplay: SearchDisplayItem[] = [];
 
   searchingParams: {name: string, value: string}[]= [];
   preparedParams: {name: string, value: string[]}[]=[];
@@ -33,37 +33,7 @@ export class MusiciansComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
 
-  sampleMusicians: Musician[] = [
-    <Musician>{
-      id: 1,
-      firstName: 'Davie',
-      lastName: 'Jones',
-      birthday: new Date(),
-      gender: 'male',
-      city: 'Krakow',
-      country: 'Poland',
-      bio: 'Davie Jones` bio',
-      isLookingBand: true,
-      genres: [],
-      instruments: []
-    },
-    <Musician>{
-      id: 2,
-      firstName: 'Arnold',
-      lastName: 'Putler',
-      birthday: new Date(),
-      gender: 'female',
-      city: 'Berlin',
-      country: 'Germany',
-      bio: 'Arnold Putler`s bio',
-      isLookingBand: false,
-      genres: [],
-      instruments: []
-    }
-  ];
-
   constructor(private musicianApiService: MusicianApiService, private router: Router, private musicAttributesApiService: MusicAttributesApiService) {
-    this.musiciansToDisplay = this.sampleMusicians.map(this.mapMusicianToDisplayItem);
   }
 
   ngOnInit() {

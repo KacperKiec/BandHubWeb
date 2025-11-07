@@ -14,7 +14,7 @@ import {Booking} from '../../core/models/booking.model';
 import {Band} from '../../core/models/band.model';
 import {CarouselSelectorComponent} from '../../shared/carousel-selector/carousel-selector.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {CarouselElement} from '../../core/models/shared.model';
 
 enum VenueSelectionMode {
@@ -31,7 +31,8 @@ enum VenueSelectionMode {
     ReactiveFormsModule,
     NgSwitch,
     NgSwitchCase,
-    NgIf
+    NgIf,
+    NgForOf
   ],
   templateUrl: './event-input.component.html',
   styleUrl: './event-input.component.css',
@@ -45,11 +46,13 @@ export class EventInputComponent implements OnInit, OnChanges {
   @Input() venues!: Venue[];
   @Output() outputEvent = new EventEmitter<EventRequestDTO>();
 
+  timeOptions: string[] = [];
   event!: EventRequestDTO;
   venueSelectionMode: VenueSelectionMode = VenueSelectionMode.BOOKING;
 
 
   constructor(private cdr: ChangeDetectorRef) {
+    this.timeOptions = this.generateTimeOptions();
     this.initEvent();
   }
 
@@ -133,6 +136,18 @@ export class EventInputComponent implements OnInit, OnChanges {
     }
 
     this.emit();
+  }
+
+  private generateTimeOptions(): string[] {
+    const options: string[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (let m = 0; m < 60; m += 30) {
+        const hh = String(h).padStart(2, '0');
+        const mm = String(m).padStart(2, '0');
+        options.push(`${hh}:${mm}`);
+      }
+    }
+    return options;
   }
 
   emit() {

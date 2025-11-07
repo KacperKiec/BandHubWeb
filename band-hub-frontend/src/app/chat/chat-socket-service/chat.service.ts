@@ -12,6 +12,8 @@ export class ChatService {
   private apiUrl = environment.apiUrl;
   private messagesSubject = new BehaviorSubject<any>([]);
   messages$ = this.messagesSubject.asObservable();
+  private readStatusChangedSubject = new BehaviorSubject<any>([]);
+  readStatusChanged$ = this.readStatusChangedSubject.asObservable();
 
   constructor() {
   }
@@ -22,7 +24,6 @@ export class ChatService {
     this.client = new Client({
       brokerURL: '',
       connectHeaders: {},
-      debug: (str) => console.log(str),
       reconnectDelay: 5000,
       webSocketFactory: () => new SockJS(`${this.apiUrl}/ws/chat`)
     });
@@ -32,7 +33,6 @@ export class ChatService {
       if(userId) {
         this.client!.subscribe(`/topic/user/${userId}`, (message: Message) => {
           const msg = JSON.parse(message.body);
-          console.log(msg);
           this.messagesSubject.next(msg);
         });
       }
@@ -52,5 +52,9 @@ export class ChatService {
       destination: '/app/chat.send',
       body: JSON.stringify(message)
     });
+  }
+
+  notifyReadStatusChanged() {
+    this.readStatusChangedSubject.next(true);
   }
 }

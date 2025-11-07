@@ -50,4 +50,10 @@ public class ChatController {
         chatService.markMessagesAsRead(msgIds);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+
+    @GetMapping(value = "/user/{id}/unread")
+    ResponseEntity<List<MessageDTO>> getUnreadMessages(@PathVariable Integer id) {
+        var result = chatService.getUnreadMessages(id);
+        return ResponseEntity.ok(result);
+    }
 }

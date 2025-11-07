@@ -1,12 +1,10 @@
 package io.kk.bandhub.chatservice.config;
 
-import io.kk.bandhub.chatservice.dto.NotificationType;
 import io.kk.bandhub.chatservice.model.Message;
 import io.kk.bandhub.chatservice.rabbit.DynamicListenerService;
 import io.kk.bandhub.chatservice.rabbit.DynamicQueueService;
 import io.kk.bandhub.chatservice.rabbit.RabbitService;
 import io.kk.bandhub.chatservice.service.ChatSocketService;
-import io.kk.bandhub.chatservice.utils.NotificationCreator;
 import io.kk.bandhub.chatservice.utils.UserStatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -51,17 +47,6 @@ public class WebSocketEventListener {
             List<Message> pendingMessages = chatService.getPendingMessages(uid);
 
             if (!pendingMessages.isEmpty()) {
-                String title = "Nowa wiadomość";
-                String content = "Masz nową wiadomość czatu, sprwadź kto do ciebie napisał.";
-
-                var dto = NotificationCreator.createNotification(NotificationType.NEW_MESSAGE, uid, title, content);
-
-                Map<String, Object> metadata = new HashMap<>();
-                metadata.put("receiverId", uid);
-                dto.setMetadata(metadata);
-
-                rabbitService.sendNotification(dto);
-
                 for (Message msg : pendingMessages) {
                     rabbitService.sendMessage(msg);
                     chatService.markAsSent(msg);

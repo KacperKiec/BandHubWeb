@@ -1,5 +1,7 @@
 package io.kk.bandhub.venueservice.dto;
 
+import io.kk.bandhub.venueservice.utils.validation.BookingTimeValidatable;
+import io.kk.bandhub.venueservice.utils.validation.ValidBookingTimes;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +11,8 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class BookingRequestDTO {
+@ValidBookingTimes
+public class BookingRequestDTO implements BookingTimeValidatable {
 
     @NotNull
     private Integer tenantId;

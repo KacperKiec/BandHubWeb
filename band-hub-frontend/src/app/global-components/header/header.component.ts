@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {NotificationPanelComponent} from '../../notifications/notification-panel/notification-panel.component';
 import {NotificationApiService} from '../../notifications/notification-service/notification-api.service';
 import {ChatService} from '../../chat/chat-socket-service/chat.service';
+import {ChatApiService} from '../../chat/chat-service/chat-api.service';
 
 @Component({
   selector: 'app-header',
@@ -27,16 +28,17 @@ export class HeaderComponent implements OnInit {
   showDropdown = false;
   showNotificationPanel = false;
 
-  private subscription: Subscription = new Subscription();
+  private notificationSubscription: Subscription = new Subscription();
+  private chatSubscription: Subscription = new Subscription();
   notifications: boolean[] = [];
-  hasNewMessages: boolean = false;
+  messages: boolean[] = [];
 
   @ViewChild('dropdownMenu') dropdownRef!: ElementRef;
   @ViewChild('notificationPanel', { read: ElementRef, static: false }) panelRef!: ElementRef;
 
   @Output() emitOpeningMenu: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService, private notificationApiService: NotificationApiService, private chatSocketService: ChatService) {
+  constructor(private router: Router, private authService: AuthService, private authApiService: AuthApiService, private eRef: ElementRef, private notificationService: NotificationService, private notificationApiService: NotificationApiService, private chatSocketService: ChatService, private chatApiService: ChatApiService) {
   }
 
   ngOnInit() {
@@ -54,12 +56,22 @@ export class HeaderComponent implements OnInit {
       }
     });
 
-    this.subscription = this.notificationService.notifications$.subscribe(
+    this.notificationSubscription = this.notificationService.notifications$.subscribe(
       (notification) => {
         if (notification) this.notifications = [...this.notifications, notification];
       }
     );
     this.initNotifications();
+
+    this.chatSubscription = this.chatSocketService.messages$.subscribe(
+      (message) => {
+        if (message) this.messages = [...this.messages, message];
+        console.log('Liczba wiadomosci: ' + this.messages.length);
+      }
+    );
+    this.chatSocketService.readStatusChanged$.subscribe(() => {
+      this.initMessages();
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -98,6 +110,17 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  initMessages() {
+    if (!this.userId) return;
+
+    this.messages = [];
+    this.chatApiService.checkUnreadMessages(this.userId).subscribe(messages => {
+      if (messages && messages.length > 0) {
+        this.messages = messages.map(() => true);
+      }
+    })
+  }
+
   updateNotifications() {
     this.notifications.pop();
   }
@@ -129,6 +152,10 @@ export class HeaderComponent implements OnInit {
 
   goToUserEvents() {
     this.router.navigate(['/user/events']);
+  }
+
+  goToChat() {
+    this.router.navigate(['/chat']);
   }
 
   logOut() {

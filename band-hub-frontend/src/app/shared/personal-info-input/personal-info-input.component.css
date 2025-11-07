@@ -21,9 +21,6 @@
   font-size: 16px;
   padding: 7px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.names input::placeholder {
   text-align: center;
 }
 
@@ -45,7 +42,6 @@
   border-radius: 25px;
   font-size: 16px;
   padding: 5px;
-  margin: 0 5px;
   text-align: center;
 }
 

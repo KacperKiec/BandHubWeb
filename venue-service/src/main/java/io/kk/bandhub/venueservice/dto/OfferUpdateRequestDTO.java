@@ -1,8 +1,8 @@
 package io.kk.bandhub.venueservice.dto;
 
 import io.kk.bandhub.venueservice.utils.OfferStatus;
-import io.kk.bandhub.venueservice.utils.OfferTimeValidatable;
-import io.kk.bandhub.venueservice.utils.ValidOfferTimes;
+import io.kk.bandhub.venueservice.utils.validation.OfferTimeValidatable;
+import io.kk.bandhub.venueservice.utils.validation.ValidOfferTimes;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

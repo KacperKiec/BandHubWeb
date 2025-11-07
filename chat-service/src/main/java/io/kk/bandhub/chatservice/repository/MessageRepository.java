@@ -12,4 +12,5 @@ public interface MessageRepository {
     Optional<Message> findById(String id);
     Page<Message> findMessagesByChatId(String chatId, Pageable pageable);
     List<Message> findMessagesByReceiverIdAndIsSent(Integer receiverId, Boolean isSent);
+    List<Message> findMessagesByReceiverIdAndIsRead(Integer id, Boolean isRead);
 }

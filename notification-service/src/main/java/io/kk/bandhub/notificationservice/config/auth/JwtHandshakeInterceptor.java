@@ -40,9 +40,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 
                             SecurityContextHolder.getContext().setAuthentication(auth);
                             attributes.put("auth", auth);
-                            System.out.println("Token valid: " + auth);
                         } catch (JwtException e) {
-                            System.out.println("Token invalid");
                             return false;
                         }
                     }

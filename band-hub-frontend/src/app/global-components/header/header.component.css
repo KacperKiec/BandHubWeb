@@ -59,16 +59,16 @@
   cursor: pointer;
 }
 
-.bell-container {
+.bell-container, .chat-bubble-container {
   position: relative;
   display: inline-block;
 }
 
-.bell {
+.bell, .chat-bubble {
   cursor: pointer;
 }
 
-.notification-badge {
+.badge {
   position: absolute;
   right: 2px;
   width: 10px;

@@ -13,4 +13,5 @@ public interface ChatService {
     List<ChatDTO> getUserChats(Integer userId, Pageable pageable);
     Page<MessageDTO> getChatMessages(String chatId, Pageable pageable);
     void markMessagesAsRead(Set<String> msgIds);
+    List<MessageDTO> getUnreadMessages(Integer userId);
 }
