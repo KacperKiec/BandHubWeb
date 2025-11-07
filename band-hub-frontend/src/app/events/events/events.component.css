@@ -43,7 +43,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0.7rem;
+  padding: 0.79rem;
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.1);
   background-color: rgba(255,255,255,0.1);
@@ -67,6 +67,25 @@
 .filter label {
   font-size: 0.8rem;
 }
+
+.filter input[type="date"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.35rem;
+  font-size: 0.8rem;
+  font-family: Arial, serif;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(228,220,198,0.6);
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 
 .events-grid {
   margin-top: 0.7rem;

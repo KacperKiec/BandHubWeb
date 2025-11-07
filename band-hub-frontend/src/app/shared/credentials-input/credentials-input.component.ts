@@ -21,6 +21,14 @@ export class CredentialsInputComponent {
     repeatPassword: ''
   };
 
+  validateEmail() {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const email: string = this.formData.email ?? '';
+    if (!regex.test(email)) alert('Nieprawidłowy format email!');
+  }
+
+
   validatePasswords() {
     const password: string = this.formData.password ?? '';
     const repeatPassword: string = this.formData.repeatPassword ?? '';

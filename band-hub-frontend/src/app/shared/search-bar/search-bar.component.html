@@ -23,7 +23,7 @@
           </div>
 
           <div class="filter-input" *ngIf="filter.type === 'text' && filter.label === 'Miasto'">
-            <app-address-search [customClass]="'filter-input'" (address)="getAddress(i, $event)"></app-address-search>
+            <app-address-search [customClass]="'location-input-3'" (address)="getAddress(i, $event)"></app-address-search>
           </div>
 
           <div class="filter-input" *ngIf="filter.type === 'number'">

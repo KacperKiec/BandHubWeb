@@ -1,5 +1,6 @@
 package io.kk.bandhub.userservice.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,7 @@ public class AccountRequestDTO {
     @Size(max = 50)
     @NotNull
     @NotBlank
+    @Email
     private String email;
 
     @Size(max = 50)

@@ -11,7 +11,7 @@
         <label>Miasto</label>
         <app-address-search
           [placeholderInput]="'Miasto'"
-          [customClass]="'filter-input'"
+          [customClass]="'location-input-3'"
           (address)="getCity($event); filterEvents()">
         </app-address-search>
       </div>
@@ -22,7 +22,7 @@
       </div>
 
       <div class="filter">
-        <button class="btn-primary" (click)="resetParams()">Reset</button>
+        <button class="btn-primary" style="padding: 0.89rem;" (click)="resetParams()">Reset</button>
       </div>
     </div>
   </header>
