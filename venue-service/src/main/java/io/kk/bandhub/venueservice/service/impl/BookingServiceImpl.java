@@ -68,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
             offerRepository.save(offer);
 
             String title = "Nowa rezerwacja";
-            String content = "Ktoś zarezerwował miejsce w %s na dzień %s.".formatted(offer.getVenue().getName(), booking.getBookingDate().toString());
+            String content = "Ktoś zarezerwował miejsce w %s na dzień %s.".formatted(offer.getVenue().getName(), booking.getOffer().getDate().toString());
 
             var dto = NotificationCreator.createNotification(NotificationType.NEW_BOOKING, offer.getVenue().getOwnerId(), title, content);
 

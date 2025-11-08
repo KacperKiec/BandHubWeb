@@ -31,3 +31,7 @@
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.register-button:hover {
+  background-color: #353a40;
+}

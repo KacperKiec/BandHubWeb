@@ -48,6 +48,11 @@
   margin: 20px auto;
 }
 
+.confirm-button:hover,
+.register-button:hover {
+  background-color: #353a40;
+}
+
 .confirm-button label {
   cursor: pointer;
 }

@@ -281,7 +281,7 @@ export class ChatComponent implements OnInit {
 
       setTimeout(() => this.scrollToBottom(), 0);
 
-    } else return
+    } else return;
   }
 
   private scrollToBottom(): void {

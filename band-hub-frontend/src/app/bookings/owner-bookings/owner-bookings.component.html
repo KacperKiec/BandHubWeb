@@ -47,13 +47,13 @@
 
     <div class="page-panel" *ngIf="bookings.length !== 0">
       <button class="page-button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 0">
-        <img src="/assets/icons8-collapse-arrow-50.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
+        <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="left-arrow" alt="Left paging arrow">
       </button>
 
       <div>Strona {{currentPage + 1}} z {{totalPages}}</div>
 
       <button class="page-button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage + 1 === totalPages">
-        <img src="/assets/icons8-collapse-arrow-50.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
+        <img src="/assets/icons8-paging-arrow.png" width="20px" height="20px" class="right-arrow" alt="Right paging arrow">
       </button>
     </div>
 

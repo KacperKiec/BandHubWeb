@@ -193,6 +193,7 @@
   text-align: center;
   margin-top: 2rem;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  color: black;
 }
 
 .become-musician-card h2 {
@@ -203,7 +204,7 @@
 .become-musician-card .btn {
   padding: 0.75rem 1.5rem;
   background-color: #615D55;
-  color: white;
+  color: #E4DCC6;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;

@@ -128,8 +128,8 @@ export class OffersComponent implements OnInit {
     this.booking = {
       tenantId: this.userId,
       offerId: offer.id,
-      startTime: range.startTime,
-      endTime: range.endTime,
+      startTime: range.startTime.substring(0, 5),
+      endTime: range.endTime.substring(0, 5),
       bookingDate: new Date().toISOString().substring(0, 10)
     }
   }

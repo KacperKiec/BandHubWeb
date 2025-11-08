@@ -6,7 +6,7 @@
   width: 70%;
   margin: 5px auto 15px;
   padding: 3rem;
-  background-color: rgba(255, 255, 255, 0.6);
+  background: rgba(72, 76, 85, 0.3);
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   justify-content: center;
@@ -97,7 +97,7 @@
 
 .btn {
   padding: 0.75rem 1.5rem;
-  background-color: #615D55;
+  background-color: #0E1418;
   color: #E4DCC6;
   border: none;
   border-radius: 0.5rem;
@@ -107,7 +107,8 @@
 }
 
 .btn:hover, .btn2:hover {
-  background-color: #45403c;
+  background-color: #B8AA8D;
+  color: #0E1418;
 }
 
 .my-bands-panel {
@@ -119,6 +120,7 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #E4DCC6;
 }
 
 .band-grid {
@@ -128,7 +130,7 @@
 }
 
 .band-card {
-  background-color: white;
+  background-color: rgb(255, 255, 255, 0.8);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;

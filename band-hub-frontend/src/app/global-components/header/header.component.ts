@@ -66,7 +66,6 @@ export class HeaderComponent implements OnInit {
     this.chatSubscription = this.chatSocketService.messages$.subscribe(
       (message) => {
         if (message) this.messages = [...this.messages, message];
-        console.log('Liczba wiadomosci: ' + this.messages.length);
       }
     );
     this.chatSocketService.readStatusChanged$.subscribe(() => {

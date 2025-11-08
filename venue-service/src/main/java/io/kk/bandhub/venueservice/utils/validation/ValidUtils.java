@@ -13,7 +13,8 @@ public class ValidUtils {
             valid = false;
         }
 
-        if (dto.getStartTime().getMinute() != 30 || dto.getStartTime().getMinute() != 0 || dto.getEndTime().getMinute() != 30 || dto.getEndTime().getMinute() != 0) {
+        if ((dto.getStartTime().getMinute() != 0 && dto.getStartTime().getMinute() != 30)
+                || (dto.getEndTime().getMinute() != 0 && dto.getEndTime().getMinute() != 30)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Times must be multiples of 30 minutes")
                     .addPropertyNode("startTime").addPropertyNode("endTime").addConstraintViolation();
