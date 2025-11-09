@@ -23,7 +23,7 @@ public class EventController {
     private final EventService eventService;
     private final UserEventService userEventService;
 
-    @PostMapping(value = "")
+    @PostMapping
     ResponseEntity<UserEventDTO> createEvent(@RequestBody @Valid EventRequestDTO eventDTO) {
         var result = eventService.createEvent(eventDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);

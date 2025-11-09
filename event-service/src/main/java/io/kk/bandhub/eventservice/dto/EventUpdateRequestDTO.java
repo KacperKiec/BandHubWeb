@@ -1,5 +1,6 @@
 package io.kk.bandhub.eventservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.kk.bandhub.eventservice.utils.validation.EventTimeValidatable;
 import io.kk.bandhub.eventservice.utils.validation.ValidEventTimes;
 import jakarta.validation.constraints.NotBlank;
@@ -33,9 +34,11 @@ public class EventUpdateRequestDTO implements EventTimeValidatable {
     private LocalDate date;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
 
     @NotNull

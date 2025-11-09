@@ -97,6 +97,7 @@
   transition: all 0.3s ease;
   background: rgba(255,255,255,0.05);
   border: 1px solid transparent;
+  position: relative;
 }
 
 .chat-list li:hover {
@@ -116,7 +117,7 @@
   background: #FF4C4C;
   border-radius: 50%;
   position: absolute;
-  top: 14px;
+  top: 20px;
   right: 14px;
 }
 

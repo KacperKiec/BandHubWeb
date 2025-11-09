@@ -28,6 +28,10 @@ label {
   font-weight: 600;
 }
 
+input {
+  text-align: center;
+}
+
 input,
 textarea {
   font-family: 'Merriweather', serif;

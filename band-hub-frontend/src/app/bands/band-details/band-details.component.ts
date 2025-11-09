@@ -49,6 +49,7 @@ export class BandDetailsComponent implements OnInit{
     this.bandApiService.getBandById(id).subscribe(band => {
       if (band) {
         this.band = band;
+        console.log(band)
       }
     });
 

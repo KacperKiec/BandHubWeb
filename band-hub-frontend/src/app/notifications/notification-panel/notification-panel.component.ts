@@ -52,6 +52,7 @@ export class NotificationPanelComponent implements OnInit {
       this.userId = JSON.parse(rawId);
     }
 
+    console.log('UserId: ' + this.userId);
     this.loadUnreadNotifications(0);
   }
 

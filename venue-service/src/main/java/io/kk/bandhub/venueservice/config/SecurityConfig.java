@@ -31,7 +31,8 @@ public class SecurityConfig {
                         .requestMatchers("/booking/**").authenticated()
                         .requestMatchers("/offer/public/**").permitAll()
                         .requestMatchers("/offer/**").authenticated()
-                        .requestMatchers("/venue/**").authenticated())
+                        .requestMatchers("/venue/**").authenticated()
+                        .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)

@@ -17,4 +17,5 @@ public interface BookingService {
     Page<BookingDTO> getUserBookings(Integer tenantId, Pageable pageable);
     Page<BookingDTO> getOwnerBookings(Integer ownerId, Pageable pageable);
     Page<BookingDTO> getBookings(Pageable pageable, Integer tenantId, Integer offerId, OfferStatus status);
+    Integer getBookingOfferOwnerId(Integer bookingId);
 }

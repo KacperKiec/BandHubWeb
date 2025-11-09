@@ -13,6 +13,7 @@ import io.kk.bandhub.venueservice.model.Booking;
 import io.kk.bandhub.venueservice.repository.booking.BookingRepository;
 import io.kk.bandhub.venueservice.repository.booking.BookingSpecification;
 import io.kk.bandhub.venueservice.repository.offer.OfferRepository;
+import io.kk.bandhub.venueservice.repository.venue.VenueRepository;
 import io.kk.bandhub.venueservice.service.BookingService;
 import io.kk.bandhub.venueservice.service.OfferAvailabilityService;
 import io.kk.bandhub.venueservice.utils.NotificationCreator;
@@ -36,6 +37,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final OfferRepository offerRepository;
+    private final VenueRepository venueRepository;
     private final OfferAvailabilityService offerAvailabilityService;
     private final RabbitService rabbitService;
     private final Mapper mapper;
@@ -156,5 +158,13 @@ public class BookingServiceImpl implements BookingService {
                 .and(BookingSpecification.hasStatus(status));
 
         return bookingRepository.findAll(spec, pageable).map(mapper::toBookingDTO);
+    }
+
+    public Integer getBookingOfferOwnerId(Integer bookingId) {
+        var booking = bookingRepository.findById(bookingId).orElseThrow(
+                () -> new BookingException(BookingError.BOOKING_NOT_FOUND)
+        );
+
+        return booking.getOffer().getVenue().getOwnerId();
     }
 }

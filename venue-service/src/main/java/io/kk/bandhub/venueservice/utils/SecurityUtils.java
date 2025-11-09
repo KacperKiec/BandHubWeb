@@ -16,4 +16,14 @@ public class SecurityUtils {
             throw new AccessException("You can only edit data that belongs to you.");
         }
     }
+
+    public static void verifyAuthorities(Authentication authentication, Integer tenantId, Integer ownerId) {
+        JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) authentication;
+        Jwt jwt = jwtAuth.getToken();
+        Long userIdFromToken = jwt.getClaim("userId");
+
+        if (!userIdFromToken.equals(tenantId.longValue()) && !userIdFromToken.equals(ownerId.longValue())) {
+            throw new AccessException("You can only edit data that belongs to you.");
+        }
+    }
 }

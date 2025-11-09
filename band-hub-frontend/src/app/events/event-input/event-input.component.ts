@@ -151,6 +151,7 @@ export class EventInputComponent implements OnInit, OnChanges {
   }
 
   emit() {
+    console.log(this.event);
     this.outputEvent.emit(this.event);
   }
 

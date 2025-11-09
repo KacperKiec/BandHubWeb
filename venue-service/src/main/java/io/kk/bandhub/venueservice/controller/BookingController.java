@@ -3,6 +3,8 @@ package io.kk.bandhub.venueservice.controller;
 import io.kk.bandhub.venueservice.dto.BookingDTO;
 import io.kk.bandhub.venueservice.dto.BookingRequestDTO;
 import io.kk.bandhub.venueservice.service.BookingService;
+import io.kk.bandhub.venueservice.service.OfferService;
+import io.kk.bandhub.venueservice.service.VenueService;
 import io.kk.bandhub.venueservice.utils.OfferStatus;
 import io.kk.bandhub.venueservice.utils.SecurityUtils;
 import jakarta.validation.Valid;
@@ -35,7 +37,7 @@ public class BookingController {
 
     @DeleteMapping(value = "/{id}")
     ResponseEntity<Void> deleteBooking(@PathVariable Integer id, @RequestParam String initiator, Authentication authentication) {
-        SecurityUtils.verifyAuthorities(authentication, bookingService.getBooking(id).getTenantId());
+        SecurityUtils.verifyAuthorities(authentication, bookingService.getBooking(id).getTenantId(), bookingService.getBookingOfferOwnerId(id));
         bookingService.deleteBooking(id, initiator);
         return ResponseEntity.noContent().build();
     }

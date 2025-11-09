@@ -20,10 +20,6 @@ public interface VenueServiceClient {
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetData")
     BookingEventDataDTO getVenueEventData(@PathVariable Integer id);
 
-    @GetMapping("/event-data/internal/{id}")
-    @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetDataReg")
-    BookingEventDataDTO getVenueEventDataReg(@PathVariable Integer id);
-
     @GetMapping(value = "/venue/internal/ids")
     @CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallbackGetVenues")
     List<VenueDTO> getVenuesByIds(@RequestParam List<Integer> ids);
@@ -37,22 +33,6 @@ public interface VenueServiceClient {
     List<OfferDTO> getOffersByVenueAndDate(@PathVariable Integer id, @RequestParam LocalDate date);
 
     default BookingEventDataDTO fallbackGetData(Integer id, Throwable throwable) {
-        BookingEventDataDTO b = new BookingEventDataDTO();
-        b.setVenueId(null);
-        b.setVenueName("unknown");
-        b.setTenantId(null);
-        b.setStartTime(null);
-        b.setEndTime(null);
-
-        b.setStreet("unknown");
-        b.setCity("unknown");
-        b.setCountry("unknown");
-        b.setPostalCode("unknown");
-        b.setNumber("unknown");
-        return b;
-    }
-
-    default BookingEventDataDTO fallbackGetDataReg(Throwable throwable) {
         if (throwable instanceof feign.FeignException.ServiceUnavailable) {
             throw new RegistrationException("Registration failed because of service unavailability");
         } else if (throwable instanceof feign.FeignException.NotFound) {

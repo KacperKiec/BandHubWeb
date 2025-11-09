@@ -1,5 +1,6 @@
 package io.kk.bandhub.musicservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,6 +30,7 @@ public class BandUpdateRequestDTO {
     private String bio;
 
     @NotNull(message = "Looking members flag cannot be null")
+    @JsonProperty("isLookingMembers")
     private boolean isLookingMembers;
 
     private Set<GenreDTO> genres = new HashSet<>();
