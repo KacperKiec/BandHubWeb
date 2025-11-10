@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ChatDTO, MessageDTO, MessageRequest} from '../../core/models/chat.model';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -6,7 +6,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ChatApiService} from '../chat-service/chat-api.service';
 import {UserApiService} from '../../user/user-service/user-api.service';
 import {AccountResponse} from '../../core/models/account.model';
-import {Page, PageInfo} from '../../core/models/pagination.model';
 import {ChatService} from '../chat-socket-service/chat.service';
 
 @Component({
@@ -21,7 +20,7 @@ import {ChatService} from '../chat-socket-service/chat.service';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   userId!: number;
   chats: ChatDTO[] = [];
   messages: MessageDTO[] = [];
@@ -44,7 +43,7 @@ export class ChatComponent implements OnInit {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private chatApiService: ChatApiService, private userApiService: UserApiService, private chatSocketService: ChatService) {
+  constructor(private router: Router, private route: ActivatedRoute, private chatApiService: ChatApiService, private userApiService: UserApiService, private chatSocketService: ChatService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -68,12 +67,31 @@ export class ChatComponent implements OnInit {
     });
 
     this.chatSocketService.messages$.subscribe(message => {
-      if (this.selectedChat?.id !== message.chatId) return;
-      this.messages = [...this.messages, message];
+      if (this.selectedChat?.id === message.chatId) {
+        this.messages = [...this.messages, message];
 
-      this.scrollToBottom();
-      this.markMessages();
+        this.scrollToBottom();
+        this.markMessages();
+
+      } else {
+
+        const chatIndex = this.chats.findIndex(c => c.id === message.chatId);
+        if (chatIndex !== -1) {
+          if (message.receiverId === this.userId && !message.isRead) {
+            this.chats[chatIndex].messages.content.push(message);
+          }
+        } else {
+          this.chatApiService.getUserChats(this.userId, 0, 10).subscribe(chats => {
+            if (chats) this.chats = [...chats];
+            this.cdr.detectChanges();
+          });
+        }
+      }
     });
+  }
+
+  ngOnDestroy() {
+    this.selectedChat = null;
   }
 
   hasUnreadMessages(chat: ChatDTO): boolean {
@@ -111,31 +129,11 @@ export class ChatComponent implements OnInit {
   }
 
   startChat(receiver: AccountResponse) {
-    this.chatApiService.createChat([this.userId, receiver.id]).subscribe(id => {
-      if (id) {
-
-        const pageInfo: PageInfo = {
-          totalPages: 0,
-          totalElements: 0,
-          size: 0,
-          number: 0
-        }
-
-        const page: Page<MessageDTO> = {
-          content: [],
-          page: pageInfo
-        }
-
-        const dto: ChatDTO = {
-          id: id,
-          messages: page,
-          receiverFirstName: receiver.firstName,
-          receiverLastName: receiver.lastName,
-          receiverId: receiver.id
-        }
-
-        this.chats.push(dto);
-        this.selectChat(dto);
+    this.chatApiService.createChat([this.userId, receiver.id]).subscribe(chatDTO => {
+      if (chatDTO) {
+        this.chats.push(chatDTO);
+        this.selectChat(chatDTO);
+        this.cdr.detectChanges();
       }
     });
   }

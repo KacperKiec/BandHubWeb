@@ -33,10 +33,17 @@ public class ChatServiceImpl implements ChatService {
     private final AccountServiceClient accountServiceClient;
     private final Mapper mapper;
 
-    public String createChat(Set<Integer> participants) {
+    public ChatDTO createChat(Set<Integer> participants, Integer userId) {
         Chat chat = new Chat();
         chat.setParticipants(participants);
-        return chatRepository.save(chat).getId();
+
+        var account = accountServiceClient.getAccount(chat.getParticipants()
+                .stream().filter(id -> !id.equals(userId)).findFirst().orElseThrow(
+                        () -> new ChatException(ChatError.CHAT_NOT_FOUND)
+                ));
+
+        var saved = chatRepository.save(chat);
+        return mapper.toChatDTO(saved, Page.empty(), account);
     }
 
     public List<ChatDTO> getUserChats(Integer userId, Pageable pageable) {

@@ -23,8 +23,8 @@ export class ChatApiService {
       );
   }
 
-  createChat(participants: number[]): Observable<string> {
-    return this.http.post<string>(`${this.apiURL}`, participants, {withCredentials: true})
+  createChat(participants: number[]): Observable<ChatDTO> {
+    return this.http.post<ChatDTO>(`${this.apiURL}`, participants, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

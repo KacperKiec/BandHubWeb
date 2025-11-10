@@ -24,7 +24,7 @@ export class LoginComponent {
     this.authApiService.login(this.email, this.password).subscribe({
       next: () => {
         this.authService.setLoginStatus(true);
-        window.location.href = '/';
+        setTimeout(() => window.location.href = '/', 100);
       }
     });
   }

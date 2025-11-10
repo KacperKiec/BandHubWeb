@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
-import {catchError, Observable, of, retry, tap} from 'rxjs';
+import {catchError, map, Observable, of, retry, switchMap, tap} from 'rxjs';
 import {AccountRegisterRequest} from '../../core/models/account.model';
 import {environment} from '../../../environments/environment';
 
@@ -35,13 +35,11 @@ export class AuthApiService {
   login(email: string, password: string): Observable<void> {
     return this.http.post<void>(`${this.apiURL}/auth/login`, { email, password }, { withCredentials: true })
       .pipe(
-        tap(() => {
-          this.getCurrentUser().subscribe(id => {
-            localStorage.setItem('userId', JSON.stringify(id));
-          });
-        }),
-        catchError((error) =>
-          this.errorHandler.handleError(error))
+        switchMap(() => this.getCurrentUser().pipe(
+          tap(id => localStorage.setItem('userId', JSON.stringify(id))),
+          map(() => void 0)
+        )),
+        catchError(error => this.errorHandler.handleError(error))
       );
   }
 

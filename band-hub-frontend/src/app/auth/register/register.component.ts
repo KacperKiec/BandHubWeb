@@ -67,7 +67,6 @@ export class RegisterComponent implements OnInit{
   }
 
   submitForm() {
-    console.log('Dane formularza:', this.formData);
 
     for (let value of Object.values(this.formData)) {
       if (value === null || value === '') {
@@ -88,7 +87,6 @@ export class RegisterComponent implements OnInit{
       roles: [{name: 'USER'}]
     };
 
-    console.log(account)
     this.authApiService.registerAccount(account).subscribe({
       next: () => {
         this.authApiService.login(account.email, account.password).subscribe({

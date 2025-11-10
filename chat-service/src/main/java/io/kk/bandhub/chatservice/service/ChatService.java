@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ChatService {
-    String createChat(Set<Integer> participants);
+    ChatDTO createChat(Set<Integer> participants, Integer userId);
     List<ChatDTO> getUserChats(Integer userId, Pageable pageable);
     Page<MessageDTO> getChatMessages(String chatId, Pageable pageable);
     void markMessagesAsRead(Set<String> msgIds);
