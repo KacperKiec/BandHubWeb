@@ -1,8 +1,8 @@
 import {Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild} from '@angular/core';
 import {NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../core/auth/service/auth.service';
-import {AuthApiService} from '../../core/auth/auth-service/auth-api.service';
+import {AuthService} from '../../auth/service/auth.service';
+import {AuthApiService} from '../../auth/auth-service/auth-api.service';
 import {NotificationService} from '../../notifications/notification-socket-service/notification.service';
 import {Subscription} from 'rxjs';
 import {NotificationPanelComponent} from '../../notifications/notification-panel/notification-panel.component';

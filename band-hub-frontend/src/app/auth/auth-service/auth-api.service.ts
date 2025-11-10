@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ErrorHandlerService} from '../../error-handler-service/error-handler.service';
+import {ErrorHandlerService} from '../../core/error-handler-service/error-handler.service';
 import {catchError, Observable, of, retry, tap} from 'rxjs';
-import {AccountRegisterRequest} from '../../models/account.model';
-import {environment} from '../../../../environments/environment';
+import {AccountRegisterRequest} from '../../core/models/account.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

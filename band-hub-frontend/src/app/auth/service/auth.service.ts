@@ -1,4 +1,4 @@
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {AuthApiService} from '../auth-service/auth-api.service';
 import {Router} from '@angular/router';

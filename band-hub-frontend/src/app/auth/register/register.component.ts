@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import { FormsModule} from '@angular/forms';
-import {AddressSearchComponent} from '../../../shared/address-search/address-search.component';
+import {AddressSearchComponent} from '../../shared/address-search/address-search.component';
 import {AuthApiService} from '../auth-service/auth-api.service';
 import {Router} from '@angular/router';
 import {AuthService} from '../service/auth.service';
-import {AccountCredentials, AccountPersonalData, AccountRegisterRequest} from '../../models/account.model';
-import {PersonalInfoInputComponent} from '../../../shared/personal-info-input/personal-info-input.component';
-import {CredentialsInputComponent} from '../../../shared/credentials-input/credentials-input.component';
+import {AccountCredentials, AccountPersonalData, AccountRegisterRequest} from '../../core/models/account.model';
+import {PersonalInfoInputComponent} from '../../shared/personal-info-input/personal-info-input.component';
+import {CredentialsInputComponent} from '../../shared/credentials-input/credentials-input.component';
 
 @Component({
   selector: 'app-register',

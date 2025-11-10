@@ -1,8 +1,8 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
-import {AuthService} from '../../core/auth/service/auth.service';
-import {AuthApiService} from '../../core/auth/auth-service/auth-api.service';
+import {AuthService} from '../../auth/service/auth.service';
+import {AuthApiService} from '../../auth/auth-service/auth-api.service';
 
 @Component({
   selector: 'app-navbar',
