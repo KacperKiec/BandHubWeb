@@ -5,7 +5,8 @@ import io.kk.bandhub.authservice.dto.AuthRequest;
 import io.kk.bandhub.authservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,15 +15,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
+    @Value("${app.oauth2.token-expiration-time}")
+    private Integer expirationTime;
 
     @PostMapping("/login")
     ResponseEntity<Void> login(@RequestBody AuthRequest request, HttpServletResponse response) {
@@ -38,7 +45,7 @@ public class AuthController {
                 .secure(true)
                 .path("/")
                 .sameSite("None")
-                .maxAge(3600)
+                .maxAge(expirationTime)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());

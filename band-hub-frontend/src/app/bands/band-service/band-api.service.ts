@@ -15,14 +15,6 @@ export class BandApiService {
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) { }
 
-  getBands(page: number = 0, size: number = 10): Observable<Page<Band>> {
-    return this.http.get<Page<Band>>(`${this.apiURL}/public/all?page=${page}&size=${size}`)
-      .pipe(
-        tap(() => this.errorHandler.errorSubject.next('')),
-        catchError(error => this.errorHandler.handleError(error))
-      );
-  }
-
   getBandById(id: number): Observable<Band> {
     return this.http.get<Band>(`${this.apiURL}/public/${id}`)
       .pipe(
@@ -59,6 +51,14 @@ export class BandApiService {
       );
   }
 
+  getBands(page: number = 0, size: number = 10): Observable<Page<Band>> {
+    return this.http.get<Page<Band>>(`${this.apiURL}/public/all?page=${page}&size=${size}`)
+      .pipe(
+        tap(() => this.errorHandler.errorSubject.next('')),
+        catchError(error => this.errorHandler.handleError(error))
+      );
+  }
+
   updateBand(band: BandUpdateRequest): Observable<Band> {
     return this.http.put<Band>(`${this.apiURL}`, band, {withCredentials: true})
       .pipe(
@@ -67,16 +67,16 @@ export class BandApiService {
       );
   }
 
-  leaveBand(request: BandMembershipRequest): Observable<void> {
-    return this.http.patch<void>(`${this.apiURL}/leave`, request, {withCredentials: true})
+  deleteBand(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiURL}/${id}`, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))
       );
   }
 
-  deleteBand(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiURL}/${id}`, {withCredentials: true})
+  leaveBand(request: BandMembershipRequest): Observable<void> {
+    return this.http.patch<void>(`${this.apiURL}/leave`, request, {withCredentials: true})
       .pipe(
         tap(() => this.errorHandler.errorSubject.next('')),
         catchError(error => this.errorHandler.handleError(error))

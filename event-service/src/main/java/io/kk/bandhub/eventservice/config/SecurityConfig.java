@@ -29,7 +29,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/event/public/**").permitAll()
-                        .requestMatchers("/event/**").authenticated())
+                        .requestMatchers("/event/**").authenticated()
+                        .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(authenticationFailureHandler))
                 .csrf(AbstractHttpConfigurer::disable)

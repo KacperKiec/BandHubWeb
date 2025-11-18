@@ -1,5 +1,7 @@
 package io.kk.bandhub.eventservice.config.auth;
 
+import io.github.resilience4j.core.lang.NonNullApi;
+import io.github.resilience4j.core.lang.NonNullFields;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@NonNullFields(false)
+@NonNullApi(false)
+
 public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String JWT_COOKIE_NAME = "jwt";
@@ -31,24 +36,16 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         try {
             Optional<String> token = extractJwtFromCookie(request);
             if (token.isPresent()) {
-                //System.out.println("JWT token found, attempting authentication");
                 JwtAuthenticationToken authentication = authenticate(token.get());
-                //System.out.println("Authentication successful for user: " +
-                //        authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                //System.out.println("No JWT token found in cookies");
             }
         } catch (JwtException e) {
-            //System.out.println("JWT validation failed: " + e.getMessage());
             SecurityContextHolder.clearContext();
         }
 
@@ -57,18 +54,8 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 
     private Optional<String> extractJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) {
-            //System.out.println("No cookies found in request");
             return Optional.empty();
         }
-
-//        System.out.println("Received cookies:");
-//        Arrays.stream(request.getCookies())
-//                .forEach(cookie -> System.out.println(
-//                        "Cookie: " + cookie.getName() +
-//                                " = " + cookie.getValue() +
-//                                " | Domain: " + cookie.getDomain() +
-//                                " | Path: " + cookie.getPath() +
-//                                " | Secure: " + cookie.getSecure()));
 
         return Arrays.stream(request.getCookies())
                 .filter(cookie -> JWT_COOKIE_NAME.equals(cookie.getName()))
@@ -87,8 +74,6 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
         List<GrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
-        //System.out.println("Mapped authorities: " + authorities);
 
         return new JwtAuthenticationToken(jwt, authorities);
     }

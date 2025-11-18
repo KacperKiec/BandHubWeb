@@ -29,7 +29,6 @@ public class AccountAuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String token = oAuth2Client.getAccessToken();
-        //System.out.println(token);
         try {
             String completeUrl = url + username;
             HttpHeaders headers = new HttpHeaders();
@@ -44,7 +43,6 @@ public class AccountAuthService implements UserDetailsService {
             );
             return response.getBody();
         } catch (Exception e) {
-            //System.out.println(e);
             throw new AuthException("User with given credentials could not be found or service is unavailable.");
         }
     }

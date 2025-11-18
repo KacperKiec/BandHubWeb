@@ -3,16 +3,14 @@ package io.kk.bandhub.venueservice.config;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import io.kk.bandhub.venueservice.config.auth.OAuth2Client;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class FeignRequestInterceptor implements RequestInterceptor {
 
     private final OAuth2Client oAuth2Client;
-
-    public FeignRequestInterceptor(OAuth2Client oAuth2Client) {
-        this.oAuth2Client = oAuth2Client;
-    }
 
     @Override
     public void apply(RequestTemplate requestTemplate) {

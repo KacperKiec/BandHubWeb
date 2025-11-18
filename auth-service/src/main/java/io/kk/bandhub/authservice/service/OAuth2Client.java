@@ -38,10 +38,9 @@ public class OAuth2Client {
 
     public String getAccessToken() {
         lock.lock();
-        //System.out.println(System.currentTimeMillis() - tokenExpirationTime);
         try {
             if (accessToken == null || System.currentTimeMillis() >= tokenExpirationTime) {
-                refreshAccessToken();
+                requestAccessToken();
             }
             return accessToken;
         } finally {
@@ -49,8 +48,7 @@ public class OAuth2Client {
         }
     }
 
-    private void refreshAccessToken() {
-
+    private void requestAccessToken() {
         String grantType = "client_credentials";
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -69,16 +67,12 @@ public class OAuth2Client {
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        //System.out.println(response.getBody());
 
         try {
             JsonNode jsonResponse = objectMapper.readTree(response.getBody());
             this.accessToken = jsonResponse.get("access_token").asText();
             int expiresIn = jsonResponse.get("expires_in").asInt();
-            //System.out.println(expiresIn);
             this.tokenExpirationTime = System.currentTimeMillis() + (expiresIn * 1000L) - 5000;
-            //System.out.println(System.currentTimeMillis());
-            // System.out.println(this.tokenExpirationTime);
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse OAuth2 token response", e);
         }

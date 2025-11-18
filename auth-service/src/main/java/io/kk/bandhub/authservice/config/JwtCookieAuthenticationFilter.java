@@ -39,16 +39,10 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
         try {
             Optional<String> token = extractJwtFromCookie(request);
             if (token.isPresent()) {
-                //System.out.println("JWT token found, attempting authentication");
                 JwtAuthenticationToken authentication = authenticate(token.get());
-                //System.out.println("Authentication successful for user: " +
-                //        authentication.getName());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                //System.out.println("No JWT token found in cookies");
             }
         } catch (JwtException e) {
-            //System.out.println("JWT validation failed: " + e.getMessage());
             SecurityContextHolder.clearContext();
         }
 
@@ -57,18 +51,8 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 
     private Optional<String> extractJwtFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) {
-            //System.out.println("No cookies found in request");
             return Optional.empty();
         }
-
-//        System.out.println("Received cookies:");
-//        Arrays.stream(request.getCookies())
-//                .forEach(cookie -> System.out.println(
-//                        "Cookie: " + cookie.getName() +
-//                                " = " + cookie.getValue() +
-//                                " | Domain: " + cookie.getDomain() +
-//                                " | Path: " + cookie.getPath() +
-//                                " | Secure: " + cookie.getSecure()));
 
         return Arrays.stream(request.getCookies())
                 .filter(cookie -> JWT_COOKIE_NAME.equals(cookie.getName()))
@@ -87,8 +71,6 @@ public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
         List<GrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
-        //System.out.println("Mapped authorities: " + authorities);
 
         return new JwtAuthenticationToken(jwt, authorities);
     }

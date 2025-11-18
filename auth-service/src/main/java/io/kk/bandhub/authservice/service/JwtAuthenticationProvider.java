@@ -1,6 +1,7 @@
 package io.kk.bandhub.authservice.service;
 
 import io.kk.bandhub.authservice.exception.AuthException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,17 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private final AccountAuthService accountAuthService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-
-    public JwtAuthenticationProvider(AccountAuthService accountAuthService, PasswordEncoder passwordEncoder, JwtService jwtService) {
-        this.accountAuthService = accountAuthService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -33,9 +28,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             throw new AuthException("Authentication with given credentials failure");
         }
 
-        var token = jwtService.generateToken(userDetails, null);
-
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override
