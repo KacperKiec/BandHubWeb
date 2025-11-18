@@ -1,7 +1,5 @@
 package io.kk.bandhub.eventservice.config.auth;
 
-import io.github.resilience4j.core.lang.NonNullApi;
-import io.github.resilience4j.core.lang.NonNullFields;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -22,9 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-@NonNullFields(false)
-@NonNullApi(false)
 
 public class JwtCookieAuthenticationFilter extends OncePerRequestFilter {
 

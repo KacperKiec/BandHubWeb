@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface VenueRepository {
     Venue save(Venue venue);
     void deleteById(int id);
+    void deleteAll();
     Optional<Venue> findById(int id);
     Optional<Venue> findByNameAndOwnerId(String name, Integer ownerId);
     List<Venue> findByOwnerId(Integer ownerId);

@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface OfferRepository {
     Offer save(Offer offer);
     void deleteById(int id);
+    void deleteAll();
     Optional<Offer> findById(int id);
     List<Offer> findAll();
     List<Offer> findByVenueOwnerId(Integer venueOwnerId);
